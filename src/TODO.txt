@@ -1,0 +1,1 @@
+- Considerar fazer teste de interseção raio - luz
