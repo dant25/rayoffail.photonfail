@@ -11,9 +11,9 @@ public:
     virtual SpectralQuantity computeLocalShading(const Intersection& lIntersect,
                                                  const SpectralQuantity& diffuse,
                                                  const SpectralQuantity& specular,
-                                                 const SpectralQuantity& ambient) = 0;
+                                                 const SpectralQuantity& ambient) const = 0;
     Intersection getIntersection();
-private:
+protected:
     //Armazena o último ponto de interseção
     Intersection i;
 };

@@ -5,13 +5,16 @@ Camera::Camera(int xres, int yres, const Vec3& pos, const Vec3& lookat, const Ve
 }
 
 Ray Camera::generateRay(int x, int y) const {
-    Ray r;
-    r.origin = this->pos;
+   float xw = 2*this->pos.z*(x - imgWidth/2.0)/imgWidth;
+   float yw = 2*this->pos.z*(y - imgHeight/2.0)/imgHeight;
+   
+   Vec3 p = this->pos + Vec3(xw, yw, -pos.z);
 
-    //Raio ortogonal mazela
-    r.dir = Vec3(0.0, 0.0, -1.0);
-
-    return r;
+   Vec3 dir = normalize(p - this->pos);
+   Ray r;
+   r.o = pos;
+   r.d = dir;
+   return r;
 }
 
 int Camera::getWidth() const {

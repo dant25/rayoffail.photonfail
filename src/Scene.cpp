@@ -34,3 +34,7 @@ SpectralQuantity Scene::render(const Ray& r) const {
     
     return ls; 
 }
+
+void Scene::addObject(Object *obj) {
+   objects.addObject(obj);
+}

@@ -8,6 +8,7 @@
 class Scene {
 public:
     SpectralQuantity render(const Ray& r) const;
+    void addObject(Object *obj);
     //addObj
     //addLight
     

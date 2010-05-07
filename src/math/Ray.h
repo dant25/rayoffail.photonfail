@@ -5,8 +5,10 @@
 
 class Ray { 
 public:
-    Vec3 dir;
-    Vec3 origin;
+    //vetor direção
+    Vec3 d;
+    //posição de origem
+    Vec3 o;
 };
 
 
