@@ -5,7 +5,7 @@
 
 class Sphere : public Object {
 public:
-    Sphere(float radius, Vec3 center);
+    Sphere(const Material& mat, float radius, Vec3 center);
     bool intersect(const Ray& r);
     SpectralQuantity computeLocalShading(const Intersection& lIntersect,
                                          const SpectralQuantity& diffuse,

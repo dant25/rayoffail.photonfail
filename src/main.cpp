@@ -7,7 +7,8 @@ int main () {
     //Inicializa camera
     Camera c(300, 300, Vec3(0.0, 0.0, 10.0), Vec3(0.0, 0.0, 0.0), Vec3(0.0, 1.0, 0.0));
     //Inicializa cena
-    Sphere sphere(5.0, Vec3(0.0, 0.0, -7.0));
+    Material m(SpectralQuantity(1.0, .0, .0), SpectralQuantity(1.0, .0, .0), SpectralQuantity(1.0, .0, .0), 16.0);
+    Sphere sphere(m, 5.0, Vec3(0.0, 0.0, -7.0));
     Scene s;
     s.addObject(&sphere);
 

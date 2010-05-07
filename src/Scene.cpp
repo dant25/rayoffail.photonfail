@@ -15,19 +15,23 @@ SpectralQuantity Scene::render(const Ray& r) const {
     //Cor resultante de reflexão
     //SpectralQuantity rs;
     //para cada luz l
-    //  testa visibilidade
+    for(int i = 0; i < lights.size(); i++) {
+    //  TODO testa visibilidade
     //  se é visível
     //      computa cor
             //TODO: interseção com a luz?
-            Intersection lightIntersect;
-            lightIntersect.normal = Vec3(0.0, 0.0, 0.0);
-            lightIntersect.point = Vec3(0.0, 0.0, 0.0);
+            Vec3 samplePos = lights[i]->samplePoint();
+            Vec3 lightNormal = i.pos - samplePos;
+            //FIXME passnado normal por referencia
+            lights[i]->getNormal(samplePos, lightNormal);
+        
             //FIXME placeholder só pra poder fazer algo na função agora
             ls = obj->computeLocalShading(lightIntersect, SpectralQuantity(1.0, 1.0, 1.0), 
                                     SpectralQuantity(1.0, 1.0, 1.0), SpectralQuantity(1.0, 1.0, 1.0));
     //      traça raio refletido r
     //      Ray r = reflectedRay(i.normal);
     //      rs = this->render(r);
+    }
 
     //Combina de algum modo os valores de ls e rs e retorna a cor 
     //encontrada por aquele raio na cena
