@@ -49,10 +49,3 @@ bool Sphere::intersect(const Ray& r) {
       }
    }
 }
-
-SpectralQuantity Sphere::computeLocalShading(const Intersection& lIntersect,
-      const SpectralQuantity& diffuse,
-      const SpectralQuantity& specular,
-      const SpectralQuantity& ambient) const {
-   return SpectralQuantity(1.0, 0.0, 0.0);
-}

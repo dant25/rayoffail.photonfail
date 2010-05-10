@@ -4,6 +4,7 @@
 #include "SpectralQuantity.h"
 #include "Container.h"
 #include "../math/Ray.h"
+#include "Light.h"
 #include <vector>
 
 class Scene {

@@ -1,6 +1,7 @@
 #ifndef POINTLIGHT_H_
 #define POINTLIGHT_H_
 
+#include "Light.h"
 
 class PointLight : public Light {
 public:
@@ -8,7 +9,7 @@ public:
 
     Vec3 samplePoint();
     void getNormal(Vec3 point, Vec3 &normal);
-private:
+    
     Vec3 pos;
 };
 

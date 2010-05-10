@@ -8,12 +8,12 @@ SpectralQuantity Scene::render(const Ray& r) const {
     if (!obj)
         return SpectralQuantity(0.0, 0.0, 0.0);
 
-    Intersection i = obj->getIntersection();
+    Intersection objIntersect = obj->getIntersection();
     
     //Cor resultante da iluminação local
     SpectralQuantity ls;
     //Cor resultante de reflexão
-    //SpectralQuantity rs;
+    //SpectralQuantit/y rs;
     //para cada luz l
     for(int i = 0; i < lights.size(); i++) {
     //  TODO testa visibilidade
@@ -21,13 +21,18 @@ SpectralQuantity Scene::render(const Ray& r) const {
     //      computa cor
             //TODO: interseção com a luz?
             Vec3 samplePos = lights[i]->samplePoint();
-            Vec3 lightNormal = i.pos - samplePos;
-            //FIXME passnado normal por referencia
+            //FIXME calcula a normal previamente como o vetor que sai da luz
+            //em direção ao ponto iluminado. Gambiarra para tratar luz pontual
+            Vec3 lightNormal = objIntersect.point - samplePos;
+            //FIXME passando normal por referencia9
             lights[i]->getNormal(samplePos, lightNormal);
-        
+            Intersection lightIntersect;
+            lightIntersect.point = samplePos;
+            lightIntersect.normal = lightNormal;
             //FIXME placeholder só pra poder fazer algo na função agora
-            ls = obj->computeLocalShading(lightIntersect, SpectralQuantity(1.0, 1.0, 1.0), 
-                                    SpectralQuantity(1.0, 1.0, 1.0), SpectralQuantity(1.0, 1.0, 1.0));
+            //FIXME passando r.o como vetor posição da camera, não funcionará em projeção ortogonal.
+            ls = obj->computeLocalShading(lightIntersect, lights[i]->getDiffIntensity(), 
+                                    lights[i]->getSpecIntensity(), lights[i]->getAmbIntensity(), r.o);
     //      traça raio refletido r
     //      Ray r = reflectedRay(i.normal);
     //      rs = this->render(r);
@@ -41,4 +46,8 @@ SpectralQuantity Scene::render(const Ray& r) const {
 
 void Scene::addObject(Object *obj) {
    objects.addObject(obj);
+}
+
+void Scene::addLight(Light *l) {
+   lights.push_back(l);
 }

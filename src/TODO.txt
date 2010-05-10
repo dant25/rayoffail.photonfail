@@ -1,1 +1,12 @@
+1. Implementar computeLocalShading - phong
+2. Implementar reflexão
+3. Melhorar camera - oversampling
+4. Melhorar image - salvar imagem em formato melhor
+5. Melhorar material - considerar usar BRDF e outros modelos de iluminação
+6. Criar classe mesh e tratar triangles
+7. Obj loader
+8. Textura
+
+
+
 - Considerar fazer teste de interseção raio - luz
