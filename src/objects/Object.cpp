@@ -23,8 +23,8 @@ SpectralQuantity Object::computeLocalShading(const Intersection& lIntersect,
    SpectralQuantity diff = this->m.kd*intensity*max(dot(this->i.normal, lightVec), 0.0);
 
    Vec3 viewVec = normalize(cameraPos - this->i.point);
-   Vec3 halfVec = normalize(lightVec + viewVec);
-   SpectralQuantity spec = this->m.ks*intensity*pow(max(dot(this->i.normal, halfVec), 0.0), this->m.shininess);
+   Vec3 reflected = viewVec.getReflected(this->i.normal);
+   SpectralQuantity spec = this->m.ks*intensity*pow(max(dot(this->i.normal, reflected), 0.0), this->m.shininess);
    
    color = diff + spec;
    return color;

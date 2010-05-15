@@ -29,6 +29,19 @@ public:
 		return (x*v.x + y*v.y + z*v.z);
 	}
 
+	inline Vec3 cross(const Vec3& v) const{
+		return Vec3(this->y*v.z - v.y*this->z,
+					this->z*v.x - v.z*this->x,
+					this->x*v.y - v.x*this->y);
+	}
+
+	void normalize(){
+		float len = length();
+		x = x/len;
+		y = y/len;
+		z = z/len;
+	}
+
 	float length() const;
 
 	inline Vec3 getReflected(const Vec3 &normal) const {

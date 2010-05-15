@@ -1,6 +1,8 @@
 #include "Scene.h"
 #include "math/Intersection.h"
 
+#include <iostream>
+
 Scene::Scene(){
 	background_color = SpectralQuantity(0.0001, 0.0001, 0.0001);
 	maxDepth = 4;
@@ -41,24 +43,30 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
             lightIntersect.normal = lightNormal;
             //FIXME placeholder só pra poder fazer algo na função agora
             //FIXME passando r.o como vetor posição da camera, não funcionará em projeção ortogonal.
+            //FIXME somar as contribuições de cada luz
             ls = obj->computeLocalShading(lightIntersect, lights[i]->getIntensity(), r.o);
     //      traça raio refletido r
     //      Ray r = reflectedRay(i.normal);
     //      rs = this->render(r);
     }
 
+
     //Cor resultante de reflexão
     SpectralQuantity rs;
-    if(depth < maxDepth)
-    	rs = render(Ray(objIntersect.point, r.d.getReflected(objIntersect.normal)), depth++);
+
+    if(depth < maxDepth && obj->getSpecularity() > 0.0){
+    	Vec3 ref =  (r.d*-1.0).getReflected(objIntersect.normal);
+    	//std::cout << "Raio refletido = " << ref.x << ", " << ref.y << ", " << ref.z << std::endl;
+    	rs = render(Ray(objIntersect.point, ref), depth+1);
+    }
 
 
     //Combina de algum modo os valores de ls e rs e retorna a cor 
     //encontrada por aquele raio na cena
     SpectralQuantity result;
-    result = ls + rs;
+    result = ls*(1.0 - obj->getSpecularity()) + rs*obj->getSpecularity();
     
-    return ls; 
+    return result;
 }
 
 void Scene::addObject(Object *obj) {

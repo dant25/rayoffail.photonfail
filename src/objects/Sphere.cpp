@@ -21,6 +21,7 @@ bool Sphere::intersect(const Ray& r) {
          this->i.dist = dist;
          this->i.point = r.o + r.d*dist;
          this->i.normal = (this->i.point - this->c)/radius;
+         this->i.point += this->i.normal*0.0001;
          return true;
       } else
          return false;
@@ -45,6 +46,7 @@ bool Sphere::intersect(const Ray& r) {
          this->i.point = r.o + r.d*dist;
          //FIXME inverter normal se dist == largest?
          this->i.normal = (this->i.point - this->c)/radius;
+         this->i.point += this->i.normal*0.0001;
          return true;
       }
    }

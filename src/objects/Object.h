@@ -14,6 +14,10 @@ public:
                                          const SpectralQuantity& intensity,
                                          const Vec3& rayOrigin);
     Intersection getIntersection();
+    float getSpecularity(){
+    	return m.spec;
+    }
+
 protected:
     //Armazena o último ponto de interseção
     Intersection i;
