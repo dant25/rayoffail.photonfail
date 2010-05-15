@@ -20,9 +20,7 @@ int main () {
     Renderer r;
     Image *img;
     img = r.render(s, c);
-    std::cout << "RAY OF FAIL!! Salvando imagem...---->" << std::endl;
     img->save("teste1.tga");
-    std::cout << "RAY OF FAIL!! Salvo...---->" << std::endl;
     //FIXME seria mais intuitivo se render não tratasse da alocação da imagem
 
     /*

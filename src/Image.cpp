@@ -29,6 +29,17 @@ void WriteByte(FILE *file, unsigned char b) {
     fwrite((void*)&b,sizeof(unsigned char),1,file);
 }
 
+int clamp(float value) {
+   int newValue = int(255*value);
+   
+   if(newValue > 255)
+      newValue = 255;
+   else if (newValue < 0)
+      newValue = 0;
+
+   return newValue;
+}
+
 void Image::save(const char* path) {
 	FILE* file;
 	file = fopen(path, "wb");
@@ -60,9 +71,9 @@ void Image::save(const char* path) {
 		for (int x = 0; x < width; x++) {
 			//obs: ordem da cor inversa (b, g, r)
             //FIXME tratando SpectralQuantity como uma cor rgb normal!
-			WriteByte(file, (int)255*color[x][y].data[2]);
-			WriteByte(file, (int)255*color[x][y].data[1]);
-			WriteByte(file, (int)255*color[x][y].data[0]);
+			WriteByte(file, clamp(color[x][y].data[2]));
+			WriteByte(file, clamp(color[x][y].data[1]));
+			WriteByte(file, clamp(color[x][y].data[0]));
 		}
 	}
 	fclose(file);
