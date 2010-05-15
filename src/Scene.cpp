@@ -1,12 +1,18 @@
 #include "Scene.h"
 #include "math/Intersection.h"
 
+Scene::Scene(){
+	background_color = SpectralQuantity(0.0001, 0.0001, 0.0001);
+}
+
+
 SpectralQuantity Scene::render(const Ray& r) const {
+	// obj = 0 caso não haja interseção
     Object *obj = objects.findObject(r);
 
     //Se não houver interseção, retorna cor de fundo
     if (!obj)
-        return SpectralQuantity(0.0, 0.0, 0.0);
+        return background_color;
 
     Intersection objIntersect = obj->getIntersection();
     
@@ -31,8 +37,7 @@ SpectralQuantity Scene::render(const Ray& r) const {
             lightIntersect.normal = lightNormal;
             //FIXME placeholder só pra poder fazer algo na função agora
             //FIXME passando r.o como vetor posição da camera, não funcionará em projeção ortogonal.
-            ls = obj->computeLocalShading(lightIntersect, lights[i]->getDiffIntensity(), 
-                                    lights[i]->getSpecIntensity(), lights[i]->getAmbIntensity(), r.o);
+            ls = obj->computeLocalShading(lightIntersect, lights[i]->getIntensity(), r.o);
     //      traça raio refletido r
     //      Ray r = reflectedRay(i.normal);
     //      rs = this->render(r);

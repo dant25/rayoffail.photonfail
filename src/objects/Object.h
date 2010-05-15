@@ -11,10 +11,8 @@ public:
     Object(const Material& mat);
     virtual bool intersect(const Ray& r) = 0;
     SpectralQuantity computeLocalShading(const Intersection& lIntersect,
-                                         const SpectralQuantity& diffuse,
-                                         const SpectralQuantity& specular,
-                                         const SpectralQuantity& ambient,
-                                         const Vec3& cameraPos);
+                                         const SpectralQuantity& intensity,
+                                         const Vec3& rayOrigin);
     Intersection getIntersection();
 protected:
     //Armazena o último ponto de interseção

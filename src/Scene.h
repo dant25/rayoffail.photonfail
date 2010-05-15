@@ -3,12 +3,14 @@
 
 #include "SpectralQuantity.h"
 #include "Container.h"
-#include "../math/Ray.h"
-#include "Light.h"
+#include "math/Ray.h"
+#include "lights/Light.h"
 #include <vector>
 
 class Scene {
 public:
+	Scene();
+
     SpectralQuantity render(const Ray& r) const;
     void addObject(Object* obj);
     void addLight(Light*  l);
@@ -16,6 +18,10 @@ public:
 private:
     Container objects;
     std::vector<Light*> lights;
+
+    SpectralQuantity background_color;
+
+
 };
 
 #endif
