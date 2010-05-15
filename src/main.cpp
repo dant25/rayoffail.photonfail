@@ -10,7 +10,7 @@ int main () {
     Camera c(Vec3(0.0, 0.0, 20.0), Vec3(0.0, 0.0, -1.0), Vec3(0.0, 1.0, 0.0), 500, 500);
 
     //Inicializa cena
-    Material m(SpectralQuantity(1.0, 0.5, 0.5), SpectralQuantity(0.3, 0.3, 0.3), SpectralQuantity(0.1, 0.1, 0.1), 32.0, 0.5);
+    Material m(SpectralQuantity(1.0, 1.0, 0.0), SpectralQuantity(1.0, 1.0, 0.0), SpectralQuantity(0.0, 0.0, 0.0), 32.0, 0.2);
 
     Scene s;
     s.addObject(new Sphere(m, 3.0, Vec3(5.0, 0.0, 0.0)));
