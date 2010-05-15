@@ -15,13 +15,25 @@ public:
 	Vec3 operator*(float s) const;
 	Vec3& operator*=(float s);
 
+	Vec3 operator*(const Vec3& v) const{
+		return Vec3(x*v.x, y*v.y, z*v.z);
+	}
+
 	Vec3 operator/(float s) const;
 	Vec3& operator/=(float s);
 
 	bool operator==(const Vec3& v) const;
 	bool operator!=(const Vec3& v) const;
 
+	inline float dot(const Vec3& v) const {
+		return (x*v.x + y*v.y + z*v.z);
+	}
+
 	float length() const;
+
+	inline Vec3 getReflected(const Vec3 &normal) const {
+		return normal* this->dot(normal)*2.0 - *this;
+	}
 
 	float x, y, z;
 };

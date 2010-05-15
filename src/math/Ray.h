@@ -5,6 +5,11 @@
 
 class Ray { 
 public:
+	Ray(const Vec3 &origin, const Vec3 &dir){
+		d = dir;
+		o = origin;
+	}
+
     //vetor direção
     Vec3 d;
     //posição de origem

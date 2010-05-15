@@ -20,8 +20,9 @@ private:
     std::vector<Light*> lights;
 
     SpectralQuantity background_color;
+    int maxDepth;
 
-
+    SpectralQuantity render(const Ray& r, int depth) const;
 };
 
 #endif

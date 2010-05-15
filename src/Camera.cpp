@@ -11,9 +11,7 @@ Ray Camera::generateRay(int x, int y) const {
    Vec3 p = this->pos + Vec3(xw, yw, -pos.z);
 
    Vec3 dir = normalize(p - this->pos);
-   Ray r;
-   r.o = pos;
-   r.d = dir;
+   Ray r(pos, dir);
    //Ray r;
    //r.o = Vec3(xw, yw, 0.0);
    //r.d = Vec3(0.0, 0.0, -1.0);
