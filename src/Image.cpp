@@ -67,7 +67,7 @@ void Image::save(const char* path) {
 	WriteByte(file, 24);
 	WriteByte(file, 0);
 
-	for (int y = 0; y < height; y++) {
+	for (int y = height - 1; y >= 0; y--) {
 		for (int x = 0; x < width; x++) {
 			//obs: ordem da cor inversa (b, g, r)
             //FIXME tratando SpectralQuantity como uma cor rgb normal!

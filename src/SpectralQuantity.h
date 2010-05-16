@@ -9,6 +9,7 @@ public:
    SpectralQuantity(float r = 0.0, float g = 0.0, float b = 0.0);
 
    SpectralQuantity operator+(const SpectralQuantity& s) const;
+   SpectralQuantity& operator+=(const SpectralQuantity& s);
    SpectralQuantity operator*(const SpectralQuantity& s) const;
    SpectralQuantity operator*(float s) const;
 
