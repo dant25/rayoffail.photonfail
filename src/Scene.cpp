@@ -28,9 +28,6 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
    SpectralQuantity ls;
    //para cada luz l
    for(int i = 0; i < lights.size(); i++) {
-      //  TODO testa visibilidade
-      //  se é visível
-      //      computa cor
       //TODO: interseção com a luz?
       Vec3 samplePos = lights[i]->samplePoint();
       //FIXME calcula a normal previamente como o vetor que sai da luz
@@ -41,22 +38,27 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
       Intersection lightIntersect;
       lightIntersect.point = samplePos;
       lightIntersect.normal = lightNormal;
+      lightIntersect.dist = (lightIntersect.point - objIntersect.point).length(); 
+
+      Ray shadowRay(objIntersect.point, normalize(lightIntersect.point - objIntersect.point));
+      Object *shadowObj = objects.findObject(shadowRay);
+      
+      if(shadowObj) {
+         if(shadowObj->getIntersection().dist < lightIntersect.dist)
+            continue;
+      }
       //FIXME placeholder só pra poder fazer algo na função agora
-      //FIXME passando r.o como vetor posição da camera, não funcionará em projeção ortogonal.
       //FIXME somar as contribuições de cada luz
       ls += obj->computeLocalShading(lightIntersect, lights[i]->getIntensity(), r.o);
-      //      traça raio refletido r
-      //      Ray r = reflectedRay(i.normal);
-      //      rs = this->render(r);
    }
 
 
    //Cor resultante de reflexão
+   //FIXME reflexão existe mesmo quando há sombra no objeto
    SpectralQuantity rs;
 
    if(depth < maxDepth && obj->getSpecularity() > 0.0){
       Vec3 ref =  (r.d*-1.0).getReflected(objIntersect.normal);
-      //std::cout << "Raio refletido = " << ref.x << ", " << ref.y << ", " << ref.z << std::endl;
       rs = render(Ray(objIntersect.point, ref), depth+1);
    }
 
