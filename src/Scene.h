@@ -19,6 +19,7 @@ private:
     Container objects;
     std::vector<Light*> lights;
 
+    SpectralQuantity ambient_color;
     SpectralQuantity background_color;
     int maxDepth;
 

@@ -4,7 +4,7 @@
 #include <iostream>
 
 Scene::Scene(){
-   background_color = SpectralQuantity(0.0001, 0.0001, 0.0001);
+   background_color = SpectralQuantity(0.0, 0.0, 0.0);
    maxDepth = 4;
 }
 
@@ -26,15 +26,20 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 
    //Cor resultante da iluminação local
    SpectralQuantity ls;
-   //para cada luz l
+
+   // Calcula a iluminação direta.
    for(int i = 0; i < lights.size(); i++) {
       //TODO: interseção com a luz?
       Vec3 samplePos = lights[i]->samplePoint();
+
       //FIXME calcula a normal previamente como o vetor que sai da luz
       //em direção ao ponto iluminado. Gambiarra para tratar luz pontual
       Vec3 lightNormal = objIntersect.point - samplePos;
-      //FIXME passando normal por referencia9
+      lightNormal.normalize();
+
+      //FIXME passando normal por referencia
       lights[i]->getNormal(samplePos, lightNormal);
+
       Intersection lightIntersect;
       lightIntersect.point = samplePos;
       lightIntersect.normal = lightNormal;
@@ -42,11 +47,14 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 
       Ray shadowRay(objIntersect.point, normalize(lightIntersect.point - objIntersect.point));
       Object *shadowObj = objects.findObject(shadowRay);
-      
+
+      // Se não há obstáculo entre a luz e o ponto sendo considerado
       if(shadowObj) {
-         if(shadowObj->getIntersection().dist < lightIntersect.dist)
-            continue;
+         if(shadowObj->getIntersection().dist < lightIntersect.dist){
+        	 continue;
+         }
       }
+
       //FIXME placeholder só pra poder fazer algo na função agora
       //FIXME somar as contribuições de cada luz
       ls += obj->computeLocalShading(lightIntersect, lights[i]->getIntensity(), r.o);
