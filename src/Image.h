@@ -5,6 +5,7 @@
 
 class Image {
    public:
+      Image();
       Image(int width, int height);
       ~Image();
 

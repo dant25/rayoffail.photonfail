@@ -86,13 +86,13 @@ LIBS		+=
 
 
 # Additional locations for header files
-INCDIRS		+= src src/math src/objects src/lights
+INCDIRS		+= src src/math src/objects src/lights src/util
 
 # Additional locations for library files
 LIBDIRS		+= 
 
 # Additional locations for source files
-SRCDIRS		= src src/math src/objects src/lights
+SRCDIRS		= src src/math src/objects src/lights src/util
 
 # Object files and the target will be placed in this directory with an
 # underscore and the buildname appended (e.g., for the "debug" build: objs_debug/)

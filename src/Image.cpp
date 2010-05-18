@@ -1,7 +1,11 @@
 #include "Image.h"
-//FIXME escrever a função de ler tga ou usar outra lib
-#include "image.h"
+//FIXME escrever a função de ler tga
+#include "util/image.h"
 #include <stdio.h>
+
+Image::Image() {
+   color = NULL;
+}
 
 Image::Image(int width, int height) : width(width), height(height) {
     color = new SpectralQuantity*[width];
@@ -89,17 +93,14 @@ void Image::save(const char* path) {
 	fclose(file);
 }
 
-#include <iostream>
 void Image::load(const char* path) {
-   //FIXME verificar se é necessário alocar memória
-   clear(); 
-
+   if(color)
+      clear();
    unsigned char* data = NULL;
    int x, y, n;
    data = stbi_load(path, &x, &y, &n, 0);
    width = x;
    height = y;
-   std::cout << "carregou a img" << std::endl;
 
    color = new SpectralQuantity*[width];
    for(int i = 0; i < width; i++)
