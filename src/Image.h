@@ -11,6 +11,7 @@ public:
     void save(const char* path);
     
     void setPixel(int x, int y, const SpectralQuantity& c);
+    SpectralQuantity getPixel(int x, int y);
 
     int getWidth() const;
     int getHeight() const;

@@ -25,6 +25,10 @@ void Image::setPixel(int x, int y, const SpectralQuantity& c) {
     color[x][y] = c;
 }
 
+SpectralQuantity Image::getPixel(int x, int y){
+	return color[x][y];
+}
+
 void WriteByte(FILE *file, unsigned char b) {
     fwrite((void*)&b,sizeof(unsigned char),1,file);
 }

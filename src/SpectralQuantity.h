@@ -12,6 +12,7 @@ public:
    SpectralQuantity& operator+=(const SpectralQuantity& s);
    SpectralQuantity operator*(const SpectralQuantity& s) const;
    SpectralQuantity operator*(float s) const;
+   SpectralQuantity operator/(float) const;
 
    double data[3]; 
 };

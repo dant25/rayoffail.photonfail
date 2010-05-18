@@ -1,15 +1,18 @@
 #include "Sphere.h"
+
+#include "../math/Utilities.h"
 #include <cmath>
 
-Sphere::Sphere(const Material& mat, float radius, Vec3 center) : Object(mat), radius(radius), c(center) {
+Sphere::Sphere(const Material& mat, float radius, Vec3 center) : Object(mat), radius(radius), centre(center) {
 }
+
 
 bool Sphere::intersect(const Ray& r) {
    //Assume que r.d está normalizado
    //a, b, e c são os coeficientes da equação do segundo grau
    float a = dot(r.d, r.d);
-   float b = (dot(r.d, r.o - this->c))*2.0;
-   float c = dot(r.o - this->c, r.o - this->c) - radius*radius;
+   float b = (dot(r.d, r.o - this->centre))*2.0;
+   float c = dot(r.o - this->centre, r.o - this->centre) - radius*radius;
 
    float delta = b*b - 4*a*c;
 
@@ -20,7 +23,7 @@ bool Sphere::intersect(const Ray& r) {
       if(dist > 0) {
          this->i.dist = dist;
          this->i.point = r.o + r.d*dist;
-         this->i.normal = (this->i.point - this->c)/radius;
+         this->i.normal = (this->i.point - this->centre)/radius;
          this->i.point += this->i.normal*0.0001;
          return true;
       } else
@@ -45,9 +48,27 @@ bool Sphere::intersect(const Ray& r) {
          this->i.dist = dist;
          this->i.point = r.o + r.d*dist;
          //FIXME inverter normal se dist == largest?
-         this->i.normal = (this->i.point - this->c)/radius;
+         this->i.normal = (this->i.point - this->centre)/radius;
          this->i.point += this->i.normal*0.0001;
          return true;
       }
    }
+}
+
+
+Vec3 Sphere::samplePoint(){
+	float rand1 = RAND(0.0, 1.0);
+	float rand2 = RAND(0.0, 1.0);
+
+	return Vec3(
+		centre.x + 2.0*radius*cos(2.0*M_PI*rand2)*sqrt(rand1*(1.0 - rand1)),
+		centre.y + 2.0*radius*sin(2.0*M_PI*rand2)*sqrt(rand1*(1.0 - rand1)),
+		centre.z + radius*(1.0 - 2.0*rand1)
+	);
+}
+
+
+void Sphere::getNormal(Vec3 point, Vec3 &normal){
+	normal = point - centre;
+	normal.normalize();
 }

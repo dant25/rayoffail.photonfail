@@ -6,11 +6,14 @@
 class Sphere : public Object {
 public:
     Sphere(const Material& mat, float radius, Vec3 center);
-    bool intersect(const Ray& r);
+
+    virtual bool intersect(const Ray& r);
+    virtual Vec3 samplePoint();
+    virtual void getNormal(Vec3 point, Vec3 &normal);
+
 private:
     float radius;
-    Vec3 c;
-    
+    Vec3 centre;
 };
 
 #endif

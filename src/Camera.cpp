@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include "math/Utilities.h"
 #include "Camera.h"
 
 
@@ -41,24 +42,21 @@ Ray Camera::generateRay(int x, int y) const {
 	/*
     float _W = W-dp;
     float _H = H-dp;
-    //Vector3d delta = up*RAND(-dp/2.0, dp/2.0);
-    Vec3 delta_up = up*RAND(-dp, dp);
-    Vec3 delta_right = right*RAND(-dp, dp);
 
-    Vec3 dir = (lookat*focal_dist) + (up*((_H/2.0)-(y*dp)+RAND(-dp/2.0, dp/2.0))) + (right*((x*dp)-(_W/2.0)+RAND(-dp/2.0, dp/2.0)));
+    Vec3 dir = (lookat*focal_dist) + (up*((_H/2.0)-(y*dp))) + (right*((x*dp)-(_W/2.0)));
     dir.normalize();
 
-    std::cout << dir.x << ", " << dir.y << ", " << dir.z << std::endl;
     return Ray(position, dir);
     */
 
     float _W = W-dp;
     float _H = H-dp;
 
-    Vec3 dir = (lookat*focal_dist) + (up*((_H/2.0)-(y*dp))) + (right*((x*dp)-(_W/2.0)));
-    dir.normalize();
+    Vec3 delta_up = up*RAND(-dp, dp);
+    Vec3 delta_right = right*RAND(-dp, dp);
 
-    //std::cout << dir.x << ", " << dir.y << ", " << dir.z << std::endl;
+    Vec3 dir = (lookat*focal_dist) + (up*((_H/2.0)-(y*dp)+RAND(-dp/2.0, dp/2.0))) + (right*((x*dp)-(_W/2.0)+RAND(-dp/2.0, dp/2.0)));
+    dir.normalize();
 
     return Ray(position, dir);
 }

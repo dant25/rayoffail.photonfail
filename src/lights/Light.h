@@ -4,15 +4,13 @@
 #include "../math/Intersection.h"
 #include "../SpectralQuantity.h"
 
-class Light {
+#include "../objects/Object.h"
+
+class Light: public Object{
 public:
     Light(const SpectralQuantity &intensity);
 
-    virtual Vec3 samplePoint() = 0;
-    virtual void getNormal(Vec3 point, Vec3 &normal) = 0;
-
-    SpectralQuantity getIntensity();
-
+    virtual SpectralQuantity getIntensity();
 
 protected:
     SpectralQuantity intensity;

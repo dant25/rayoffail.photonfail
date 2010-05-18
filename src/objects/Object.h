@@ -9,11 +9,17 @@
 class Object {
 public:
     Object(const Material& mat);
+
     virtual bool intersect(const Ray& r) = 0;
-    SpectralQuantity computeLocalShading(const Intersection& lIntersect,
+    virtual Vec3 samplePoint() = 0;
+    virtual void getNormal(Vec3 point, Vec3 &normal) = 0;
+
+    virtual SpectralQuantity computeLocalShading(const Intersection& lIntersect,
                                          const SpectralQuantity& intensity,
                                          const Vec3& rayOrigin);
     Intersection getIntersection();
+
+
     float getSpecularity(){
     	return m.spec;
     }
