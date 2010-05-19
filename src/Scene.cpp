@@ -1,4 +1,4 @@
-#include "Scene.h"				color = color + ;
+#include "Scene.h"
 #include "math/Intersection.h"
 
 #include <iostream>
@@ -43,11 +43,9 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 		Intersection lightIntersect;
 		lightIntersect.point = samplePos;
 		lightIntersect.normal = lightNormal;
-		lightIntersect.dist
-				= (lightIntersect.point - objIntersect.point).length();
+		lightIntersect.dist = (lightIntersect.point - objIntersect.point).length();
 
-		Ray shadowRay(objIntersect.point, normalize(lightIntersect.point
-				- objIntersect.point));
+		Ray shadowRay(objIntersect.point, normalize(lightIntersect.point - objIntersect.point));
 		Object *shadowObj = objects.findObject(shadowRay);
 
 		// Se não há obstáculo entre a luz e o ponto sendo considerado

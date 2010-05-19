@@ -60,11 +60,16 @@ Vec3 Sphere::samplePoint(){
 	float rand1 = RAND(0.0, 1.0);
 	float rand2 = RAND(0.0, 1.0);
 
-	return Vec3(
+	Vec3 point(
 		centre.x + 2.0*radius*cos(2.0*M_PI*rand2)*sqrt(rand1*(1.0 - rand1)),
 		centre.y + 2.0*radius*sin(2.0*M_PI*rand2)*sqrt(rand1*(1.0 - rand1)),
 		centre.z + radius*(1.0 - 2.0*rand1)
 	);
+
+	Vec3 normal = point - centre;
+	normal.normalize();
+
+	return point + normal*0.0001;
 }
 
 

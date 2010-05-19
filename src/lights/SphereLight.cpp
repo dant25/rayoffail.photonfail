@@ -30,5 +30,6 @@ void SphereLight::getNormal(Vec3 point, Vec3 &normal){
 SpectralQuantity SphereLight::computeLocalShading(const Intersection& lIntersect, const SpectralQuantity& intensity, const Vec3& rayOrigin)
 {
 	cout << "Shading on light surface!" << endl;
+
 	return this->intensity + sphere.computeLocalShading(lIntersect, intensity, rayOrigin);
 }
