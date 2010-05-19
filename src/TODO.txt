@@ -1,0 +1,20 @@
+ Implementar computeLocalShading - phong ***** (DONE) *****
+
+ Implementar reflexão ***** (DONE) *****
+
+ Implementar luz com área. (DIFÍCIL)
+	- QuadLight
+	- SphereLight
+	- Sampling da superfície das luzes
+	- Tratar as interseções dos raios com essas luzes.
+
+ Melhorar camera - oversampling (FÁCIL)
+
+ Criar classe mesh e tratar triangles (REAPROVEITAR)
+
+ Scene loader (TRABALHOSO)
+	- Escolher formato exportado pelo Blender
+	- Implementar um importador que permita importer nossas primitivas.
+	- Deve incluir textura
+
+ Textura
