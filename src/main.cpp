@@ -36,5 +36,6 @@ int main () {
     }
     */
 
+    //Importer::load("data/triangle.dae");
     delete img;
 }
