@@ -1,5 +1,11 @@
 #include "Image.h"
+//FIXME escrever a função de ler tga
+#include "util/image.h"
 #include <stdio.h>
+
+Image::Image() {
+   color = NULL;
+}
 
 Image::Image(int width, int height) : width(width), height(height) {
     color = new SpectralQuantity*[width];
@@ -8,9 +14,13 @@ Image::Image(int width, int height) : width(width), height(height) {
 }
 
 Image::~Image() {
-    for(int i = 0; i < width; i++)
-        delete []color[i];
-    delete []color;
+   this->clear();
+}
+
+void Image::clear() {
+   for(int i = 0; i < width; i++)
+      delete []color[i];
+   delete []color;
 }
 
 int Image::getWidth() const {
@@ -25,7 +35,7 @@ void Image::setPixel(int x, int y, const SpectralQuantity& c) {
     color[x][y] = c;
 }
 
-SpectralQuantity Image::getPixel(int x, int y){
+SpectralQuantity Image::getPixel(int x, int y) const {
 	return color[x][y];
 }
 
@@ -81,4 +91,26 @@ void Image::save(const char* path) {
 		}
 	}
 	fclose(file);
+}
+
+void Image::load(const char* path) {
+   if(color)
+      clear();
+   unsigned char* data = NULL;
+   int x, y, n;
+   data = stbi_load(path, &x, &y, &n, 0);
+   width = x;
+   height = y;
+
+   color = new SpectralQuantity*[width];
+   for(int i = 0; i < width; i++)
+      color[i] = new SpectralQuantity[height];
+   
+   for(int j = 0; j < height; j++)
+      for(int i = 0; i < width; i++)
+         color[i][j] = SpectralQuantity(data[3*j*width + i*3]/255.0,
+                                        data[3*j*width + i*3 + 1]/255.0,
+                                        data[3*j*width + i*3 + 2]/255.0);
+
+   stbi_image_free(data);
 }
