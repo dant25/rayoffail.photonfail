@@ -14,7 +14,7 @@ public:
     Mesh();
 
     void addVertex(float x, float y, float z);
-    void addFace(int index1, int index2, int index3, int normal);
+    void addFace(int index1, int index2, int index3, int normal_index);
     void addNormal(float x, float y, float z);
 
     //Implementação da interface de Object

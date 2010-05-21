@@ -2,7 +2,7 @@
 #include "Renderer.h"
 #include "objects/Sphere.h"
 #include "lights/PointLight.h"
-#include "lights/SphereLight.h"
+#include "lights/QuadLight.h"
 
 
 int main () {
@@ -15,12 +15,12 @@ int main () {
     
     Scene s;
     //s.addObject(new Sphere(Material(SpectralQuantity(0.7, 0.7, 0.0), SpectralQuantity(0.7, 0.7, 0.0), SpectralQuantity(0.0, 0.0, 0.0), 32.0, 0.6), 4.0, Vec3(0.0, 15.0, 0.0)));
-    s.addObject(new Sphere(Material(SpectralQuantity(0.7, 0.0, 0.0), SpectralQuantity(0.7, 0.0, 0.0), SpectralQuantity(0.0, 0.0, 0.0), 32.0, 0.5), 10.0, Vec3(0.0, 0.0, 0.0)));
+    s.addObject(new Sphere(Material(SpectralQuantity(0.7, 0.0, 0.0), SpectralQuantity(0.7, 0.0, 0.0), SpectralQuantity(0.0, 0.0, 0.0), 32.0, 0.0), 5.0, Vec3(0.0, 0.0, 0.0)));
 
 
     //s.addLight(new PointLight(Vec3(0.0, 0.0, 20.0), SpectralQuantity(0.7, 0.7, 0.7)));
     //s.addLight(new PointLight(Vec3(0.0, 35.0, 0.0), SpectralQuantity(1.0, 1.0, 1.0)));
-    s.addLight(new SphereLight(SpectralQuantity(10.0, 10.0, 10.0), Vec3(0.0, 15.0, 0.0), 4.0));
+    s.addLight(new QuadLight(SpectralQuantity(1.0, 1.0, 1.0), Vec3(10.0, 0.0, 0.0), Vec3(0.0, 1.0, 0.0), Vec3(0.5, 0.0, 1.0)));
 
     Renderer r;
     Image *img;

@@ -1,13 +1,14 @@
-#ifndef SPHERELIGHT_H_
-#define SPHERELIGHT_H_
+#ifndef DISKLIGHT_H_
+#define DISKLIGHT_H_
 
 #include "Light.h"
 
-#include "../objects/Sphere.h"
-
-class SphereLight: public Light {
+class DiskLight: public Light {
 public:
-	SphereLight(const SpectralQuantity &intensity, const Vec3 &centre, float radius);
+	DiskLight(	const SpectralQuantity &intensity,
+				const Vec3 &centre,
+				const Vec3 &normal,
+				float radius);
 
 	// Métodos de Object
     virtual bool intersect(const Ray& r);
@@ -19,7 +20,8 @@ public:
                                          const Vec3& rayOrigin);
 
 private:
-    Sphere sphere;
+    Vec3 centre;
+    float radius;
 };
 
-#endif /* SPHERELIGHT_H_ */
+#endif /* DISKLIGHT_H_ */
