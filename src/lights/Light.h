@@ -10,7 +10,7 @@ class Light: public Object{
 public:
     Light(const SpectralQuantity &intensity);
 
-    virtual SpectralQuantity getIntensity();
+    virtual SpectralQuantity getIntensity(const Vec3 &from);
 
     /*
     virtual SpectralQuantity computeLocalShading(const Intersection& lIntersect,
