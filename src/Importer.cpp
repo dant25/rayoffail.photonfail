@@ -33,7 +33,9 @@ static Scene* Importer::load(const char* path) {
 
          while (triangles){
             TiXmlElement *input = triangles->FirstChildElement("input");
+            int numOffset = 0;
             while(input) {
+               numOffset++;
                //TODO ler source com as coordenadas dos vertices
                std::cout << "input->semantic: " << input->Attribute("semantic") << std::endl;
                char *inputAttrName = input->Attribute("source");
@@ -161,11 +163,24 @@ static Scene* Importer::load(const char* path) {
                   tok = strtok(NULL, " ");
                   float vertId3 = atoi(tok);
                   tok = strtok(NULL, " ");
-                  float vertNorm2 = atoi(tok);
+                  float vertNorm3 = atoi(tok);
                   //TODO addFace
                   //m->addFace(x, y, z, 0);
                   //TODO: triangle[i]->addTexCoord(x, y);
-                  std::cout << "face indices: " << x << ", " << y << ", " << z << std::endl;
+                  //std::cout << "face indices: " << x << ", " << y << ", " << z << std::endl;
+               }
+               else if (numOffset == 3) {
+                  float vertId1 = atoi(tok);
+                  tok = strtok(NULL, " ");
+                  float vertNorm1 = atoi(tok);
+                  tok = strtok(NULL, " ");
+                  float vertId2 = atoi(tok);
+                  tok = strtok(NULL, " ");
+                  float vertNorm2 = atoi(tok);
+                  tok = strtok(NULL, " ");
+                  float vertId3 = atoi(tok);
+                  tok = strtok(NULL, " ");
+                  float vertNorm3 = atoi(tok);
                }
             }
             //std::cout << "Vertices dos triangulos: " << p->GetText() << std::endl;
