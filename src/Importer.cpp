@@ -25,10 +25,11 @@ Scene* Importer::load(const char* path) {
    TiXmlElement* libraryGeometries = collada->FirstChildElement("library_geometries");
    TiXmlElement* geometry = libraryGeometries->FirstChildElement("geometry");
    while (geometry){
+      std::cout << "\t\tgeometry" << std::endl;
       TiXmlElement* mesh = geometry->FirstChildElement("mesh");
       while(mesh){
+         std::cout << "\t\t\tmesh" << std::endl;
          Mesh *m = new Mesh;
-         s->addObject(m);
          std::string meshid = std::string(geometry->Attribute("id"));
          TiXmlElement* triangles = mesh->FirstChildElement("triangles");
 
@@ -90,7 +91,9 @@ Scene* Importer::load(const char* path) {
                               float y = atof(vertTok);
                               vertTok = strtok(NULL, " ");
                               float z = atof(vertTok);
+                              vertTok = strtok(NULL, " ");
                               m->addVertex(x, y, z);
+                              std::cout << "addvertex: (" << x << ", " << y << ", " << z << ");" << std::endl;
                            }
                            //std::cout << "\tfloat array: " << floatArray->GetText() << std::endl;
                         }
@@ -116,7 +119,9 @@ Scene* Importer::load(const char* path) {
                         float y = atof(normalTok);
                         normalTok = strtok(NULL, " ");
                         float z = atof(normalTok);
+                        normalTok = strtok(NULL, " ");
                         m->addNormal(x, y, z);
+                        std::cout << "addnormal: (" << x << ", " << y << ", " << z << ");" << std::endl;
                      }
                      //std::cout << "\tfloat array (normais): " << floatArray->GetText() << std::endl;
                   }
@@ -140,7 +145,8 @@ Scene* Importer::load(const char* path) {
                         float y = atof(texTok);
                         //m->addNormal(x, y);
                         //TODO: triangle[i]->addTexCoord(x, y);
-                        std::cout << "tex coords: " << x << ", " << y << std::endl;
+
+                        std::cout << "addtexcoord: (" << x << ", " << y << ");" << std::endl;
                      }
                      //std::cout << "\tfloat array (texcoord): " << floatArray->GetText() << std::endl;
                   }
@@ -150,44 +156,56 @@ Scene* Importer::load(const char* path) {
                TiXmlElement *p = triangles->FirstChildElement("p");
                //FIXME: quebrar a string de vertices e instanciar mesh
                int numTriangles = atoi(triangles->Attribute("count"));
-               std::cout << "numTriIndices: " << numTriangles << std::endl;
+               std::cout << "numTriangles: " << numTriangles << std::endl;
                char *indexTok = strtok((char*)p->GetText(), " ");
-            for(int i = 0;  i < numTriangles; i++) {
-               if (numOffset == 2) {
-                  float vertId1 = atoi(indexTok);
-                  indexTok = strtok(NULL, " ");
-                  float vertNorm1 = atoi(indexTok);
-                  indexTok = strtok(NULL, " ");
-                  float vertId2 = atoi(indexTok);
-                  indexTok = strtok(NULL, " ");
-                  float vertNorm2 = atoi(indexTok);
-                  indexTok = strtok(NULL, " ");
-                  float vertId3 = atoi(indexTok);
-                  indexTok = strtok(NULL, " ");
-                  float vertNorm3 = atoi(indexTok);
-                  //TODO addFace
-                  //m->addFace(x, y, z, 0);
-                  //TODO: triangle[i]->addTexCoord(x, y);
-                  //std::cout << "face indices: " << x << ", " << y << ", " << z << std::endl;
+               std::cout << "numOffset: " << numOffset << std::endl;
+               for(int i = 0;  i < numTriangles; i++) {
+                  if (numOffset == 2) {
+                     
+                     float vertId1 = atoi(indexTok);
+                     
+                     indexTok = strtok(NULL, " ");
+                     float vertNorm1 = atoi(indexTok);
+                     
+                     indexTok = strtok(NULL, " ");
+                     float vertId2 = atoi(indexTok);
+                     
+                     indexTok = strtok(NULL, " ");
+                     float vertNorm2 = atoi(indexTok);
+                     
+                     indexTok = strtok(NULL, " ");
+                     float vertId3 = atoi(indexTok);
+                     
+                     indexTok = strtok(NULL, " ");
+                     float vertNorm3 = atoi(indexTok);
+                     
+                     indexTok = strtok(NULL, " ");
+                     //TODO addFace
+                     m->addFace(vertId1, vertId2, vertId3, vertNorm1, vertNorm2, vertNorm3);
+                     std::cout << "addface: (" << vertId1  << ", " << vertId2 << ", " << vertId3 << ")" << std::endl;
+                     //TODO: triangle[i]->addTexCoord(x, y);
+                     //std::cout << "face indices: " << x << ", " << y << ", " << z << std::endl;
+                  }
+                  /*else if (numOffset == 3) {
+                    float vertId1 = atoi(tok);
+                    tok = strtok(NULL, " ");
+                    float vertNorm1 = atoi(tok);
+                    tok = strtok(NULL, " ");
+                    float vertId2 = atoi(tok);
+                    tok = strtok(NULL, " ");
+                    float vertNorm2 = atoi(tok);
+                    tok = strtok(NULL, " ");
+                    float vertId3 = atoi(tok);
+                    tok = strtok(NULL, " ");
+                    float vertNorm3 = atoi(tok);
+                    }*/
                }
-               /*else if (numOffset == 3) {
-                  float vertId1 = atoi(tok);
-                  tok = strtok(NULL, " ");
-                  float vertNorm1 = atoi(tok);
-                  tok = strtok(NULL, " ");
-                  float vertId2 = atoi(tok);
-                  tok = strtok(NULL, " ");
-                  float vertNorm2 = atoi(tok);
-                  tok = strtok(NULL, " ");
-                  float vertId3 = atoi(tok);
-                  tok = strtok(NULL, " ");
-                  float vertNorm3 = atoi(tok);
-               }*/
-            }
-            //std::cout << "Vertices dos triangulos: " << p->GetText() << std::endl;
+               //std::cout << "Vertices dos triangulos: " << p->GetText() << std::endl;
 
-            triangles = triangles->NextSiblingElement("triangles");
+               triangles = triangles->NextSiblingElement("triangles");
          }
+         std::cout << "\t\t ADD MESH" << std::endl;
+         s->addObject(m);
          mesh = mesh->NextSiblingElement("mesh");
       }
       geometry = geometry->NextSiblingElement("geometry"); 

@@ -6,7 +6,7 @@
 
 Mesh::Mesh()
 //TODO: Object precisa de um construtor sem argumentos
-:   Object(Material(SpectralQuantity(1.0, 1.0, 1.0), SpectralQuantity(1.0, 1.0, 1.0), SpectralQuantity(1.0, 1.0, 1.0), 0.0, 0.0))
+:   Object(Material(SpectralQuantity(1.0, 1.0, 1.0), SpectralQuantity(1.0, 1.0, 1.0), SpectralQuantity(1.0, 1.0, 1.0), 1.0, 0.0))
 {
 }
 
@@ -19,7 +19,6 @@ void Mesh::addVertex(float x, float y, float z){
 
     vertices.push_back(vertex);
 }
-
 
 void Mesh::addFace(int index1, int index2, int index3, int nid1, int nid2, int nid3) {
     Face* face = new Face;
@@ -43,17 +42,16 @@ void Mesh::addNormal(float x, float y, float z)
     normal->data[1] = y;
     normal->data[2] = z;
 
-    vertices.push_back(normal);
+    normals.push_back(normal);
 }
 
-
 bool Mesh::intersect(const Ray &ray){
-
 	bool hit =false;
 	float min_dist = 999999999999.0;
 	Vec3 c_p1, c_p2, c_p3;
 
     unsigned int k;
+    int faceIndex;
 	for(k = 0; k<faces.size(); k++)
 	{
 
@@ -61,7 +59,7 @@ bool Mesh::intersect(const Ray &ray){
 	    Vec3 p2(faces[k]->vertices[1]->data[0], faces[k]->vertices[1]->data[1], faces[k]->vertices[1]->data[2]);
 	    Vec3 p3(faces[k]->vertices[2]->data[0], faces[k]->vertices[2]->data[1], faces[k]->vertices[2]->data[2]);
 
-        bool cull_face = true;
+        bool cull_face = false;
 
         const float epsilon = 0.000001;
 
@@ -104,6 +102,7 @@ bool Mesh::intersect(const Ray &ray){
             hit = true;
             float d = (intersection_point - ray.o).length();
             if(d < min_dist){
+               faceIndex = k;
                 min_dist = d;
                 i.point = intersection_point;
                 c_p1 = p1;
@@ -140,6 +139,7 @@ bool Mesh::intersect(const Ray &ray){
             hit = true;
             float d = (intersection_point - ray.o).length();
             if(d < min_dist){
+               faceIndex = k;
                 min_dist = d;
                 i.point = intersection_point;
                 c_p1 = p1;
@@ -151,14 +151,17 @@ bool Mesh::intersect(const Ray &ray){
 
     if(hit)
     {
+       i.dist = min_dist;
+       i.normal = Vec3(faces[faceIndex]->normal[0]->data[0], faces[faceIndex]->normal[0]->data[1], faces[faceIndex]->normal[0]->data[2]);
         //normal = Vec3(normals[faces[i]->normal]->data[0], normals[faces[i]->normal]->data[1], normals[faces[i]->normal]->data[2]);
-        i.normal = (c_p2 - c_p1).cross(c_p3 - c_p1);
+        //i.normal = (c_p2 - c_p1).cross(c_p3 - c_p1);
         //intersection.normal = (c_p3 - c_p1).crossProduct(c_p2 - c_p1);
-        i.normal.normalize();
+        //i.normal.normalize();
         i.point = i.point + i.normal*0.0000001;
         //intersection.toOrigin = ray.d*(-1.0);
         //intersection.reflected = intersection.normal * ( 2.0 * intersection.toOrigin.dotProduct ( intersection.normal ) ) - intersection.toOrigin;
 
+        //std::cout << "interseção com mesh" << std::endl;
         return true;
     }
 

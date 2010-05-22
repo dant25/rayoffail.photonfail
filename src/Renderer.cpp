@@ -1,5 +1,7 @@
 #include "Renderer.h"
 
+#include <iostream>
+
 Image*  Renderer::render(const Scene& s, const Camera& c) {
     Image *img = new Image(c.getWidth(), c.getHeight());
     int numSamples = 24;

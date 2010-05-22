@@ -45,7 +45,9 @@ public:
 	float length() const;
 
 	inline Vec3 getReflected(const Vec3 &normal) const {
-		return normal* this->dot(normal)*2.0 - *this;
+       Vec3 vec = normal* this->dot(normal)*2.0 - *this;
+       vec.normalize();
+       return vec;
 	}
 
 	float x, y, z;
