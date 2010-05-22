@@ -1,6 +1,10 @@
 
 #include "DiskLight.h"
 
+#include <cmath>
+#include "../math/Utilities.h"
+
+
 DiskLight::DiskLight(	const SpectralQuantity &intensity,
 						const Vec3 &centre,
 						const Vec3 &normal,
@@ -10,6 +14,19 @@ DiskLight::DiskLight(	const SpectralQuantity &intensity,
  	radius(radius)
 {
 	i.normal = normal;
+
+	// Obtem uma sistema de coordenadas com z = normal
+	// FIXME: Tem um jeito melhor de fazer isso?
+	Vec3 aux = i.normal;
+	aux.x += 1.0;
+	aux.y += 1.0;
+	aux.z += 1.0;
+
+	yVec = normal.cross(aux);
+	yVec.normalize();
+
+	xVec = yVec.cross(normal);
+	xVec.normalize();
 }
 
 
@@ -40,8 +57,11 @@ bool DiskLight::intersect(const Ray& r) {
 
 
 Vec3 DiskLight::samplePoint(){
-	//TODO: Implementar
-	return Vec3();
+	float phi = 2.0*M_PI*RAND(0.0, 1.0);
+	float r = radius*sqrt(RAND(0.0, 1.0));
+
+	Vec3 point = centre + xVec*r*cos(phi) + yVec*r*sin(phi);
+	return point + i.normal*0.0001;
 }
 
 
