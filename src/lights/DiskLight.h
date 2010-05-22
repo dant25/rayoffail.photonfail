@@ -22,6 +22,9 @@ public:
 private:
     Vec3 centre;
     float radius;
+
+    Vec3 xVec;
+    Vec3 yVec;
 };
 
 #endif /* DISKLIGHT_H_ */
