@@ -3,10 +3,10 @@
 #include "objects/Sphere.h"
 #include "lights/PointLight.h"
 #include "lights/QuadLight.h"
-
+#include "Importer.h"
 
 int main () {
-
+/*
     std::cout << "RAY OF FAIL!! ---->" << std::endl;    
     //Inicializa camera
     Camera c(Vec3(0.0, 0.0, 40.0), Vec3(0.0, 0.0, -1.0), Vec3(0.0, 1.0, 0.0), 500, 500);
@@ -26,7 +26,7 @@ int main () {
     Image *img;
     img = r.render(s, c);
     img->save("teste1.tga");
-    //FIXME seria mais intuitivo se render não tratasse da alocação da imagem
+    //FIXME seria mais intuitivo se render não tratasse da alocação da imagem */
 
     /*
     Importer imp("/scene.obj");
@@ -37,6 +37,6 @@ int main () {
     }
     */
 
-    //Importer::load("data/triangle.dae");
-    delete img;
+    Importer::load("data/cornell-box.dae");
+ //   delete img;
 }
