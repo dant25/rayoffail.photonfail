@@ -4,16 +4,16 @@
 
  Implementar luz com área. (DIFÍCIL)
 	- QuadLight
-	- SphereLight
+	- DiskLight
 	- Sampling da superfície das luzes
 	- Tratar as interseções dos raios com essas luzes.
 
- Melhorar camera - oversampling (FÁCIL)
+ Melhorar camera - oversampling *****(DONE)******
 
  Criar classe mesh e tratar triangles (REAPROVEITAR)
 
  Scene loader (TRABALHOSO)
-	- Escolher formato exportado pelo Blender
+	- Escolher formato exportado pelo Blender *****(DONE)******
 	- Implementar um importador que permita importer nossas primitivas.
 	- Deve incluir textura
 

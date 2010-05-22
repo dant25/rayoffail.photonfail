@@ -58,7 +58,7 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 		//FIXME placeholder só pra poder fazer algo na função agora
 		//FIXME somar as contribuições de cada luz
 		ls += obj->computeLocalShading(lightIntersect,
-				lights[i]->getIntensity(), r.o);
+				lights[i]->getIntensity(normalize(objIntersect.point - lightIntersect.point)), r.o);
 	}
 
 	//Cor resultante de reflexão
