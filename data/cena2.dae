@@ -35,13 +35,13 @@
 							<color>0.00000 0.00000 0.00000 1</color>
 						</emission>
 						<ambient>
-							<color>0.40000 0.40000 0.40000 1</color>
+							<color>0.10000 0.10000 0.80000 1</color>
 						</ambient>
 						<diffuse>
-							<color>0.80000 0.80000 0.80000 1</color>
+							<color>0.30000 0.30000 0.80000 1</color>
 						</diffuse>
 						<specular>
-							<color>0.50000 0.50000 0.50000 1</color>
+							<color>0.20000 0.20000 0.70000 1</color>
 						</specular>
 						<shininess>
 							<float>12.5</float>
@@ -106,7 +106,7 @@
 				<vertices id="Plane_001-Vertex">
 					<input semantic="POSITION" source="#Plane_001-Position"/>
 				</vertices>
-				<triangles count="2">
+				<triangles count="2" material="Material">
 					<input offset="0" semantic="VERTEX" source="#Plane_001-Vertex"/>
 					<input offset="1" semantic="NORMAL" source="#Plane_001-Normals"/>
 					<p>0 0 3 0 2 0 2 0 1 0 0 0</p>
