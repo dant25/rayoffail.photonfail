@@ -45,6 +45,7 @@ Scene* Importer::load(const char* path) {
 void loadMaterials(TiXmlElement *libraryMaterials, TiXmlElement *libraryEffects, Scene *s) {
    TiXmlElement *material = libraryMaterials->FirstChildElement("material");
    while(material) {
+      char *matId = (char*) material->Attribute("id");
       TiXmlElement *instanceEffect = material->FirstChildElement("instance_effect");
       //FIXME assumindo só 1 instance effect
       char *url = (char*) instanceEffect->Attribute("url");
@@ -71,14 +72,15 @@ void loadMaterials(TiXmlElement *libraryMaterials, TiXmlElement *libraryEffects,
 
             TiXmlElement *shininess = phong->FirstChildElement("shininess");
             TiXmlElement *value = shininess->FirstChildElement("float");
-            float s = atof(value->GetText());
+            float matShininess = atof(value->GetText());
 
             TiXmlElement *reflectivity = phong->FirstChildElement("reflectivity");
             value = reflectivity->FirstChildElement("float");
             float spec = atof(value->GetText());
             
-            Material *m = new Material(kd, ks, ka, s, spec);
-            //TODO adicionar material à cena
+            Material *m = new Material(kd, ks, ka, matShininess, spec);
+            std::cout << "adicionando material id: " << matId << std::endl;
+            s->addMaterial(matId, m);
          }
          effect = effect->NextSiblingElement("effect");
       }
@@ -91,9 +93,15 @@ void loadGeometry(TiXmlElement *libraryGeometries, Scene *s) {
    while (geometry){
       TiXmlElement* mesh = geometry->FirstChildElement("mesh");
       while(mesh){
-         Mesh *m = new Mesh;
-         std::string meshid = std::string(geometry->Attribute("id"));
          TiXmlElement* triangles = mesh->FirstChildElement("triangles");
+         const char* matId = triangles->Attribute("material");
+         Mesh *m;
+         if(matId != NULL) {
+            Material *mat = s->getMaterial(matId);
+            m = new Mesh(*mat);
+            std::cout << "mat != NULL" << std::endl;
+         } else
+            m = new Mesh;
 
          while (triangles){
             TiXmlElement *input = triangles->FirstChildElement("input");

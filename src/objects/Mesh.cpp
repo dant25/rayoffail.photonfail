@@ -11,6 +11,10 @@ Mesh::Mesh()
 }
 
 
+Mesh::Mesh(const Material &m) : Object(m)
+{
+}
+
 void Mesh::addVertex(float x, float y, float z){
     Vector* vertex = new Vector;
     vertex->data[0] = x;

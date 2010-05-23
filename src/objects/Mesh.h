@@ -12,6 +12,7 @@ using std::string;
 class Mesh: public Object{
 public:
     Mesh();
+    Mesh(const Material &m);
 
     void addVertex(float x, float y, float z);
     void addFace(int index1, int index2, int index3, int nid1, int nid2, int nid3);

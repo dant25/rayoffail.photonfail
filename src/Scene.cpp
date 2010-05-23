@@ -86,3 +86,17 @@ void Scene::addLight(Light *l) {
 	lights.push_back(l);
 	objects.addObject(l);
 }
+
+void Scene::addMaterial(const char *label, Material *m) {
+   materials[std::string(label)] = m;
+}
+
+Material* Scene::getMaterial(const char *label) {
+   std::cout << "procurando pelo label: " << label << std::endl;
+   std::cout << "Lista de materials: "  << std::endl;
+   
+   std::map<std::string, Material*>::iterator i;
+   for (i = materials.begin(); i != materials.end(); i++)
+      std::cout << i->first << std::endl;
+   return materials[label];
+}
