@@ -13,7 +13,7 @@ Object* Container::findObject(const Ray& r) const {
    Object *obj = NULL;
 
    float dist = INFINITY;
-   for(int i = 0; i < objects.size(); i++) {
+   for(unsigned int i = 0; i < objects.size(); i++) {
       if(objects[i]->intersect(r)) {
          //Aponta para o novo objeto se a distância for a menor encontrada até
          //o momento
