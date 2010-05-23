@@ -45,16 +45,13 @@ Scene* Importer::load(const char* path) {
 void loadMaterials(TiXmlElement *libraryMaterials, TiXmlElement *libraryEffects, Scene *s) {
    TiXmlElement *material = libraryMaterials->FirstChildElement("material");
    while(material) {
-      std::cout << "<material>" << std::endl;
       TiXmlElement *instanceEffect = material->FirstChildElement("instance_effect");
       //FIXME assumindo só 1 instance effect
       char *url = (char*) instanceEffect->Attribute("url");
       fixStr(url);
-      std::cout << "\t<intance_effec url =  "  << url << ">" << std::endl;
       //TODO: encontrar effect
       TiXmlElement *effect = libraryEffects->FirstChildElement("effect");
       while(effect) {
-         std::cout << "<effect id = " << effect->Attribute("id") << ">" << std::endl;
          if(strcmp(effect->Attribute("id"), url) == 0) {
             TiXmlElement *phong = effect->FirstChildElement("profile_COMMON")->FirstChildElement("technique")->FirstChildElement("phong");
             TiXmlElement *ambient = phong->FirstChildElement("ambient");
@@ -92,10 +89,8 @@ void loadMaterials(TiXmlElement *libraryMaterials, TiXmlElement *libraryEffects,
 void loadGeometry(TiXmlElement *libraryGeometries, Scene *s) {
    TiXmlElement* geometry = libraryGeometries->FirstChildElement("geometry");
    while (geometry){
-      std::cout << "\t\tgeometry" << std::endl;
       TiXmlElement* mesh = geometry->FirstChildElement("mesh");
       while(mesh){
-         std::cout << "\t\t\tmesh" << std::endl;
          Mesh *m = new Mesh;
          std::string meshid = std::string(geometry->Attribute("id"));
          TiXmlElement* triangles = mesh->FirstChildElement("triangles");
@@ -106,7 +101,6 @@ void loadGeometry(TiXmlElement *libraryGeometries, Scene *s) {
             while(input) {
                numOffset++;
                //TODO ler source com as coordenadas dos vertices
-               std::cout << "input->semantic: " << input->Attribute("semantic") << std::endl;
                char *inputAttrName = (char*)input->Attribute("source");
                fixStr(inputAttrName);
                if(strcmp(input->Attribute("semantic"), "VERTEX") == 0) {
@@ -114,10 +108,8 @@ void loadGeometry(TiXmlElement *libraryGeometries, Scene *s) {
                   //TODO agrupar em uma função
                   TiXmlElement *vertSource = mesh->FirstChildElement("vertices");
                   while(vertSource) {
-                     if(strcmp(vertSource->Attribute("id"), inputAttrName) == 0) {
-                        std::cout << "\tvertsource encontrado" << std::endl;
+                     if(strcmp(vertSource->Attribute("id"), inputAttrName) == 0) 
                         break;
-                     }
                      vertSource = vertSource->NextSiblingElement("vertices");
                   }
                   //TODO ler cada input de vertSource
@@ -126,16 +118,14 @@ void loadGeometry(TiXmlElement *libraryGeometries, Scene *s) {
                      //TODO ler cada input, procurar o equivalente em mesh e ler o float_array
                      //POSITION
                      if(strcmp(inputVertSource->Attribute("semantic"), "POSITION") == 0) {
-                        std::cout << "\tinput POSITION encontrado" << std::endl;
                         char *posSourceName = (char*)inputVertSource->Attribute("source");
                         fixStr(posSourceName);
                         
                         TiXmlElement *meshSource = mesh->FirstChildElement("source");
                         while(meshSource) {
-                           if(strcmp(meshSource->Attribute("id"), posSourceName) == 0) {
-                              std::cout << "\tsource de mesh encontrado" << std::endl;
+                           if(strcmp(meshSource->Attribute("id"), posSourceName) == 0) 
                               break;
-                           }
+                           
                            meshSource = meshSource->NextSiblingElement("source");
                         }
                         //meshSource guarda um ponteiro para o source das positions
@@ -162,10 +152,8 @@ void loadGeometry(TiXmlElement *libraryGeometries, Scene *s) {
                else if (strcmp(input->Attribute("semantic"), "NORMAL") == 0) {
                   TiXmlElement *meshSource = mesh->FirstChildElement("source");
                   while(meshSource) {
-                     if(strcmp(meshSource->Attribute("id"), inputAttrName) == 0) {
-                        std::cout << "\tsource de mesh encontrado" << std::endl;
+                     if(strcmp(meshSource->Attribute("id"), inputAttrName) == 0) 
                         break;
-                     }
                      meshSource = meshSource->NextSiblingElement("source");
                   }
                   TiXmlElement *floatArray = meshSource->FirstChildElement("float_array");
@@ -186,10 +174,9 @@ void loadGeometry(TiXmlElement *libraryGeometries, Scene *s) {
                else if (strcmp(input->Attribute("semantic"), "TEXCOORD") == 0) {
                   TiXmlElement *meshSource = mesh->FirstChildElement("source");
                   while(meshSource) {
-                     if(strcmp(meshSource->Attribute("id"), inputAttrName) == 0) {
-                        std::cout << "\tsource de mesh encontrado" << std::endl;
+                     if(strcmp(meshSource->Attribute("id"), inputAttrName) == 0) 
                         break;
-                     }
+                     
                      meshSource = meshSource->NextSiblingElement("source");
                   }
                   //meshSource guarda um ponteiro para o source das positions
@@ -208,7 +195,6 @@ void loadGeometry(TiXmlElement *libraryGeometries, Scene *s) {
                   }
                   //std::cout << "\tfloat array (texcoord): " << floatArray->GetText() << std::endl;
                }
-               std::cout << "input->source: " << input->Attribute("source") << std::endl;
                input = input->NextSiblingElement("input");
             }
             TiXmlElement *p = triangles->FirstChildElement("p");
@@ -259,7 +245,6 @@ void loadGeometry(TiXmlElement *libraryGeometries, Scene *s) {
 
             triangles = triangles->NextSiblingElement("triangles");
          }
-         std::cout << "\t\t ADD MESH" << std::endl;
          s->addObject(m);
          mesh = mesh->NextSiblingElement("mesh");
       }
