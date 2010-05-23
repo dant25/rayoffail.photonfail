@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA version="1.4.0" xmlns="http://www.collada.org/2005/11/COLLADASchema">
+	<asset>
+		<contributor>
+			<author>Illusoft Collada 1.4.0 plugin for Blender - http://colladablender.illusoft.com</author>
+			<authoring_tool>Blender v:249 - Illusoft Collada Exporter v:0.3.161</authoring_tool>
+			<comments></comments>
+			<copyright></copyright>
+			<source_data>file:///home/nfs/jonasdeyson/Documentos/Pesquisa/RayTracing/Scenes/cornell-box.blend</source_data>
+		</contributor>
+		<created>2010-05-21T15:03:56.239455</created>
+		<modified>2010-05-21T15:03:56.239477</modified>
+		<unit meter="0.01" name="centimeter"/>
+		<up_axis>Z_UP</up_axis>
+	</asset>
+	<library_cameras>
+		<camera id="Camera-Camera" name="Camera-Camera">
+			<optics>
+				<technique_common>
+					<perspective>
+						<yfov>39.14625</yfov>
+						<znear>0.1</znear>
+						<zfar>100.0</zfar>
+					</perspective>
+				</technique_common>
+			</optics>
+		</camera>
+	</library_cameras>
+	<library_effects>
+		<effect id="Khaki-fx" name="Khaki-fx">
+			<profile_COMMON>
+				<technique sid="blender">
+					<phong>
+						<emission>
+							<color>0.00000 0.00000 0.00000 1</color>
+						</emission>
+						<ambient>
+							<color>0.50000 0.41209 0.27473 1</color>
+						</ambient>
+						<diffuse>
+							<color>1.00000 0.82418 0.54945 1</color>
+						</diffuse>
+						<specular>
+							<color>0.50000 0.50000 0.50000 1</color>
+						</specular>
+						<shininess>
+							<float>12.5</float>
+						</shininess>
+						<reflective>
+							<color>1.00000 1.00000 1.00000 1</color>
+						</reflective>
+						<reflectivity>
+							<float>0.0</float>
+						</reflectivity>
+						<transparent>
+							<color>1 1 1 1</color>
+						</transparent>
+						<transparency>
+							<float>0.0</float>
+						</transparency>
+					</phong>
+				</technique>
+			</profile_COMMON>
+		</effect>
+		<effect id="HalveRed-fx" name="HalveRed-fx">
+			<profile_COMMON>
+				<technique sid="blender">
+					<phong>
+						<emission>
+							<color>0.00000 0.00000 0.00000 1</color>
+						</emission>
+						<ambient>
+							<color>0.35001 0.00000 0.00000 1</color>
+						</ambient>
+						<diffuse>
+							<color>0.70003 0.00000 0.00000 1</color>
+						</diffuse>
+						<specular>
+							<color>0.50000 0.50000 0.50000 1</color>
+						</specular>
+						<shininess>
+							<float>12.5</float>
+						</shininess>
+						<reflective>
+							<color>1.00000 1.00000 1.00000 1</color>
+						</reflective>
+						<reflectivity>
+							<float>0.0</float>
+						</reflectivity>
+						<transparent>
+							<color>1 1 1 1</color>
+						</transparent>
+						<transparency>
+							<float>0.0</float>
+						</transparency>
+					</phong>
+				</technique>
+			</profile_COMMON>
+		</effect>
+		<effect id="DarkGreen-fx" name="DarkGreen-fx">
+			<profile_COMMON>
+				<technique sid="blender">
+					<phong>
+						<emission>
+							<color>0.00000 0.00000 0.00000 1</color>
+						</emission>
+						<ambient>
+							<color>0.00000 0.20000 0.00000 1</color>
+						</ambient>
+						<diffuse>
+							<color>0.00000 0.40000 0.00000 1</color>
+						</diffuse>
+						<specular>
+							<color>0.50000 0.50000 0.50000 1</color>
+						</specular>
+						<shininess>
+							<float>12.5</float>
+						</shininess>
+						<reflective>
+							<color>1.00000 1.00000 1.00000 1</color>
+						</reflective>
+						<reflectivity>
+							<float>0.0</float>
+						</reflectivity>
+						<transparent>
+							<color>1 1 1 1</color>
+						</transparent>
+						<transparency>
+							<float>0.0</float>
+						</transparency>
+					</phong>
+				</technique>
+			</profile_COMMON>
+		</effect>
+		<effect id="Grey-fx" name="Grey-fx">
+			<profile_COMMON>
+				<technique sid="blender">
+					<phong>
+						<emission>
+							<color>0.70000 0.70000 0.70000 1</color>
+						</emission>
+						<ambient>
+							<color>0.40000 0.40000 0.40000 1</color>
+						</ambient>
+						<diffuse>
+							<color>0.80000 0.80000 0.80000 1</color>
+						</diffuse>
+						<specular>
+							<color>0.50000 0.50000 0.50000 1</color>
+						</specular>
+						<shininess>
+							<float>12.5</float>
+						</shininess>
+						<reflective>
+							<color>1.00000 1.00000 1.00000 1</color>
+						</reflective>
+						<reflectivity>
+							<float>0.0</float>
+						</reflectivity>
+						<transparent>
+							<color>1 1 1 1</color>
+						</transparent>
+						<transparency>
+							<float>0.0</float>
+						</transparency>
+					</phong>
+				</technique>
+			</profile_COMMON>
+		</effect>
+	</library_effects>
+	<library_materials>
+		<material id="Khaki" name="Khaki">
+			<instance_effect url="#Khaki-fx"/>
+		</material>
+		<material id="HalveRed" name="HalveRed">
+			<instance_effect url="#HalveRed-fx"/>
+		</material>
+		<material id="DarkGreen" name="DarkGreen">
+			<instance_effect url="#DarkGreen-fx"/>
+		</material>
+		<material id="Grey" name="Grey">
+			<instance_effect url="#Grey-fx"/>
+		</material>
+	</library_materials>
+	<library_geometries>
+		<geometry id="tall_box_001" name="tall_box_001">
+			<mesh>
+				<source id="tall_box_001-Position">
+					<float_array count="60" id="tall_box_001-Position-array">-0.54500 -1.04369 1.65083 1.03500 -0.55369 1.65044 0.54500 1.04631 1.64917 -1.03500 0.54631 1.64957 -0.54500 -1.04631 -1.64917 -0.54500 -1.04369 1.65083 -1.03500 0.54631 1.64957 -1.03500 0.54369 -1.65043 -1.03500 0.54369 -1.65043 -1.03500 0.54631 1.64957 0.54500 1.04631 1.64917 0.54500 1.04369 -1.65083 0.54500 1.04369 -1.65083 0.54500 1.04631 1.64917 1.03500 -0.55369 1.65044 1.03500 -0.55631 -1.64956 1.03500 -0.55631 -1.64956 1.03500 -0.55369 1.65044 -0.54500 -1.04369 1.65083 -0.54500 -1.04631 -1.64917</float_array>
+					<technique_common>
+						<accessor count="20" source="#tall_box_001-Position-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="tall_box_001-Normals">
+					<float_array count="15" id="tall_box_001-Normals-array">0.00000 0.00080 1.00000 -0.95565 -0.29451 0.00023 -0.30171 0.95340 -0.00076 0.95617 0.29283 -0.00023 0.29621 -0.95512 0.00076</float_array>
+					<technique_common>
+						<accessor count="5" source="#tall_box_001-Normals-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<vertices id="tall_box_001-Vertex">
+					<input semantic="POSITION" source="#tall_box_001-Position"/>
+				</vertices>
+				<triangles count="10" material="Khaki">
+					<input offset="0" semantic="VERTEX" source="#tall_box_001-Vertex"/>
+					<input offset="1" semantic="NORMAL" source="#tall_box_001-Normals"/>
+					<p>0 0 1 0 2 0 2 0 3 0 0 0 4 1 5 1 6 1 6 1 7 1 4 1 8 2 9 2 10 2 10 2 11 2 8 2 12 3 13 3 14 3 14 3 15 3 12 3 16 4 17 4 18 4 18 4 19 4 16 4</p>
+				</triangles>
+			</mesh>
+		</geometry>
+		<geometry id="short_box_001" name="short_box_001">
+			<mesh>
+				<source id="short_box_001-Position">
+					<float_array count="60" id="short_box_001-Position-array">0.56000 -1.03434 0.82582 1.04000 0.56566 0.82455 -0.54000 1.03566 0.82418 -1.04000 -0.54434 0.82543 -1.04000 -0.54566 -0.82457 -1.04000 -0.54434 0.82543 -0.54000 1.03566 0.82418 -0.54000 1.03434 -0.82582 0.56000 -1.03566 -0.82418 0.56000 -1.03434 0.82582 -1.04000 -0.54434 0.82543 -1.04000 -0.54566 -0.82457 1.04000 0.56434 -0.82545 1.04000 0.56566 0.82455 0.56000 -1.03434 0.82582 0.56000 -1.03566 -0.82418 -0.54000 1.03434 -0.82582 -0.54000 1.03566 0.82418 1.04000 0.56566 0.82455 1.04000 0.56434 -0.82545</float_array>
+					<technique_common>
+						<accessor count="20" source="#short_box_001-Position-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="short_box_001-Normals">
+					<float_array count="15" id="short_box_001-Normals-array">0.00000 0.00080 1.00000 -0.95340 0.30171 -0.00024 -0.29283 -0.95617 0.00076 0.95783 -0.28735 0.00023 0.28512 0.95849 -0.00076</float_array>
+					<technique_common>
+						<accessor count="5" source="#short_box_001-Normals-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<vertices id="short_box_001-Vertex">
+					<input semantic="POSITION" source="#short_box_001-Position"/>
+				</vertices>
+				<triangles count="10" material="Khaki">
+					<input offset="0" semantic="VERTEX" source="#short_box_001-Vertex"/>
+					<input offset="1" semantic="NORMAL" source="#short_box_001-Normals"/>
+					<p>0 0 1 0 2 0 2 0 3 0 0 0 4 1 5 1 6 1 6 1 7 1 4 1 8 2 9 2 10 2 10 2 11 2 8 2 12 3 13 3 14 3 14 3 15 3 12 3 16 4 17 4 18 4 18 4 19 4 16 4</p>
+				</triangles>
+			</mesh>
+		</geometry>
+		<geometry id="left_wall_001" name="left_wall_001">
+			<mesh>
+				<source id="left_wall_001-Position">
+					<float_array count="12" id="left_wall_001-Position-array">-0.00000 -2.79818 -2.74177 0.03200 2.79381 -2.74623 -0.03200 2.79818 2.74177 -0.03200 -2.79381 2.74623</float_array>
+					<technique_common>
+						<accessor count="4" source="#left_wall_001-Position-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="left_wall_001-Normals">
+					<float_array count="3" id="left_wall_001-Normals-array">0.99996 -0.00285 0.00875</float_array>
+					<technique_common>
+						<accessor count="1" source="#left_wall_001-Normals-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<vertices id="left_wall_001-Vertex">
+					<input semantic="POSITION" source="#left_wall_001-Position"/>
+				</vertices>
+				<triangles count="2" material="HalveRed">
+					<input offset="0" semantic="VERTEX" source="#left_wall_001-Vertex"/>
+					<input offset="1" semantic="NORMAL" source="#left_wall_001-Normals"/>
+					<p>0 0 1 0 2 0 2 0 3 0 0 0</p>
+				</triangles>
+			</mesh>
+		</geometry>
+		<geometry id="right_wall_001" name="right_wall_001">
+			<mesh>
+				<source id="right_wall_001-Position">
+					<float_array count="12" id="right_wall_001-Position-array">0.00000 2.79381 -2.74623 -0.00000 -2.79818 -2.74177 0.00000 -2.79381 2.74623 0.00000 2.79818 2.74177</float_array>
+					<technique_common>
+						<accessor count="4" source="#right_wall_001-Position-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="right_wall_001-Normals">
+					<float_array count="3" id="right_wall_001-Normals-array">-1.00000 0.00000 0.00000</float_array>
+					<technique_common>
+						<accessor count="1" source="#right_wall_001-Normals-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<vertices id="right_wall_001-Vertex">
+					<input semantic="POSITION" source="#right_wall_001-Position"/>
+				</vertices>
+				<triangles count="2" material="DarkGreen">
+					<input offset="0" semantic="VERTEX" source="#right_wall_001-Vertex"/>
+					<input offset="1" semantic="NORMAL" source="#right_wall_001-Normals"/>
+					<p>0 0 1 0 2 0 2 0 3 0 0 0</p>
+				</triangles>
+			</mesh>
+		</geometry>
+		<geometry id="back_wall_001" name="back_wall_001">
+			<mesh>
+				<source id="back_wall_001-Position">
+					<float_array count="12" id="back_wall_001-Position-array">-2.71600 -0.00218 -2.74400 2.78000 -0.00218 -2.74400 2.78000 0.00218 2.74400 -2.78000 0.00218 2.74400</float_array>
+					<technique_common>
+						<accessor count="4" source="#back_wall_001-Position-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="back_wall_001-Normals">
+					<float_array count="3" id="back_wall_001-Normals-array">0.00000 -1.00000 0.00080</float_array>
+					<technique_common>
+						<accessor count="1" source="#back_wall_001-Normals-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<vertices id="back_wall_001-Vertex">
+					<input semantic="POSITION" source="#back_wall_001-Position"/>
+				</vertices>
+				<triangles count="2" material="Khaki">
+					<input offset="0" semantic="VERTEX" source="#back_wall_001-Vertex"/>
+					<input offset="1" semantic="NORMAL" source="#back_wall_001-Normals"/>
+					<p>0 0 1 0 2 0 2 0 3 0 0 0</p>
+				</triangles>
+			</mesh>
+		</geometry>
+		<geometry id="ceiling_001" name="ceiling_001">
+			<mesh>
+				<source id="ceiling_001-Position">
+					<float_array count="12" id="ceiling_001-Position-array">-2.78000 -2.79600 0.00223 -2.78000 2.79600 -0.00223 2.78000 2.79600 -0.00223 2.78000 -2.79600 0.00223</float_array>
+					<technique_common>
+						<accessor count="4" source="#ceiling_001-Position-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="ceiling_001-Normals">
+					<float_array count="3" id="ceiling_001-Normals-array">0.00000 -0.00080 -1.00000</float_array>
+					<technique_common>
+						<accessor count="1" source="#ceiling_001-Normals-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<vertices id="ceiling_001-Vertex">
+					<input semantic="POSITION" source="#ceiling_001-Position"/>
+				</vertices>
+				<triangles count="2" material="Khaki">
+					<input offset="0" semantic="VERTEX" source="#ceiling_001-Vertex"/>
+					<input offset="1" semantic="NORMAL" source="#ceiling_001-Normals"/>
+					<p>0 0 1 0 2 0 2 0 3 0 0 0</p>
+				</triangles>
+			</mesh>
+		</geometry>
+		<geometry id="floor_001" name="floor_001">
+			<mesh>
+				<source id="floor_001-Position">
+					<float_array count="12" id="floor_001-Position-array">-2.76400 -2.79600 0.00223 2.76400 -2.79600 0.00223 2.76400 2.79600 -0.00223 -2.73200 2.79600 -0.00223</float_array>
+					<technique_common>
+						<accessor count="4" source="#floor_001-Position-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="floor_001-Normals">
+					<float_array count="3" id="floor_001-Normals-array">0.00000 0.00080 1.00000</float_array>
+					<technique_common>
+						<accessor count="1" source="#floor_001-Normals-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<vertices id="floor_001-Vertex">
+					<input semantic="POSITION" source="#floor_001-Position"/>
+				</vertices>
+				<triangles count="2" material="Khaki">
+					<input offset="0" semantic="VERTEX" source="#floor_001-Vertex"/>
+					<input offset="1" semantic="NORMAL" source="#floor_001-Normals"/>
+					<p>0 0 1 0 2 0 2 0 3 0 0 0</p>
+				</triangles>
+			</mesh>
+		</geometry>
+		<geometry id="area_light_001" name="area_light_001">
+			<mesh>
+				<source id="area_light_001-Position">
+					<float_array count="12" id="area_light_001-Position-array">-0.65000 -0.52500 0.00042 -0.65000 0.52500 -0.00042 0.65000 0.52500 -0.00042 0.65000 -0.52500 0.00042</float_array>
+					<technique_common>
+						<accessor count="4" source="#area_light_001-Position-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="area_light_001-Normals">
+					<float_array count="3" id="area_light_001-Normals-array">0.00000 -0.00080 -1.00000</float_array>
+					<technique_common>
+						<accessor count="1" source="#area_light_001-Normals-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<vertices id="area_light_001-Vertex">
+					<input semantic="POSITION" source="#area_light_001-Position"/>
+				</vertices>
+				<triangles count="2" material="Grey">
+					<input offset="0" semantic="VERTEX" source="#area_light_001-Vertex"/>
+					<input offset="1" semantic="NORMAL" source="#area_light_001-Normals"/>
+					<p>0 0 1 0 2 0 2 0 3 0 0 0</p>
+				</triangles>
+			</mesh>
+		</geometry>
+	</library_geometries>
+	<library_visual_scenes>
+		<visual_scene id="default_half_HI" name="default_half_HI">
+			<node layer="L1" id="tall_box" name="tall_box">
+				<translate sid="translate">-3.68500 3.51631 1.64720</translate>
+				<rotate sid="rotateZ">0 0 1 0.00000</rotate>
+				<rotate sid="rotateY">0 1 0 -0.00000</rotate>
+				<rotate sid="rotateX">1 0 0 0.00000</rotate>
+				<scale sid="scale">1.00000 1.00000 1.00000</scale>
+				<instance_geometry url="#tall_box_001">
+					<bind_material>
+						<technique_common>
+							<instance_material symbol="Khaki" target="#Khaki">
+								<bind_vertex_input input_semantic="TEXCOORD" input_set="1" semantic="CHANNEL1"/>
+							</instance_material>
+						</technique_common>
+					</bind_material>
+				</instance_geometry>
+			</node>
+			<node layer="L1" id="short_box" name="short_box">
+				<translate sid="translate">-1.86000 1.68566 0.82366</translate>
+				<rotate sid="rotateZ">0 0 1 0.00000</rotate>
+				<rotate sid="rotateY">0 1 0 -0.00000</rotate>
+				<rotate sid="rotateX">1 0 0 0.00000</rotate>
+				<scale sid="scale">1.00000 1.00000 1.00000</scale>
+				<instance_geometry url="#short_box_001">
+					<bind_material>
+						<technique_common>
+							<instance_material symbol="Khaki" target="#Khaki">
+								<bind_vertex_input input_semantic="TEXCOORD" input_set="1" semantic="CHANNEL1"/>
+							</instance_material>
+						</technique_common>
+					</bind_material>
+				</instance_geometry>
+			</node>
+			<node layer="L1" id="left_wall" name="left_wall">
+				<translate sid="translate">-5.52800 2.79818 2.74177</translate>
+				<rotate sid="rotateZ">0 0 1 0.00000</rotate>
+				<rotate sid="rotateY">0 1 0 -0.00000</rotate>
+				<rotate sid="rotateX">1 0 0 0.00000</rotate>
+				<scale sid="scale">1.00000 1.00000 1.00000</scale>
+				<instance_geometry url="#left_wall_001">
+					<bind_material>
+						<technique_common>
+							<instance_material symbol="HalveRed" target="#HalveRed">
+								<bind_vertex_input input_semantic="TEXCOORD" input_set="1" semantic="CHANNEL1"/>
+							</instance_material>
+						</technique_common>
+					</bind_material>
+				</instance_geometry>
+			</node>
+			<node layer="L1" id="right_wall" name="right_wall">
+				<translate sid="translate">0.00000 2.79818 2.74177</translate>
+				<rotate sid="rotateZ">0 0 1 0.00000</rotate>
+				<rotate sid="rotateY">0 1 0 -0.00000</rotate>
+				<rotate sid="rotateX">1 0 0 0.00000</rotate>
+				<scale sid="scale">1.00000 1.00000 1.00000</scale>
+				<instance_geometry url="#right_wall_001">
+					<bind_material>
+						<technique_common>
+							<instance_material symbol="DarkGreen" target="#DarkGreen">
+								<bind_vertex_input input_semantic="TEXCOORD" input_set="1" semantic="CHANNEL1"/>
+							</instance_material>
+						</technique_common>
+					</bind_material>
+				</instance_geometry>
+			</node>
+			<node layer="L1" id="back_wall" name="back_wall">
+				<translate sid="translate">-2.78000 5.59418 2.73955</translate>
+				<rotate sid="rotateZ">0 0 1 0.00000</rotate>
+				<rotate sid="rotateY">0 1 0 -0.00000</rotate>
+				<rotate sid="rotateX">1 0 0 0.00000</rotate>
+				<scale sid="scale">1.00000 1.00000 1.00000</scale>
+				<instance_geometry url="#back_wall_001">
+					<bind_material>
+						<technique_common>
+							<instance_material symbol="Khaki" target="#Khaki">
+								<bind_vertex_input input_semantic="TEXCOORD" input_set="1" semantic="CHANNEL1"/>
+							</instance_material>
+						</technique_common>
+					</bind_material>
+				</instance_geometry>
+			</node>
+			<node layer="L1" id="ceiling" name="ceiling">
+				<translate sid="translate">-2.78000 2.80037 5.48577</translate>
+				<rotate sid="rotateZ">0 0 1 0.00000</rotate>
+				<rotate sid="rotateY">0 1 0 -0.00000</rotate>
+				<rotate sid="rotateX">1 0 0 0.00000</rotate>
+				<scale sid="scale">1.00000 1.00000 1.00000</scale>
+				<instance_geometry url="#ceiling_001">
+					<bind_material>
+						<technique_common>
+							<instance_material symbol="Khaki" target="#Khaki">
+								<bind_vertex_input input_semantic="TEXCOORD" input_set="1" semantic="CHANNEL1"/>
+							</instance_material>
+						</technique_common>
+					</bind_material>
+				</instance_geometry>
+			</node>
+			<node layer="L1" id="floor" name="floor">
+				<translate sid="translate">-2.76400 2.79600 -0.00223</translate>
+				<rotate sid="rotateZ">0 0 1 0.00000</rotate>
+				<rotate sid="rotateY">0 1 0 -0.00000</rotate>
+				<rotate sid="rotateX">1 0 0 0.00000</rotate>
+				<scale sid="scale">1.00000 1.00000 1.00000</scale>
+				<instance_geometry url="#floor_001">
+					<bind_material>
+						<technique_common>
+							<instance_material symbol="Khaki" target="#Khaki">
+								<bind_vertex_input input_semantic="TEXCOORD" input_set="1" semantic="CHANNEL1"/>
+							</instance_material>
+						</technique_common>
+					</bind_material>
+				</instance_geometry>
+			</node>
+			<node layer="L1" id="area_light" name="area_light">
+				<translate sid="translate">-2.78000 2.79937 5.48577</translate>
+				<rotate sid="rotateZ">0 0 1 0.00000</rotate>
+				<rotate sid="rotateY">0 1 0 -0.00000</rotate>
+				<rotate sid="rotateX">1 0 0 0.00000</rotate>
+				<scale sid="scale">1.00000 1.00000 1.00000</scale>
+				<instance_geometry url="#area_light_001">
+					<bind_material>
+						<technique_common>
+							<instance_material symbol="Grey" target="#Grey">
+								<bind_vertex_input input_semantic="TEXCOORD" input_set="1" semantic="CHANNEL1"/>
+							</instance_material>
+						</technique_common>
+					</bind_material>
+				</instance_geometry>
+			</node>
+			<node layer="L1" id="Camera" name="Camera">
+				<translate sid="translate">-2.78000 -8.00000 2.73000</translate>
+				<rotate sid="rotateZ">0 0 1 0.00000</rotate>
+				<rotate sid="rotateY">0 1 0 -0.00000</rotate>
+				<rotate sid="rotateX">1 0 0 90.00002</rotate>
+				<scale sid="scale">1.00000 1.00000 1.00000</scale>
+				<instance_camera url="#Camera-Camera"/>
+			</node>
+		</visual_scene>
+	</library_visual_scenes>
+	<scene>
+		<instance_visual_scene url="#default_half_HI"/>
+	</scene>
+</COLLADA>
