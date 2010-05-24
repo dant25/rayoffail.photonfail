@@ -11,6 +11,10 @@ Mesh::Mesh()
 }
 
 
+Mesh::Mesh(const Material &m) : Object(m)
+{
+}
+
 void Mesh::addVertex(float x, float y, float z){
     Vector* vertex = new Vector;
     vertex->data[0] = x;
@@ -45,7 +49,9 @@ void Mesh::addNormal(float x, float y, float z)
     normals.push_back(normal);
 }
 
-bool Mesh::intersect(const Ray &ray){
+bool Mesh::intersect(const Ray &r){
+    //Transforma o raio pela inversa da transformada de mesh
+   Ray ray = t.getInverse()*r;
 	bool hit =false;
 	float min_dist = 999999999999.0;
 	Vec3 c_p1, c_p2, c_p3;
@@ -105,6 +111,8 @@ bool Mesh::intersect(const Ray &ray){
                faceIndex = k;
                 min_dist = d;
                 i.point = intersection_point;
+                //i.point.w = 1.0;
+                //i.point = i.point;
                 c_p1 = p1;
                 c_p2 = p2;
                 c_p3 = p3;
@@ -142,6 +150,8 @@ bool Mesh::intersect(const Ray &ray){
                faceIndex = k;
                 min_dist = d;
                 i.point = intersection_point;
+                i.point.w = 1.0;
+                i.point = this->t*i.point;
                 c_p1 = p1;
                 c_p2 = p2;
                 c_p3 = p3;
@@ -151,7 +161,7 @@ bool Mesh::intersect(const Ray &ray){
 
     if(hit)
     {
-       i.dist = min_dist;
+       i.dist = (i.point - r.o).length();
        i.normal = Vec3(faces[faceIndex]->normal[0]->data[0], faces[faceIndex]->normal[0]->data[1], faces[faceIndex]->normal[0]->data[2]);
         //normal = Vec3(normals[faces[i]->normal]->data[0], normals[faces[i]->normal]->data[1], normals[faces[i]->normal]->data[2]);
         //i.normal = (c_p2 - c_p1).cross(c_p3 - c_p1);

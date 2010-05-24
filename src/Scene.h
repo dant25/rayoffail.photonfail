@@ -6,6 +6,8 @@
 #include "math/Ray.h"
 #include "lights/Light.h"
 #include <vector>
+#include <map>
+#include <string>
 
 class Scene {
 public:
@@ -14,10 +16,13 @@ public:
     SpectralQuantity render(const Ray& r) const;
     void addObject(Object* obj);
     void addLight(Light*  l);
-    
-private:
+    void addMaterial(const char *label, Material *m);
+   
+    Material* getMaterial(const char *label);
+//private:
     Container objects;
     std::vector<Light*> lights;
+    std::map<std::string, Material*> materials;
 
     SpectralQuantity ambient_color;
     SpectralQuantity background_color;

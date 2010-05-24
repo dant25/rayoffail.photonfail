@@ -7,7 +7,8 @@ Sphere::Sphere(const Material& mat, float radius, Vec3 center) : Object(mat), ra
 }
 
 
-bool Sphere::intersect(const Ray& r) {
+bool Sphere::intersect(const Ray& ray) {
+   Ray r = t.getInverse()*ray;
    //Assume que r.d está normalizado
    //a, b, e c são os coeficientes da equação do segundo grau
    float a = dot(r.d, r.d);
@@ -23,8 +24,11 @@ bool Sphere::intersect(const Ray& r) {
       if(dist > 0) {
          this->i.dist = dist;
          this->i.point = r.o + r.d*dist;
+         this->i.point.w = 1.0;
          this->i.normal = (this->i.point - this->centre)/radius;
          this->i.point += this->i.normal*0.0001;
+         this->i.point = t*this->i.point;
+         this->i.dist = (this->i.point - ray.o).length();
          return true;
       } else
          return false;
@@ -45,11 +49,13 @@ bool Sphere::intersect(const Ray& r) {
       if(dist < 0) 
          return false;
       else {
-         this->i.dist = dist;
          this->i.point = r.o + r.d*dist;
+         this->i.point.w = 1.0;
          //FIXME inverter normal se dist == largest?
          this->i.normal = (this->i.point - this->centre)/radius;
          this->i.point += this->i.normal*0.0001;
+         this->i.point = t*this->i.point;
+         this->i.dist = (this->i.point - ray.o).length();
          return true;
       }
    }
@@ -76,4 +82,63 @@ Vec3 Sphere::samplePoint(){
 void Sphere::getNormal(Vec3 point, Vec3 &normal){
 	normal = point - centre;
 	normal.normalize();
+}
+
+#include <iostream>
+bool Sphere::shadowintersect(const Ray& ray) {
+   Ray r = t.getInverse()*ray;
+   //Assume que r.d está normalizado
+   //a, b, e c são os coeficientes da equação do segundo grau
+   float a = dot(r.d, r.d);
+   float b = (dot(r.d, r.o - this->centre))*2.0;
+   float c = dot(r.o - this->centre, r.o - this->centre) - radius*radius;
+
+   float delta = b*b - 4*a*c;
+
+   if(delta < 0.0)
+      return false;
+   else if (delta == 0){
+      float dist = -b/2.0*a;
+      if(dist > 0) {
+         this->i.dist = dist;
+         this->i.point = r.o + r.d*dist;
+         this->i.point.w = 1.0;
+         this->i.normal = (this->i.point - this->centre)/radius;
+         this->i.point += this->i.normal*0.0001;
+         //this->i.point = t*this->i.point;
+         this->i.dist = (this->i.point - ray.o).length();
+//         std::cout << "ray.o: " << ray.o.x << ", " << ray.o.y << ", " << ray.o.z << ", " << ray.o.w << std::endl;
+//         std::cout << "r.o: " << r.o.x << ", " << r.o.y << ", " << r.o.z << ", " << r.o.w << std::endl;
+         return true;
+      } else
+         return false;
+   } else {
+      float sqrtDelta = sqrtf(delta);
+      float t0 = (-b - sqrtDelta)/(2*a);
+      float t1 = (-b + sqrtDelta)/(2*a);
+
+      float smallest = (t0 < t1) ? t0 : t1;
+      float largest = (t0 > t1) ? t0 : t1;
+      
+      float dist;
+      if(smallest < 0) 
+         dist = largest;
+      else 
+         dist = smallest;
+
+      if(dist < 0) 
+         return false;
+      else {
+         this->i.point = r.o + r.d*dist;
+         this->i.point.w = 1.0;
+         //FIXME inverter normal se dist == largest?
+         this->i.normal = (this->i.point - this->centre)/radius;
+         this->i.point += this->i.normal*0.0001;
+         //this->i.point = t*this->i.point;
+         this->i.dist = (this->i.point - ray.o).length();
+//         std::cout << "ray.o: " << ray.o.x << ", " << ray.o.y << ", " << ray.o.z << ", " << ray.o.w << std::endl;
+//         std::cout << "r.o: " << r.o.x << ", " << r.o.y << ", " << r.o.z << ", " << r.o.w << std::endl;
+         return true;
+      }
+   }
 }
