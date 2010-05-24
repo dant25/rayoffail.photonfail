@@ -19,7 +19,7 @@ public:
     void addMaterial(const char *label, Material *m);
    
     Material* getMaterial(const char *label);
-private:
+//private:
     Container objects;
     std::vector<Light*> lights;
     std::map<std::string, Material*> materials;
