@@ -1,8 +1,6 @@
 #include "Scene.h"
 #include "math/Intersection.h"
 
-#include <iostream>
-
 using namespace std;
 
 Scene::Scene() {
@@ -30,6 +28,7 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 	// Calcula a iluminação direta.
 	for (int i = 0; i < lights.size(); i++) {
 		//cout << "Intersectou!" << endl;
+        //FIXME fazer vec retornado ter componente w = 1.0
 		Vec3 samplePos = lights[i]->samplePoint();
 
 		//FIXME calcula a normal previamente como o vetor que sai da luz
@@ -42,9 +41,11 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 
 		Intersection lightIntersect;
 		lightIntersect.point = samplePos;
+        lightIntersect.point.w = 1.0;
 		lightIntersect.normal = lightNormal;
 		lightIntersect.dist = (lightIntersect.point - objIntersect.point).length();
-
+         
+        //FIXME criar origem do raio com w = 1.0
 		Ray shadowRay(objIntersect.point, normalize(lightIntersect.point - objIntersect.point));
 		Object *shadowObj = objects.findObject(shadowRay);
 
@@ -55,14 +56,11 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 			}
 		}
 
-		//FIXME placeholder só pra poder fazer algo na função agora
-		//FIXME somar as contribuições de cada luz
 		ls += obj->computeLocalShading(lightIntersect,
 				lights[i]->getIntensity(normalize(objIntersect.point - lightIntersect.point)), r.o);
 	}
 
 	//Cor resultante de reflexão
-	//FIXME reflexão existe mesmo quando há sombra no objeto
 	SpectralQuantity rs;
 
 	if (depth < maxDepth && obj->getSpecularity() > 0.0) {
@@ -92,11 +90,5 @@ void Scene::addMaterial(const char *label, Material *m) {
 }
 
 Material* Scene::getMaterial(const char *label) {
-   std::cout << "procurando pelo label: " << label << std::endl;
-   std::cout << "Lista de materials: "  << std::endl;
-   
-   std::map<std::string, Material*>::iterator i;
-   for (i = materials.begin(); i != materials.end(); i++)
-      std::cout << i->first << std::endl;
    return materials[label];
 }

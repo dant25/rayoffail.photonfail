@@ -5,6 +5,7 @@
 #include "../math/Intersection.h"
 #include "../SpectralQuantity.h"
 #include "../Material.h"
+#include "../Transform.h"
 
 class Object {
 public:
@@ -24,6 +25,7 @@ public:
     	return m.spec;
     }
 
+   Transform t;
 protected:
     //Armazena o último ponto de interseção
     Intersection i;

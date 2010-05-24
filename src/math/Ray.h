@@ -10,6 +10,8 @@ public:
 		o = origin;
 	}
 
+    Ray() { };
+
     //vetor direção
     Vec3 d;
     //posição de origem

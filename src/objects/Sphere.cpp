@@ -7,7 +7,9 @@ Sphere::Sphere(const Material& mat, float radius, Vec3 center) : Object(mat), ra
 }
 
 
-bool Sphere::intersect(const Ray& r) {
+#include <iostream>
+bool Sphere::intersect(const Ray& ray) {
+   Ray r = t.getInverse()*ray;
    //Assume que r.d está normalizado
    //a, b, e c são os coeficientes da equação do segundo grau
    float a = dot(r.d, r.d);
@@ -21,6 +23,8 @@ bool Sphere::intersect(const Ray& r) {
    else if (delta == 0){
       float dist = -b/2.0*a;
       if(dist > 0) {
+         std::cout << "ray: (" << ray.o.x << ", " << ray.o.y << ", " << ray.o.z << ")" << std::endl;
+         std::cout << "r: (" << r.o.x << ", " << r.o.y << ", " << r.o.z << ")" << std::endl;
          this->i.dist = dist;
          this->i.point = r.o + r.d*dist;
          this->i.normal = (this->i.point - this->centre)/radius;
