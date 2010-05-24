@@ -12,7 +12,7 @@ Vec3::Vec3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {
 }
 
 Vec3 Vec3::operator+(const Vec3& v) const {
-	return Vec3(x + v.x, y + v.y, z + v.z);
+	return Vec3(x + v.x, y + v.y, z + v.z, this->w);
 }
 
 Vec3& Vec3::operator+=(const Vec3& v) {
@@ -23,25 +23,26 @@ Vec3& Vec3::operator+=(const Vec3& v) {
 }
 
 Vec3 Vec3::operator-(const Vec3& v) const {
-	return Vec3(x - v.x, y - v.y, z - v.z);
+	return Vec3(x - v.x, y - v.y, z - v.z, fabs(w - v.w));
 }
 
 Vec3& Vec3::operator-=(const Vec3& v) {
 	x -= v.x;
 	y -= v.y;
 	z -= v.z;
+    w = fabs(w - v.w);
 	return *this;
 }
 
 Vec3 Vec3::operator*(float s) const {
-	return Vec3(x*s, y*s, z*s);
+	return Vec3(x*s, y*s, z*s, this->w);
 }
 
 Vec3& Vec3::operator*=(float s) {
 	x *= s;
 	y *= s;
 	z *= s;
-        return *this;
+    return *this;
 }
 
 Vec3 Vec3::operator/(float s) const {

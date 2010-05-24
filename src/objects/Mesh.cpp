@@ -61,15 +61,15 @@ bool Mesh::intersect(const Ray &r){
 	for(k = 0; k<faces.size(); k++)
 	{
 
-	    Vec3 p1(faces[k]->vertices[0]->data[0], faces[k]->vertices[0]->data[1], faces[k]->vertices[0]->data[2]);
-	    Vec3 p2(faces[k]->vertices[1]->data[0], faces[k]->vertices[1]->data[1], faces[k]->vertices[1]->data[2]);
-	    Vec3 p3(faces[k]->vertices[2]->data[0], faces[k]->vertices[2]->data[1], faces[k]->vertices[2]->data[2]);
+	    Vec3 p1(faces[k]->vertices[0]->data[0], faces[k]->vertices[0]->data[1], faces[k]->vertices[0]->data[2], 1.0);
+	    Vec3 p2(faces[k]->vertices[1]->data[0], faces[k]->vertices[1]->data[1], faces[k]->vertices[1]->data[2], 1.0);
+	    Vec3 p3(faces[k]->vertices[2]->data[0], faces[k]->vertices[2]->data[1], faces[k]->vertices[2]->data[2], 1.0);
 
         bool cull_face = false;
 
         const float epsilon = 0.000001;
 
-        Vec3 intersection_point;
+        Vec3 intersection_point(0.0, 0.0, 0.0, 1.0);
 
         Vec3 edge1 = p2 - p1;
         Vec3 edge2 = p3 - p1;
@@ -111,8 +111,7 @@ bool Mesh::intersect(const Ray &r){
                faceIndex = k;
                 min_dist = d;
                 i.point = intersection_point;
-                //i.point.w = 1.0;
-                //i.point = i.point;
+                i.point = this->t*i.point;
                 c_p1 = p1;
                 c_p2 = p2;
                 c_p3 = p3;
@@ -150,7 +149,6 @@ bool Mesh::intersect(const Ray &r){
                faceIndex = k;
                 min_dist = d;
                 i.point = intersection_point;
-                i.point.w = 1.0;
                 i.point = this->t*i.point;
                 c_p1 = p1;
                 c_p2 = p2;
