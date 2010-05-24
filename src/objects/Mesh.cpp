@@ -111,8 +111,8 @@ bool Mesh::intersect(const Ray &r){
                faceIndex = k;
                 min_dist = d;
                 i.point = intersection_point;
-                i.point.w = 1.0;
-                i.point = this->t*i.point;
+                //i.point.w = 1.0;
+                //i.point = i.point;
                 c_p1 = p1;
                 c_p2 = p2;
                 c_p3 = p3;
