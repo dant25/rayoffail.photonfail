@@ -12,7 +12,6 @@ public:
     Object(const Material& mat);
 
     virtual bool intersect(const Ray& r) = 0;
-    virtual bool shadowintersect(const Ray& r) { return false; }
     virtual Vec3 samplePoint() = 0;
     virtual void getNormal(Vec3 point, Vec3 &normal) = 0;
 
