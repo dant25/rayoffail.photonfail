@@ -5,8 +5,10 @@ Vec3::Vec3() {
 
 }
 
+Vec3::Vec3(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w) {
+}
 Vec3::Vec3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {
-
+   this->w = 0.0;
 }
 
 Vec3 Vec3::operator+(const Vec3& v) const {
@@ -83,7 +85,7 @@ Vec3 cross(const Vec3& v1, const Vec3& v2) {
 
 Vec3 normalize(const Vec3& v) {
 	float length = v.length();
-	return Vec3(v.x/length, v.y/length, v.z/length);
+	return Vec3(v.x/length, v.y/length, v.z/length, v.w);
 }
 
 float angle(const Vec3& v1, const Vec3& v2) {

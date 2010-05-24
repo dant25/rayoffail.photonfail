@@ -1,8 +1,6 @@
 #include "Scene.h"
 #include "math/Intersection.h"
 
-#include <iostream>
-
 using namespace std;
 
 Scene::Scene() {
@@ -30,6 +28,7 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 	// Calcula a iluminação direta.
 	for (int i = 0; i < lights.size(); i++) {
 		//cout << "Intersectou!" << endl;
+        //FIXME fazer vec retornado ter componente w = 1.0
 		Vec3 samplePos = lights[i]->samplePoint();
 
 		//FIXME calcula a normal previamente como o vetor que sai da luz
@@ -42,11 +41,15 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 
 		Intersection lightIntersect;
 		lightIntersect.point = samplePos;
+        lightIntersect.point.w = 1.0;
 		lightIntersect.normal = lightNormal;
 		lightIntersect.dist = (lightIntersect.point - objIntersect.point).length();
-
-		Ray shadowRay(objIntersect.point, normalize(lightIntersect.point - objIntersect.point));
-		Object *shadowObj = objects.findObject(shadowRay);
+         
+        //FIXME criar origem do raio com w = 1.0
+        Vec3 shadowDir = normalize(lightIntersect.point - objIntersect.point);
+        objIntersect.point.w = 1.0;
+		Ray shadowRay(objIntersect.point, shadowDir);
+		Object *shadowObj = objects.findShadowObject(shadowRay);
 
 		// Se não há obstáculo entre a luz e o ponto sendo considerado
 		if (shadowObj) {
@@ -55,14 +58,11 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 			}
 		}
 
-		//FIXME placeholder só pra poder fazer algo na função agora
-		//FIXME somar as contribuições de cada luz
 		ls += obj->computeLocalShading(lightIntersect,
 				lights[i]->getIntensity(normalize(objIntersect.point - lightIntersect.point)), r.o);
 	}
 
 	//Cor resultante de reflexão
-	//FIXME reflexão existe mesmo quando há sombra no objeto
 	SpectralQuantity rs;
 
 	if (depth < maxDepth && obj->getSpecularity() > 0.0) {
@@ -85,4 +85,12 @@ void Scene::addObject(Object *obj) {
 void Scene::addLight(Light *l) {
 	lights.push_back(l);
 	objects.addObject(l);
+}
+
+void Scene::addMaterial(const char *label, Material *m) {
+   materials[std::string(label)] = m;
+}
+
+Material* Scene::getMaterial(const char *label) {
+   return materials[label];
 }

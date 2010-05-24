@@ -26,3 +26,21 @@ Object* Container::findObject(const Ray& r) const {
 
    return obj;
 }
+
+Object* Container::findShadowObject(const Ray& r) const {
+   Object *obj = NULL;
+
+   float dist = INFINITY;
+   for(int i = 0; i < objects.size(); i++) {
+      if(objects[i]->shadowintersect(r)) {
+         //Aponta para o novo objeto se a distância for a menor encontrada até
+         //o momento
+         if(dist > objects[i]->getIntersection().dist) {
+            obj = objects[i];
+            dist = obj->getIntersection().dist;
+         }
+      }
+   }
+
+   return obj;
+}
