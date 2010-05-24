@@ -46,8 +46,10 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 		lightIntersect.dist = (lightIntersect.point - objIntersect.point).length();
          
         //FIXME criar origem do raio com w = 1.0
-		Ray shadowRay(objIntersect.point, normalize(lightIntersect.point - objIntersect.point));
-		Object *shadowObj = objects.findObject(shadowRay);
+        Vec3 shadowDir = normalize(lightIntersect.point - objIntersect.point);
+        objIntersect.point.w = 1.0;
+		Ray shadowRay(objIntersect.point, shadowDir);
+		Object *shadowObj = objects.findShadowObject(shadowRay);
 
 		// Se não há obstáculo entre a luz e o ponto sendo considerado
 		if (shadowObj) {

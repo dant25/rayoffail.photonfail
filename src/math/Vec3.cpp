@@ -85,7 +85,7 @@ Vec3 cross(const Vec3& v1, const Vec3& v2) {
 
 Vec3 normalize(const Vec3& v) {
 	float length = v.length();
-	return Vec3(v.x/length, v.y/length, v.z/length);
+	return Vec3(v.x/length, v.y/length, v.z/length, v.w);
 }
 
 float angle(const Vec3& v1, const Vec3& v2) {

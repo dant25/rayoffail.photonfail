@@ -18,7 +18,8 @@ Vec3 Transform::operator*(const Vec3& v) {
     result.x = mat(0, 0)*v.x + mat(0, 1)*v.y + mat(0, 2)*v.z + mat(0, 3)*v.w;
     result.y = mat(1, 0)*v.x + mat(1, 1)*v.y + mat(1, 2)*v.z + mat(1, 3)*v.w;
     result.z = mat(2, 0)*v.x + mat(2, 1)*v.y + mat(2, 2)*v.z + mat(2, 3)*v.w;
-
+    
+    result.w = v.w;
     //FIXME considerar componente w pra o ponto?
     //w =  mat(3, 0)*v.x + mat(3, 1)*v.y + mat(3, 2)*v.z + mat(3, 3);
 
