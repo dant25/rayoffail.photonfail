@@ -161,7 +161,7 @@ bool Mesh::intersect(const Ray &r){
 
     if(hit)
     {
-       i.dist = min_dist;
+       i.dist = (i.point - r.o).length();
        i.normal = Vec3(faces[faceIndex]->normal[0]->data[0], faces[faceIndex]->normal[0]->data[1], faces[faceIndex]->normal[0]->data[2]);
         //normal = Vec3(normals[faces[i]->normal]->data[0], normals[faces[i]->normal]->data[1], normals[faces[i]->normal]->data[2]);
         //i.normal = (c_p2 - c_p1).cross(c_p3 - c_p1);
