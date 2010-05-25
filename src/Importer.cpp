@@ -9,11 +9,20 @@
 #include "objects/Mesh.h"
 #include "Material.h"
 #include "SpectralQuantity.h"
+#include "Transform.h"
+#include "math/Vec3.h"
+#include "lights/Light.h"
+#include "lights/DiskLight.h"
+#include <map>
 
+using std::map;
+using std::string;
 
 //Funções auxiliares
-void loadGeometry(TiXmlElement *libraryGeometries, Scene *s);
-void loadMaterials(TiXmlElement *libraryMaterials, TiXmlElement *libraryEffects, Scene *s);
+void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Material*>& materials);
+void loadMaterials(TiXmlElement *collada, map<string, Material*>& materials);
+void loadScene(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Light*>& lights, Scene *s);
+void loadLight(TiXmlElement *collada, map<string, Light*>& lights);
 void loadColor(TiXmlElement *color, SpectralQuantity &sq);
 void fixStr(char *str);
 
@@ -31,18 +40,96 @@ Scene* Importer::load(const char* path) {
    TiXmlElement* collada = dae.FirstChildElement("COLLADA");
    if (!collada)
       return 0;
+   
+//   TiXmlElement* visualScene = collada->FirstChildElement("library_visual_scenes");
+   
+   map<string, Material*> materials;
+//   TiXmlElement* libraryMaterials = collada->FirstChildElement("library_materials");
+//   TiXmlElement* libraryEffects = collada->FirstChildElement("library_effects");
+   loadMaterials(collada, materials);
+//   TiXmlElement* libraryGeometries = collada->FirstChildElement("library_geometries");
+   map<string, Mesh*> meshes;
+   loadGeometry(collada, meshes, materials);
+   map<string, Light*> lights;
+   loadLight(collada, lights);
 
-   TiXmlElement* libraryMaterials = collada->FirstChildElement("library_materials");
-   TiXmlElement* libraryEffects = collada->FirstChildElement("library_effects");
-   loadMaterials(libraryMaterials, libraryEffects, s);
-
-   TiXmlElement* libraryGeometries = collada->FirstChildElement("library_geometries");
-   loadGeometry(libraryGeometries, s);
+   loadScene(collada, meshes, lights, s);
 
    return s;
 }
 
-void loadMaterials(TiXmlElement *libraryMaterials, TiXmlElement *libraryEffects, Scene *s) {
+//FIXME considerando só uma cena
+void loadScene(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Light*>& lights, Scene *s) {
+   TiXmlElement* libraryVisualScenes = collada->FirstChildElement("library_visual_scenes");
+   TiXmlElement* visualScene = libraryVisualScenes->FirstChildElement("visual_scene");
+   
+   TiXmlElement* node = visualScene->FirstChildElement("node");
+   while(node) {
+      //Ler transformações
+      TiXmlElement* t = node->FirstChildElement("translate");
+      char* tTok = strtok((char*)t->GetText(), " ");
+      float tr[3];
+      for(int i = 0; i < 3; i++) {
+         tr[i] = atof(tTok);
+         tTok = strtok(NULL, " ");
+      }
+
+      Transform translateTransform = translate(Vec3(tr[0], tr[1], tr[2]));
+
+      //FIXME assumindo que a primeira rotação é rotZ
+      TiXmlElement* rotz = node->FirstChildElement("rotate");
+      //FIXME ignora os 3 primeros valores
+      char* rotzTok = strtok((char*)rotz->GetText(), " ");
+      rotzTok = strtok(NULL, " ");
+      rotzTok = strtok(NULL, " ");
+      rotzTok = strtok(NULL, " ");
+      Transform rz = rotateZ(atof(rotzTok));
+      
+      //FIXME assumindo que a segunda rotação é roty
+      TiXmlElement* roty = rotz->NextSiblingElement("rotate");
+      char* rotyTok = strtok((char*)roty->GetText(), " ");
+      rotyTok = strtok(NULL, " ");
+      rotyTok = strtok(NULL, " ");
+      rotyTok = strtok(NULL, " ");
+      Transform ry = rotateY(atof(rotzTok));
+      
+      //FIXME assumindo que a terceira rotação é rotx
+      TiXmlElement* rotx = roty->NextSiblingElement("rotate");
+      char* rotxTok = strtok((char*)rotx->GetText(), " ");
+      rotxTok = strtok(NULL, " ");
+      rotxTok = strtok(NULL, " ");
+      rotxTok = strtok(NULL, " ");
+      Transform rx = rotateX(atof(rotxTok));
+      
+      //Ler instance_geometry
+      TiXmlElement* instanceGeometry = node->FirstChildElement("instance_geometry");
+      if(instanceGeometry) {
+         char *url = (char*) instanceGeometry->Attribute("url");
+         fixStr(url);
+         Mesh *m = meshes[string(url)];
+         m->t = translateTransform;
+         s->addObject(m);    
+      }
+      TiXmlElement* instanceLight = node->FirstChildElement("instance_light");
+      if(instanceLight) {
+         char* url = (char*) instanceLight->Attribute("url");
+         fixStr(url);
+         //Light l
+         //Light *l = lights[string(url)];
+         //if(l)
+         s->addLight(lights[string(url)]);
+      }
+      //Ler instance_light
+      //Ler instance_camera
+      //Adicionar mesh à cena
+      node = node->NextSiblingElement("node");
+   }
+}
+
+void loadMaterials(TiXmlElement *collada, map<string, Material*>& materials) {
+   TiXmlElement* libraryMaterials = collada->FirstChildElement("library_materials");
+   TiXmlElement* libraryEffects = collada->FirstChildElement("library_effects");
+
    TiXmlElement *material = libraryMaterials->FirstChildElement("material");
    while(material) {
       char *matId = (char*) material->Attribute("id");
@@ -50,7 +137,6 @@ void loadMaterials(TiXmlElement *libraryMaterials, TiXmlElement *libraryEffects,
       //FIXME assumindo só 1 instance effect
       char *url = (char*) instanceEffect->Attribute("url");
       fixStr(url);
-      //TODO: encontrar effect
       TiXmlElement *effect = libraryEffects->FirstChildElement("effect");
       while(effect) {
          if(strcmp(effect->Attribute("id"), url) == 0) {
@@ -80,7 +166,8 @@ void loadMaterials(TiXmlElement *libraryMaterials, TiXmlElement *libraryEffects,
             
             Material *m = new Material(kd, ks, ka, matShininess, spec);
             std::cout << "adicionando material id: " << matId << std::endl;
-            s->addMaterial(matId, m);
+            //s->addMaterial(matId, m);
+            materials[string(matId)] = m;
          }
          effect = effect->NextSiblingElement("effect");
       }
@@ -88,17 +175,20 @@ void loadMaterials(TiXmlElement *libraryMaterials, TiXmlElement *libraryEffects,
    }
 }
 
-void loadGeometry(TiXmlElement *libraryGeometries, Scene *s) {
+void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Material*>& materials) {
+   TiXmlElement* libraryGeometries = collada->FirstChildElement("library_geometries");
    TiXmlElement* geometry = libraryGeometries->FirstChildElement("geometry");
    while (geometry){
       TiXmlElement* mesh = geometry->FirstChildElement("mesh");
+      //FIXME tratando geometry id como mesh id
+      const char* geometryId = geometry->Attribute("id");
       while(mesh){
          TiXmlElement* triangles = mesh->FirstChildElement("triangles");
          const char* matId = triangles->Attribute("material");
          Mesh *m;
          if(matId != NULL) {
-            Material *mat = s->getMaterial(matId);
-            m = new Mesh(*mat);
+            //Material *mat = s->getMaterial(matId);
+            m = new Mesh(*(materials[string(matId)]));
             std::cout << "mat != NULL" << std::endl;
          } else
             m = new Mesh;
@@ -253,10 +343,58 @@ void loadGeometry(TiXmlElement *libraryGeometries, Scene *s) {
 
             triangles = triangles->NextSiblingElement("triangles");
          }
-         s->addObject(m);
+         //s->addObject(m);
+         //FIXME tratando geomtry id como meshId
+         meshes[string(geometryId)] = m;
          mesh = mesh->NextSiblingElement("mesh");
       }
       geometry = geometry->NextSiblingElement("geometry"); 
+   }
+}
+
+
+void loadLight(TiXmlElement *collada, map<string, Light*>& lights) {
+   TiXmlElement* libraryLights = collada->FirstChildElement("library_lights");
+   TiXmlElement* light = libraryLights->FirstChildElement("light");
+
+   while(light) {
+      char *lightId = (char*)light->Attribute("id");
+      Light *l;
+      //Ler disk light
+      TiXmlElement* disk = light->FirstChildElement("technique_common")->FirstChildElement("disk");
+      if(disk) {
+         SpectralQuantity intensity;
+         loadColor(disk->FirstChildElement("color"), intensity);
+
+         //Lê o vetor centre
+         TiXmlElement* diskCentre = disk->FirstChildElement("centre");
+         Vec3 centre(0.0, 0.0, 0.0, 1.0);
+         char *cTok = strtok((char*) diskCentre->GetText(), " ");
+         centre.x = atof(cTok);
+         cTok = strtok(NULL, " ");
+         centre.y = atof(cTok);
+         cTok = strtok(NULL, " ");
+         centre.z = atof(cTok);
+
+         //Lê o vetor normal
+         TiXmlElement* diskNormal = disk->FirstChildElement("normal");
+         Vec3 normal(0.0, 0.0, 0.0);
+         char *nTok = strtok((char*) diskNormal->GetText(), " ");
+         normal.x = atof(nTok);
+         nTok = strtok(NULL, " ");
+         normal.y = atof(nTok);
+         nTok = strtok(NULL, " ");
+         normal.z = atof(nTok);
+
+         TiXmlElement* diskRadius = disk->FirstChildElement("radius");
+         float radius = atof(diskRadius->GetText());
+
+         l = new DiskLight(intensity, centre, normal, radius);
+         lights[string(lightId)] = l;
+      }
+      //Ler spot light
+      //Ler point light
+      light = light->NextSiblingElement("light");
    }
 }
 

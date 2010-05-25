@@ -4,7 +4,7 @@
 
 Image*  Renderer::render(const Scene& s, const Camera& c) {
     Image *img = new Image(c.getWidth(), c.getHeight());
-    int numSamples = 24;
+    int numSamples = 36;
 
     //Loop principal, cria numSamples raios pra cada pixel
     SpectralQuantity color;

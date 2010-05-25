@@ -26,6 +26,18 @@
 			</optics>
 		</camera>
 	</library_cameras>
+    <library_lights>
+   <light id="Disk-Light" name="Disk-Light">
+      <technique_common>
+      <disk>
+         <color>1.00000 1.00000 1.00000</color> 
+         <centre>-2.78 2.8 5.4</centre>
+         <normal>0.0 0.0 -1.0</normal>
+         <radius>0.5</radius>
+      </disk>
+      </technique_common>
+   </light>
+    </library_lights>
 	<library_effects>
 		<effect id="Khaki-fx" name="Khaki-fx">
 			<profile_COMMON>
@@ -555,7 +567,7 @@
 				</instance_geometry>
 			</node>
 			<node layer="L1" id="area_light" name="area_light">
-				<translate sid="translate">-2.78000 2.79937 5.48577</translate>
+				<translate sid="translate">-2.78000 2.79937 5.47</translate>
 				<rotate sid="rotateZ">0 0 1 0.00000</rotate>
 				<rotate sid="rotateY">0 1 0 -0.00000</rotate>
 				<rotate sid="rotateX">1 0 0 0.00000</rotate>
@@ -578,6 +590,14 @@
 				<scale sid="scale">1.00000 1.00000 1.00000</scale>
 				<instance_camera url="#Camera-Camera"/>
 			</node>
+            <node layer="L1" id="Lamp" name="Lamp">
+               <translate sid="translate">0.0 0.0 0.0</translate>
+               <rotate sid="rotateZ">0 0 1 0.00000</rotate>
+               <rotate sid="rotateY">0 1 0 0.00000</rotate>
+               <rotate sid="rotateX">1 0 0 0.00000</rotate>
+               <scale sid="scale">1.0000 1.00000 1.00000</scale>
+               <instance_light url="#Disk-Light"/>
+            </node>
 		</visual_scene>
 	</library_visual_scenes>
 	<scene>
