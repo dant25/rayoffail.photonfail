@@ -38,10 +38,14 @@ Ray Transform::operator*(const Ray& r) {
 Vec3 Transform::transformNormal(const Vec3& normal) {
     Vec3 result;
 
-    result.x = mat(0, 0)*normal.x + mat(1, 0)*normal.y + mat(2, 0)*normal.z;
-    result.y = mat(0, 1)*normal.x + mat(1, 1)*normal.y + mat(2, 1)*normal.z;
-    result.z = mat(0, 2)*normal.x + mat(1, 2)*normal.y + mat(2, 2)*normal.z;
+    result.x = invMat(0, 0)*normal.x + invMat(1, 0)*normal.y + invMat(2, 0)*normal.z;
+    result.y = invMat(0, 1)*normal.x + invMat(1, 1)*normal.y + invMat(2, 1)*normal.z;
+    result.z = invMat(0, 2)*normal.x + invMat(1, 2)*normal.y + invMat(2, 2)*normal.z;
     return result;
+}
+
+Transform Transform::operator*(const Transform& t) {
+   return Transform((this->mat)*t.mat, t.invMat*(this->mat));
 }
 
 Transform translate(const Vec3& delta) {

@@ -111,6 +111,7 @@ bool Mesh::intersect(const Ray &r){
                faceIndex = k;
                 min_dist = d;
                 i.point = intersection_point;
+                i.point.w = 1.0;
                 i.point = this->t*i.point;
                 c_p1 = p1;
                 c_p2 = p2;
@@ -149,6 +150,7 @@ bool Mesh::intersect(const Ray &r){
                faceIndex = k;
                 min_dist = d;
                 i.point = intersection_point;
+                i.point.w = 1.0;
                 i.point = this->t*i.point;
                 c_p1 = p1;
                 c_p2 = p2;
@@ -161,6 +163,7 @@ bool Mesh::intersect(const Ray &r){
     {
        i.dist = (i.point - r.o).length();
        i.normal = Vec3(faces[faceIndex]->normal[0]->data[0], faces[faceIndex]->normal[0]->data[1], faces[faceIndex]->normal[0]->data[2]);
+       i.normal = t.transformNormal(i.normal);
         //normal = Vec3(normals[faces[i]->normal]->data[0], normals[faces[i]->normal]->data[1], normals[faces[i]->normal]->data[2]);
         //i.normal = (c_p2 - c_p1).cross(c_p3 - c_p1);
         //intersection.normal = (c_p3 - c_p1).crossProduct(c_p2 - c_p1);

@@ -16,6 +16,7 @@ class Transform {
         Vec3 transformNormal(const Vec3& normal);
 
         //TODO URGENTE concatenar transformações!
+        Transform operator*(const Transform& t);
 
         Mat4x4 mat;
         Mat4x4 invMat;
