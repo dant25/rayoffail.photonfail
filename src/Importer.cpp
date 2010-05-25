@@ -13,6 +13,8 @@
 #include "math/Vec3.h"
 #include "lights/Light.h"
 #include "lights/DiskLight.h"
+#include "lights/PointLight.h"
+#include "lights/SpotLight.h"
 #include <map>
 
 using std::map;
@@ -392,8 +394,61 @@ void loadLight(TiXmlElement *collada, map<string, Light*>& lights) {
          l = new DiskLight(intensity, centre, normal, radius);
          lights[string(lightId)] = l;
       }
-      //Ler spot light
       //Ler point light
+      TiXmlElement* point = light->FirstChildElement("technique_common")->FirstChildElement("point");
+      if(point) {
+         SpectralQuantity intensity;
+         loadColor(point->FirstChildElement("color"), intensity);
+
+         //Lê o vetor pos
+         TiXmlElement* pointPos = disk->FirstChildElement("pos");
+         Vec3 pos(0.0, 0.0, 0.0, 1.0);
+         char *pTok = strtok((char*) pointPos->GetText(), " ");
+         pos.x = atof(pTok);
+         pTok = strtok(NULL, " ");
+         pos.y = atof(pTok);
+         pTok = strtok(NULL, " ");
+         pos.z = atof(pTok);
+
+         l = new PointLight(pos, intensity);
+         lights[string(lightId)] = l;
+      }
+      //Ler spot light
+      TiXmlElement* spot = light->FirstChildElement("technique_common")->FirstChildElement("spot");
+      if(spot) {
+         SpectralQuantity intensity;
+         loadColor(point->FirstChildElement("color"), intensity);
+
+         //Lê o vetor pos
+         TiXmlElement* spotPos = spot->FirstChildElement("pos");
+         Vec3 pos(0.0, 0.0, 0.0, 1.0);
+         char *pTok = strtok((char*) spotPos->GetText(), " ");
+         pos.x = atof(pTok);
+         pTok = strtok(NULL, " ");
+         pos.y = atof(pTok);
+         pTok = strtok(NULL, " ");
+         pos.z = atof(pTok);
+
+         //Lê direção do spot
+         TiXmlElement* spotDir = spot->FirstChildElement("dir");
+         Vec3 dir(0.0, 0.0, 0.0);
+         char *dTok = strtok((char*) spotDir->GetText(), " ");
+         dir.x = atof(dTok);
+         dTok = strtok(NULL, " ");
+         dir.y = atof(dTok);
+         dTok = strtok(NULL, " ");
+         dir.z = atof(dTok);
+
+         //Lê angulo do spot (em graus)
+         TiXmlElement* spotAngle = spot->FirstChildElement("falloff_angle");
+         float cutoff = atof(spotAngle->GetText());
+
+         //Lê expoente do spot
+         TiXmlElement* spotExp = spot->FirstChildElement("falloff_exponent");
+         float exp = atof(spotExp->GetText());
+
+         l = new SpotLight(intensity, pos, dir, cutoff, exp);
+      }
       light = light->NextSiblingElement("light");
    }
 }
