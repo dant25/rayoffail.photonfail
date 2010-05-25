@@ -2,6 +2,7 @@
 #define UTILITIES_H_
 
 #include <cstdlib>
+#include <cmath>
 
 #define RAND(inf, sup) (inf + ((((sup)-(inf))/(float)RAND_MAX)*rand()))
 #define PROB(prob) (rand() < ((prob)*(RAND_MAX-1)))
