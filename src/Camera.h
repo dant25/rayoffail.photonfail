@@ -10,6 +10,9 @@ public:
 
     Ray generateRay(int x, int y) const;
 
+    void depthOfField(bool);
+    void setDepthOfField(float focalPlaneDist, float lensRadius);
+
     int getWidth() const {
     	return x_res;
     }
@@ -32,8 +35,12 @@ private:
     float W;
 
     int num_samples;
-
     const float L;
+
+    //Parâmetros de profundidade de campo
+    bool dof;				// Liga ou desliga.
+    float focalPlaneDist;	// Distancia entre o plano de focagem perfeita e a lente.
+    float lensRadius;			// Raio da lente.
 };
 
 #endif
