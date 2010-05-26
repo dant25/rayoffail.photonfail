@@ -4,7 +4,7 @@
 using namespace std;
 
 Scene::Scene() {
-	background_color = SpectralQuantity(0.0, 0.0, 0.0);
+	background_color = SpectralQuantity(0.1, 0.1, 0.1);
 	maxDepth = 2;
 }
 

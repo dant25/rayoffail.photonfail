@@ -17,7 +17,8 @@ class Image {
 
       int getWidth() const;
       int getHeight() const;
-   private:
+
+private:
       void clear();
 
       int width, height;
