@@ -8,7 +8,7 @@
 using namespace std;
 
 
-Camera::Camera(const Vec3 &pos, const Vec3 &lookat, const Vec3 &up, int x_res, int y_res, float focal_dist, int num_samples)
+Camera::Camera(const Vec3 &pos, const Vec3 &lookat, const Vec3 &up, int x_res, int y_res, float focal_dist)
 :   L(1.0)
 {
     this->position = pos;
@@ -30,7 +30,6 @@ Camera::Camera(const Vec3 &pos, const Vec3 &lookat, const Vec3 &up, int x_res, i
         H = L;
     }
 
-    this->num_samples = num_samples;
     dof = false;
 }
 
@@ -77,16 +76,15 @@ Ray Camera::generateRay(int x, int y) const {
 	}
 	else
 	{
-	    if(num_samples == 1)
-	    {
-			Vec3 dir = (lookat*focal_dist) + (up*((_H/2.0)-(y*dp))) + (right*((x*dp)-(_W/2.0)));
-			dir.normalize();
-	    }
-	    else
-	    {
-			Vec3 dir = (lookat*focal_dist) + (up*((_H/2.0)-(y*dp)+RAND(-dp/2.0, dp/2.0))) + (right*((x*dp)-(_W/2.0)+RAND(-dp/2.0, dp/2.0)));
-			dir.normalize();
-	    }
+		/*
+		//Na direção do meio do pixel
+		Vec3 dir = (lookat*focal_dist) + (up*((_H/2.0)-(y*dp))) + (right*((x*dp)-(_W/2.0)));
+		dir.normalize();
+		*/
+
+		//Direçao aleatória passando pelo pixel
+		/*Vec3*/ dir = (lookat*focal_dist) + (up*((_H/2.0)-(y*dp)+RAND(-dp/2.0, dp/2.0))) + (right*((x*dp)-(_W/2.0)+RAND(-dp/2.0, dp/2.0)));
+		dir.normalize();
 	}
 
 	return Ray(position, dir);
