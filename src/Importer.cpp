@@ -15,6 +15,7 @@
 #include "lights/DiskLight.h"
 #include "lights/PointLight.h"
 #include "lights/SpotLight.h"
+#include "Texture.h"
 #include <map>
 
 using std::map;
@@ -25,6 +26,8 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
 void loadMaterials(TiXmlElement *collada, map<string, Material*>& materials);
 void loadScene(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Light*>& lights, Scene *s);
 void loadLight(TiXmlElement *collada, map<string, Light*>& lights);
+Texture* loadTexture(TiXmlElement *collada, const char* id);
+Texture* loadImage(TiXmlElement *collada, const char *id);
 void loadColor(TiXmlElement *color, SpectralQuantity &sq);
 void fixStr(char *str);
 
@@ -108,6 +111,7 @@ void loadScene(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Li
       if(instanceGeometry) {
          char *url = (char*) instanceGeometry->Attribute("url");
          fixStr(url);
+         //Mesh *m = readGeometry(collada, url);
          Mesh *m = meshes[string(url)];
          m->t = translateTransform;
          s->addObject(m);    
@@ -149,9 +153,16 @@ void loadMaterials(TiXmlElement *collada, map<string, Material*>& materials) {
             loadColor(color, ka);
 
             TiXmlElement *diffuse = phong->FirstChildElement("diffuse");
-            color = diffuse->FirstChildElement("color");
+            TiXmlElement *texture = diffuse->FirstChildElement("texture");
             SpectralQuantity kd;
-            loadColor(color, kd);
+            Texture *tex = NULL;
+            if(texture) {
+               tex = loadTexture(collada, texture->Attribute("texture"));
+            }
+            else {
+               color = diffuse->FirstChildElement("color");
+               loadColor(color, kd);
+            }
 
             TiXmlElement *specular = phong->FirstChildElement("specular");
             color = specular->FirstChildElement("color");
@@ -165,7 +176,8 @@ void loadMaterials(TiXmlElement *collada, map<string, Material*>& materials) {
             TiXmlElement *reflectivity = phong->FirstChildElement("reflectivity");
             value = reflectivity->FirstChildElement("float");
             float spec = atof(value->GetText());
-            
+           
+            //FIXME atribuir textura ao material!
             Material *m = new Material(kd, ks, ka, matShininess, spec);
             std::cout << "adicionando material id: " << matId << std::endl;
             //s->addMaterial(matId, m);
@@ -287,7 +299,7 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
                      float x = atof(texTok);
                      texTok = strtok(NULL, " ");
                      float y = atof(texTok);
-                     //TODO: triangle[i]->addTexCoord(x, y);
+                     m->addTexCoord(x, y);
 
                      std::cout << "addtexcoord: (" << x << ", " << y << ");" << std::endl;
                   }
@@ -325,8 +337,37 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
                   std::cout << "addface: (" << vertId1  << ", " << vertId2 << ", " << vertId3 << ")" << std::endl;
                }
                //TODO ler texcoords
-               /*else if (numOffset == 3) {
-                 float vertId1 = atoi(tok);
+               else if (numOffset == 3) {
+                  int vertId1 = atoi(indexTok);
+
+                  indexTok = strtok(NULL, " ");
+                  int vertNorm1 = atoi(indexTok);
+
+                  indexTok = strtok(NULL, " ");
+                  int texCoord1 = atoi(indexTok);
+
+                  indexTok = strtok(NULL, " ");
+                  int vertId2 = atoi(indexTok);
+
+                  indexTok = strtok(NULL, " ");
+                  int vertNorm2 = atoi(indexTok);
+                  
+                  indexTok = strtok(NULL, " ");
+                  int texCoord2 = atoi(indexTok);
+
+                  indexTok = strtok(NULL, " ");
+                  int vertId3 = atoi(indexTok);
+
+                  indexTok = strtok(NULL, " ");
+                  int vertNorm3 = atoi(indexTok);
+                  
+                  indexTok = strtok(NULL, " ");
+                  int texCoord3 = atoi(indexTok);
+
+                  indexTok = strtok(NULL, " ");
+
+                  //m->addFace()
+                 /*float vertId1 = atoi(tok);
                  tok = strtok(NULL, " ");
                  float vertNorm1 = atoi(tok);
                  tok = strtok(NULL, " ");
@@ -336,8 +377,8 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
                  tok = strtok(NULL, " ");
                  float vertId3 = atoi(tok);
                  tok = strtok(NULL, " ");
-                 float vertNorm3 = atoi(tok);
-                 }*/
+                 float vertNorm3 = atoi(tok);*/
+                 }
             }
             //std::cout << "Vertices dos triangulos: " << p->GetText() << std::endl;
 
@@ -449,6 +490,53 @@ void loadLight(TiXmlElement *collada, map<string, Light*>& lights) {
       }
       light = light->NextSiblingElement("light");
    }
+}
+
+Texture* loadTexture(TiXmlElement *collada, const char* id) {
+   TiXmlElement* profileCommon = collada->FirstChildElement("library_effects")->FirstChildElement("effect")->FirstChildElement("profile_COMMON");
+
+   TiXmlElement* newparam = profileCommon->FirstChildElement("newparam");
+   while(newparam) {
+      if(strcmp(id, newparam->Attribute("sid")) == 0)
+         break;
+      newparam = newparam->NextSiblingElement("newparam");
+   }
+
+   TiXmlElement* sampler2D = newparam->FirstChildElement("sampler2D");
+   TiXmlElement* samplerSouce = sampler2D->FirstChildElement("source");
+   char* sourceid = (char*) samplerSouce->GetText();
+   //FIXME ignorando filtros
+
+   newparam = profileCommon->FirstChildElement("newparam");
+   while(newparam) {
+      if(strcmp(sourceid, newparam->Attribute("sid")) == 0)
+         break;
+      newparam = newparam->NextSiblingElement("newparam");
+   }
+
+   TiXmlElement* surface = newparam->FirstChildElement("surface");
+   TiXmlElement* initFrom = surface->FirstChildElement("init_from");
+
+   //FIXME deveria retornar uma IMG
+   //FIXME considerar <format>
+   Texture *tex = loadImage(collada, initFrom->GetText());
+
+   return tex;
+}
+
+Texture* loadImage(TiXmlElement *collada, const char *id) {
+   TiXmlElement* libraryImages = collada->FirstChildElement("library_images");
+   TiXmlElement* image = libraryImages->FirstChildElement("image");
+
+   while(image) {
+      if(strcmp(id, image->Attribute("id"))) 
+         break;
+      image = image->NextSiblingElement("image");
+   }
+
+   TiXmlElement* initFrom = image->FirstChildElement("init_from");
+   Texture *tex = new Texture(initFrom->GetText());
+   return tex;
 }
 
 void loadColor(TiXmlElement *color, SpectralQuantity &sq) {

@@ -34,6 +34,26 @@ void Mesh::addFace(int index1, int index2, int index3, int nid1, int nid2, int n
     face->normal[1] = normals[nid2];
     face->normal[2] = normals[nid3];
 
+    face->tex[0] = face->tex[1] = face->tex[2] = NULL;
+
+    faces.push_back(face);
+}
+void Mesh::addFace(int index1, int index2, int index3, int nid1, int nid2, int nid3,
+                   int tex1, int tex2, int tex3) {
+    Face* face = new Face;
+    face->vertices[0] = vertices[index1];
+    face->vertices[1] = vertices[index2];
+    face->vertices[2] = vertices[index3];
+
+    //face->normal = normal;
+    face->normal[0] = normals[nid1];
+    face->normal[1] = normals[nid2];
+    face->normal[2] = normals[nid3];
+
+    face->tex[0] = texcoords[tex1];
+    face->tex[1] = texcoords[tex2];
+    face->tex[2] = texcoords[tex3];
+
     faces.push_back(face);
 }
 
@@ -46,6 +66,14 @@ void Mesh::addNormal(float x, float y, float z)
     normal->data[2] = z;
 
     normals.push_back(normal);
+}
+
+void Mesh::addTexCoord(float s, float t)  {
+   TexCoord* tex = new TexCoord;
+   tex->data[0] = s;
+   tex->data[1] = t;
+
+   texcoords.push_back(tex);
 }
 
 #include <iostream>
