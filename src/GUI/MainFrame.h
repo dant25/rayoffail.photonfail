@@ -21,6 +21,7 @@ public:
 	MainFrame( wxWindow* parent );
 
 	//Event handlers
+	virtual void onIdle( wxIdleEvent& event );
 	virtual void onStart( wxCommandEvent& event );
 	virtual void onOpenMenu( wxCommandEvent& event );
 	virtual void onSaveImageMenu( wxCommandEvent& event );
@@ -28,9 +29,12 @@ public:
 
 private:
 	Renderer *renderer;
-
 	Scene *scene;
 	Camera *camera;
+
+	bool rendering;
+	wxImage *image;
+	wxBitmap *bitmap;
 };
 
 #endif // __MainFrame__

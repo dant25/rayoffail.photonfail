@@ -21,6 +21,30 @@ public:
     	return y_res;
     }
 
+    int getNumSamples() const {
+    	return num_samples;
+    }
+
+    void setNumSamples(int ns){
+    	num_samples = ns;
+    }
+
+    void setResolution(int x, int y){
+    	x_res = x;
+    	y_res = y;
+
+        if(x_res > y_res){
+            dp = L/(float)x_res;
+            H = dp*y_res;
+            W = L;
+        }
+        else{
+            dp = L/y_res;
+            W = dp*x_res;
+            H = L;
+        }
+    }
+
 private:
     Vec3 position;
     Vec3 lookat;
