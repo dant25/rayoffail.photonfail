@@ -4,20 +4,15 @@
 
 Image*  Renderer::render(const Scene& s, const Camera& c) {
     Image *img = new Image(c.getWidth(), c.getHeight());
-    //int numSamples = c.getNumSamples();
-    int numSamples = 1;
 
     //Loop principal, cria numSamples raios pra cada pixel
     SpectralQuantity color;
-    for(int i = 0; i < img->getWidth(); i++)
+    for(int i = 0; i < img->getWidth(); i++){
         for(int j = 0; j < img->getHeight(); j++) {
-        	for(int samp = 0; samp < numSamples; samp++){
-				Ray r = c.generateRay(i, j);
-
-				img->setPixel(i, j, img->getPixel(i, j) + s.render(r));
-        	}
-
-        	img->setPixel(i, j, img->getPixel(i, j)/(float)numSamples);
+			Ray r = c.generateRay(i, j);
+			img->setPixel(i, j, img->getPixel(i, j) + s.render(r));
         }
+    }
+
     return img;
 }

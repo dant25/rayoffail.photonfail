@@ -33,8 +33,11 @@ private:
 	Camera *camera;
 
 	bool rendering;
+	Image *img;
 	wxImage *image;
 	wxBitmap *bitmap;
+
+	void refreshPreview();
 };
 
 #endif // __MainFrame__
