@@ -276,7 +276,6 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
                   while(meshSource) {
                      if(strcmp(meshSource->Attribute("id"), inputAttrName) == 0) 
                         break;
-                     
                      meshSource = meshSource->NextSiblingElement("source");
                   }
                   //meshSource guarda um ponteiro para o source das positions
@@ -288,7 +287,6 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
                      float x = atof(texTok);
                      texTok = strtok(NULL, " ");
                      float y = atof(texTok);
-                     //m->addNormal(x, y);
                      //TODO: triangle[i]->addTexCoord(x, y);
 
                      std::cout << "addtexcoord: (" << x << ", " << y << ");" << std::endl;
