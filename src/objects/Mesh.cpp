@@ -1,7 +1,6 @@
-
 #include "Mesh.h"
-
 #include "../math/Vec3.h"
+#include "../math/Utilities.h"
 
 
 Mesh::Mesh()
@@ -49,6 +48,7 @@ void Mesh::addNormal(float x, float y, float z)
     normals.push_back(normal);
 }
 
+#include <iostream>
 bool Mesh::intersect(const Ray &r){
     //Transforma o raio pela inversa da transformada de mesh
    Ray ray = t.getInverse()*r;
@@ -162,7 +162,36 @@ bool Mesh::intersect(const Ray &r){
     if(hit)
     {
        i.dist = (i.point - r.o).length();
-       i.normal = Vec3(faces[faceIndex]->normal[0]->data[0], faces[faceIndex]->normal[0]->data[1], faces[faceIndex]->normal[0]->data[2]);
+       Vec3 v1, v2, v3;
+       v1 = Vec3(faces[faceIndex]->vertices[0]->data[0], faces[faceIndex]->vertices[0]->data[1],
+                 faces[faceIndex]->vertices[0]->data[2]);
+       v2 = Vec3(faces[faceIndex]->vertices[1]->data[0], faces[faceIndex]->vertices[1]->data[1],
+                 faces[faceIndex]->vertices[1]->data[2]);
+       v3 = Vec3(faces[faceIndex]->vertices[2]->data[0], faces[faceIndex]->vertices[2]->data[1],
+                  faces[faceIndex]->vertices[2]->data[2]);
+        //Modo do pbrt de achar coordenadas baricêntricas
+       Vec3 e1 = v2 - v1;
+       Vec3 e2 = v3 - v1;
+       Vec3 s1 = cross(ray.d, e2);
+       float divisor = dot(s1, e1);
+       Vec3 d = ray.o - v1;
+       float b1 = dot(d, s1)/divisor;
+       Vec3 s2 = cross(d, e1);
+       float b2 = dot(ray.d, s2)/divisor;
+       float b3 = 1.0 - b1 - b2;
+       //Modo mazela de achar coordenadas baricêntricas
+       float l1, l2, l3;
+       //barycentricCoords(v1, v2, v3, i.point, l1, l2, l3);
+       Vec3 n1, n2, n3;
+       n1 = Vec3(faces[faceIndex]->normal[0]->data[0], faces[faceIndex]->normal[0]->data[1],
+                 faces[faceIndex]->normal[0]->data[2]);
+       n2 = Vec3(faces[faceIndex]->normal[1]->data[0], faces[faceIndex]->normal[1]->data[1],
+                 faces[faceIndex]->normal[1]->data[2]);
+       n3 = Vec3(faces[faceIndex]->normal[2]->data[0], faces[faceIndex]->normal[2]->data[1],
+                  faces[faceIndex]->normal[2]->data[2]);
+       i.normal = n1*b3+ n2*b1 + n3*b2;
+       //i.normal = normalize(i.normal);
+       //i.normal = Vec3(faces[faceIndex]->normal[0]->data[0], faces[faceIndex]->normal[0]->data[1], faces[faceIndex]->normal[0]->data[2]);
        i.normal = t.transformNormal(i.normal);
         //normal = Vec3(normals[faces[i]->normal]->data[0], normals[faces[i]->normal]->data[1], normals[faces[i]->normal]->data[2]);
         //i.normal = (c_p2 - c_p1).cross(c_p3 - c_p1);
@@ -178,6 +207,7 @@ bool Mesh::intersect(const Ray &r){
 
     return false;
 }
+
 
 
 Vec3 Mesh::samplePoint(){
