@@ -6,7 +6,7 @@
 
 class Camera{
 public:
-    Camera(const Vec3 &pos, const Vec3 &lookat, const Vec3 &up, int x_res = 500, int y_res = 500, float focal_dist = 1.0, int num_samples = 1);
+    Camera(const Vec3 &pos, const Vec3 &lookat, const Vec3 &up, int x_res = 500, int y_res = 500, float focal_dist = 1.0);
 
     Ray generateRay(int x, int y) const;
 
@@ -19,14 +19,6 @@ public:
 
     int getHeight() const {
     	return y_res;
-    }
-
-    int getNumSamples() const {
-    	return num_samples;
-    }
-
-    void setNumSamples(int ns){
-    	num_samples = ns;
     }
 
     void setResolution(int x, int y){
@@ -58,7 +50,6 @@ private:
     float H;
     float W;
 
-    int num_samples;
     const float L;
 
     //Parâmetros de profundidade de campo
