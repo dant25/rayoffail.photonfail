@@ -445,7 +445,7 @@ void loadLight(TiXmlElement *collada, map<string, Light*>& lights) {
          loadColor(point->FirstChildElement("color"), intensity);
 
          //Lê o vetor pos
-         TiXmlElement* pointPos = disk->FirstChildElement("pos");
+         TiXmlElement* pointPos = point->FirstChildElement("pos");
          Vec3 pos(0.0, 0.0, 0.0, 1.0);
          char *pTok = strtok((char*) pointPos->GetText(), " ");
          pos.x = strToFloat(pTok);
