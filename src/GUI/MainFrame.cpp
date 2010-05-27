@@ -15,13 +15,10 @@ MainFrame::MainFrame( wxWindow* parent )
 :
 MainFrame_Base( parent )
 {
-	camera = new Camera(Vec3(0.0, 0.0, 10.0), Vec3(0.0, 0.0, -1.0), Vec3(0.0, 1.0, 0.0), 500, 500);
-	scene = new Scene();
+	camera = 0;
+	scene = 0;
 	rendering = false;
 	img = 0;
-
-	scene->addLight(new PointLight(Vec3(0.0, 0.0, 10.0), SpectralQuantity(0.7, 0.7, 0.7)));
-	scene->addObject(new Sphere(Material(SpectralQuantity(0.7, 0.7, 0.0), SpectralQuantity(0.7, 0.7, 0.0), SpectralQuantity(0.1, 0.1, 0.1), 32.0, 0.0), 5.0, Vec3(0.0, 0.0, 0.0)));
 }
 
 
@@ -60,6 +57,9 @@ void MainFrame::onOpenMenu( wxCommandEvent& event )
 		statusBar->SetStatusText(_("Cena carregada."), 0);
 
 		//TODO: E a Câmera?
+		camera = new Camera(Vec3(-2.78, -8.0, 2.73, 1.0), Vec3(0.0, 1.0, 0.0), Vec3(0.0, 0.0, 1.0), 500, 500);
+		camera->depthOfField(true);
+		camera->setDepthOfField(10.0, 0.5);
 	}
 }
 
@@ -99,10 +99,10 @@ void MainFrame::onIdle( wxIdleEvent& event )
 		//Apenas um loop de cada vez.
 		//O resultado deve ser acumulado em img.
 		if(!img)
-			img = renderer->render(*scene, *camera);
+			img = renderer.render(*scene, *camera);
 		else
 		{
-			Image *aux = renderer->render(*scene, *camera);
+			Image *aux = renderer.render(*scene, *camera);
 			for(int y=0; y < aux->getHeight(); y++)
 			{
 				for(int x=0; x < aux->getWidth(); x++)

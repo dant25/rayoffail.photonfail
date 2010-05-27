@@ -30,6 +30,12 @@ DiskLight::DiskLight(	const SpectralQuantity &intensity,
 }
 
 
+SpectralQuantity DiskLight::getIntensity(const Vec3 &from)
+{
+	return intensity*MAX(i.normal.dot(from), 0.0);
+}
+
+
 bool DiskLight::intersect(const Ray& r) {
 	const double n_dot_d = i.normal.dot(r.d);
 	Vec3 intersection_point;
