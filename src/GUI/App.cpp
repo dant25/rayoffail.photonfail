@@ -9,6 +9,7 @@ IMPLEMENT_APP(App);
 bool App::OnInit()
 {
     bool wxsOK = true;
+
     if ( wxsOK )
     {
     	MainFrame* frame = new MainFrame(0);
@@ -16,5 +17,5 @@ bool App::OnInit()
     	SetTopWindow(frame);
     }
 
-    return wxsOK;
+    return true;
 }
