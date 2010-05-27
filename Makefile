@@ -92,7 +92,7 @@ INCDIRS		+= src src/math src/objects src/lights src/util src/util/tinyxml
 LIBDIRS		+= 
 
 # Additional locations for source files
-SRCDIRS		= src src/math src/objects src/lights src/util src/util/tinyxml
+SRCDIRS		= src src/math src/objects src/lights src/util src/util/tinyxml src/GUI
 
 # Object files and the target will be placed in this directory with an
 # underscore and the buildname appended (e.g., for the "debug" build: objs_debug/)
