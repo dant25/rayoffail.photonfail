@@ -17,6 +17,7 @@
 #include "lights/SpotLight.h"
 #include "Texture.h"
 #include <map>
+#include "math/Utilities.h"
 
 using std::map;
 using std::string;
@@ -75,7 +76,7 @@ void loadScene(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Li
       char* tTok = strtok((char*)t->GetText(), " ");
       float tr[3];
       for(int i = 0; i < 3; i++) {
-         tr[i] = atof(tTok);
+         tr[i] = strToFloat(tTok);
          tTok = strtok(NULL, " ");
       }
 
@@ -88,7 +89,7 @@ void loadScene(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Li
       rotzTok = strtok(NULL, " ");
       rotzTok = strtok(NULL, " ");
       rotzTok = strtok(NULL, " ");
-      Transform rz = rotateZ(atof(rotzTok));
+      Transform rz = rotateZ(strToFloat(rotzTok));
       
       //FIXME assumindo que a segunda rotação é roty
       TiXmlElement* roty = rotz->NextSiblingElement("rotate");
@@ -96,7 +97,7 @@ void loadScene(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Li
       rotyTok = strtok(NULL, " ");
       rotyTok = strtok(NULL, " ");
       rotyTok = strtok(NULL, " ");
-      Transform ry = rotateY(atof(rotzTok));
+      Transform ry = rotateY(strToFloat(rotzTok));
       
       //FIXME assumindo que a terceira rotação é rotx
       TiXmlElement* rotx = roty->NextSiblingElement("rotate");
@@ -104,7 +105,7 @@ void loadScene(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Li
       rotxTok = strtok(NULL, " ");
       rotxTok = strtok(NULL, " ");
       rotxTok = strtok(NULL, " ");
-      Transform rx = rotateX(atof(rotxTok));
+      Transform rx = rotateX(strToFloat(rotxTok));
       
       //Ler instance_geometry
       TiXmlElement* instanceGeometry = node->FirstChildElement("instance_geometry");
@@ -171,11 +172,11 @@ void loadMaterials(TiXmlElement *collada, map<string, Material*>& materials) {
 
             TiXmlElement *shininess = phong->FirstChildElement("shininess");
             TiXmlElement *value = shininess->FirstChildElement("float");
-            float matShininess = atof(value->GetText());
+            float matShininess = strToFloat(value->GetText());
 
             TiXmlElement *reflectivity = phong->FirstChildElement("reflectivity");
             value = reflectivity->FirstChildElement("float");
-            float spec = atof(value->GetText());
+            float spec = strToFloat(value->GetText());
            
             //FIXME atribuir textura ao material!
             Material *m = new Material(kd, ks, ka, matShininess, spec);
@@ -246,13 +247,17 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
                         //char *coords = floatArray->GetText();
                         char *vertTok = strtok((char*)floatArray->GetText(), " ");
                         for(int i = 0; i < numVertexCoords/3; i++) {
-                           float x = atof(vertTok);
+                        	std::cout << "String: (" << vertTok << ");" << std::endl;
+                           float x = strToFloat(vertTok);
                            vertTok = strtok(NULL, " ");
-                           float y = atof(vertTok);
+                           std::cout << "String: (" << vertTok << ");" << std::endl;
+                           float y = strToFloat(vertTok);
                            vertTok = strtok(NULL, " ");
-                           float z = atof(vertTok);
+                           std::cout << "String: (" << vertTok << ");" << std::endl;
+                           float z = strToFloat(vertTok);
                            vertTok = strtok(NULL, " ");
                            m->addVertex(x, y, z);
+
                            std::cout << "addvertex: (" << x << ", " << y << ", " << z << ");" << std::endl;
                         }
                         //std::cout << "\tfloat array: " << floatArray->GetText() << std::endl;
@@ -272,11 +277,11 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
                   int numNormalCoords = atoi(floatArray->Attribute("count"));
                   char *normalTok = strtok((char*)floatArray->GetText(), " ");
                   for(int i = 0;  i < numNormalCoords/3; i++) {
-                     float x = atof(normalTok);
+                     float x = strToFloat(normalTok);
                      normalTok = strtok(NULL, " ");
-                     float y = atof(normalTok);
+                     float y = strToFloat(normalTok);
                      normalTok = strtok(NULL, " ");
-                     float z = atof(normalTok);
+                     float z = strToFloat(normalTok);
                      normalTok = strtok(NULL, " ");
                      m->addNormal(x, y, z);
                      std::cout << "addnormal: (" << x << ", " << y << ", " << z << ");" << std::endl;
@@ -296,9 +301,9 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
                   int numTexCoords = atoi(floatArray->Attribute("count"));
                   char *texTok = strtok((char*)floatArray->GetText(), " ");
                   for(int i = 0;  i < numTexCoords/2; i++) {
-                     float x = atof(texTok);
+                     float x = strToFloat(texTok);
                      texTok = strtok(NULL, " ");
-                     float y = atof(texTok);
+                     float y = strToFloat(texTok);
                      m->addTexCoord(x, y);
 
                      std::cout << "addtexcoord: (" << x << ", " << y << ");" << std::endl;
@@ -411,24 +416,24 @@ void loadLight(TiXmlElement *collada, map<string, Light*>& lights) {
          TiXmlElement* diskCentre = disk->FirstChildElement("centre");
          Vec3 centre(0.0, 0.0, 0.0, 1.0);
          char *cTok = strtok((char*) diskCentre->GetText(), " ");
-         centre.x = atof(cTok);
+         centre.x = strToFloat(cTok);
          cTok = strtok(NULL, " ");
-         centre.y = atof(cTok);
+         centre.y = strToFloat(cTok);
          cTok = strtok(NULL, " ");
-         centre.z = atof(cTok);
+         centre.z = strToFloat(cTok);
 
          //Lê o vetor normal
          TiXmlElement* diskNormal = disk->FirstChildElement("normal");
          Vec3 normal(0.0, 0.0, 0.0);
          char *nTok = strtok((char*) diskNormal->GetText(), " ");
-         normal.x = atof(nTok);
+         normal.x = strToFloat(nTok);
          nTok = strtok(NULL, " ");
-         normal.y = atof(nTok);
+         normal.y = strToFloat(nTok);
          nTok = strtok(NULL, " ");
-         normal.z = atof(nTok);
+         normal.z = strToFloat(nTok);
 
          TiXmlElement* diskRadius = disk->FirstChildElement("radius");
-         float radius = atof(diskRadius->GetText());
+         float radius = strToFloat(diskRadius->GetText());
 
          l = new DiskLight(intensity, centre, normal, radius);
          lights[string(lightId)] = l;
@@ -443,11 +448,11 @@ void loadLight(TiXmlElement *collada, map<string, Light*>& lights) {
          TiXmlElement* pointPos = disk->FirstChildElement("pos");
          Vec3 pos(0.0, 0.0, 0.0, 1.0);
          char *pTok = strtok((char*) pointPos->GetText(), " ");
-         pos.x = atof(pTok);
+         pos.x = strToFloat(pTok);
          pTok = strtok(NULL, " ");
-         pos.y = atof(pTok);
+         pos.y = strToFloat(pTok);
          pTok = strtok(NULL, " ");
-         pos.z = atof(pTok);
+         pos.z = strToFloat(pTok);
 
          l = new PointLight(pos, intensity);
          lights[string(lightId)] = l;
@@ -462,29 +467,29 @@ void loadLight(TiXmlElement *collada, map<string, Light*>& lights) {
          TiXmlElement* spotPos = spot->FirstChildElement("pos");
          Vec3 pos(0.0, 0.0, 0.0, 1.0);
          char *pTok = strtok((char*) spotPos->GetText(), " ");
-         pos.x = atof(pTok);
+         pos.x = strToFloat(pTok);
          pTok = strtok(NULL, " ");
-         pos.y = atof(pTok);
+         pos.y = strToFloat(pTok);
          pTok = strtok(NULL, " ");
-         pos.z = atof(pTok);
+         pos.z = strToFloat(pTok);
 
          //Lê direção do spot
          TiXmlElement* spotDir = spot->FirstChildElement("dir");
          Vec3 dir(0.0, 0.0, 0.0);
          char *dTok = strtok((char*) spotDir->GetText(), " ");
-         dir.x = atof(dTok);
+         dir.x = strToFloat(dTok);
          dTok = strtok(NULL, " ");
-         dir.y = atof(dTok);
+         dir.y = strToFloat(dTok);
          dTok = strtok(NULL, " ");
-         dir.z = atof(dTok);
+         dir.z = strToFloat(dTok);
 
          //Lê angulo do spot (em graus)
          TiXmlElement* spotAngle = spot->FirstChildElement("falloff_angle");
-         float cutoff = atof(spotAngle->GetText());
+         float cutoff = strToFloat(spotAngle->GetText());
 
          //Lê expoente do spot
          TiXmlElement* spotExp = spot->FirstChildElement("falloff_exponent");
-         float exp = atof(spotExp->GetText());
+         float exp = strToFloat(spotExp->GetText());
 
          l = new SpotLight(intensity, pos, dir, cutoff, exp);
       }
@@ -544,7 +549,7 @@ void loadColor(TiXmlElement *color, SpectralQuantity &sq) {
    
    //FIXME desconsiderando o alpha da cor
    for(int i = 0; i < 3; i++) {
-      sq.data[i] = atof(tok);
+      sq.data[i] = strToFloat(tok);
       tok = strtok(NULL, " ");
    }
 }

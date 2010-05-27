@@ -1,5 +1,7 @@
 #include "Utilities.h"
+
 #include <iostream>
+#include <sstream>
 
 void barycentricCoords(const Vec3& p1, const Vec3& p2, const Vec3& p3, const Vec3& p,
                        float &l1, float &l2, float &l3) {
@@ -12,4 +14,16 @@ void barycentricCoords(const Vec3& p1, const Vec3& p2, const Vec3& p3, const Vec
    l2 = cross(p2 - p, p3 - p).length()/area;
 //   l3 = cross(p2 - p1, p - p1).length()/area;
    l3 = 1.0 - l1 - l2;
+}
+
+
+float strToFloat(const char *str)
+{
+	float val;
+	std::string string(str);
+ 	std::stringstream stream;
+	stream << string;
+	stream >> val;
+
+	return val;
 }

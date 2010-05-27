@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include "../math/Vec3.h"
 #include "../math/Utilities.h"
+#include <iostream>
 
 
 Mesh::Mesh()
@@ -76,7 +77,7 @@ void Mesh::addTexCoord(float s, float t)  {
    texcoords.push_back(tex);
 }
 
-#include <iostream>
+
 bool Mesh::intersect(const Ray &r){
     //Transforma o raio pela inversa da transformada de mesh
    Ray ray = t.getInverse()*r;
