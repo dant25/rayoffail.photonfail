@@ -57,9 +57,9 @@ void MainFrame::onOpenMenu( wxCommandEvent& event )
 		statusBar->SetStatusText(_("Cena carregada."), 0);
 
 		//TODO: E a Câmera?
-		camera = new Camera(Vec3(-2.78, -8.0, 2.73, 1.0), Vec3(0.0, 1.0, 0.0), Vec3(0.0, 0.0, 1.0), 500, 500);
-		camera->depthOfField(true);
-		camera->setDepthOfField(10.0, 0.5);
+		camera = new Camera(Vec3(23.599, -24.454, 7.197, 1.0), normalize(Vec3(-1.0, 1.0, 0.0)), Vec3(0.0, 0.0, 1.0), 500, 500);
+		//camera->depthOfField(true);
+		//camera->setDepthOfField(10.0, 0.5);
 	}
 }
 
