@@ -58,11 +58,11 @@ Ray Camera::generateRay(int x, int y) const {
 	{
     	Vec3 lens_centre = position;
 
-    	Vec3 film_centre = lens_centre + lookat*(-focal_dist);
+    	Vec3 film_centre = lens_centre + lookat*focal_dist;
     	Vec3 film_point = film_centre + (up*((_H/2.0)-(y*dp)+RAND(-dp/2.0, dp/2.0))) + (right*((x*dp)-(_W/2.0)+RAND(-dp/2.0, dp/2.0)));
         float h = (film_point - film_centre).length();
         float D = focalPlaneDist*sqrt(1.0 + ((h*h)/(focal_dist*focal_dist)));
-        Vec3 Q = (lens_centre - film_point);
+        Vec3 Q = (film_point - lens_centre);
         Q.normalize();
         Q = lens_centre + Q*D;
 
@@ -78,12 +78,12 @@ Ray Camera::generateRay(int x, int y) const {
 	{
 		/*
 		//Na direção do meio do pixel
-		Vec3 dir = (lookat*focal_dist) + (up*((_H/2.0)-(y*dp))) + (right*((x*dp)-(_W/2.0)));
+		dir = (lookat*focal_dist) + (up*((_H/2.0)-(y*dp))) + (right*((x*dp)-(_W/2.0)));
 		dir.normalize();
 		*/
 
 		//Direçao aleatória passando pelo pixel
-		/*Vec3*/ dir = (lookat*focal_dist) + (up*((_H/2.0)-(y*dp)+RAND(-dp/2.0, dp/2.0))) + (right*((x*dp)-(_W/2.0)+RAND(-dp/2.0, dp/2.0)));
+		dir = (lookat*focal_dist) + (up*((_H/2.0)-(y*dp)+RAND(-dp/2.0, dp/2.0))) + (right*((x*dp)-(_W/2.0)+RAND(-dp/2.0, dp/2.0)));
 		dir.normalize();
 	}
 

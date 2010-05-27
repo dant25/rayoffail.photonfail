@@ -28,7 +28,7 @@ public:
 	virtual void onAboutMenu( wxCommandEvent& event );
 
 private:
-	Renderer *renderer;
+	Renderer renderer;
 	Scene *scene;
 	Camera *camera;
 
