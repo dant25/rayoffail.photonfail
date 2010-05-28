@@ -6,5 +6,5 @@ Material::Material(const SpectralQuantity& kd, const SpectralQuantity& ks, const
 	//this->kd = kd/sum;
 	//this->ks = ks/sum;
 	//this->ka = ka/sum;
+    tex = 0;
 }
-

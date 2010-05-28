@@ -222,6 +222,13 @@ bool Mesh::intersect(const Ray &r){
        //i.normal = normalize(i.normal);
        //i.normal = Vec3(faces[faceIndex]->normal[0]->data[0], faces[faceIndex]->normal[0]->data[1], faces[faceIndex]->normal[0]->data[2]);
        i.normal = t.transformNormal(i.normal);
+
+       if(this->m.tex) {
+         i.texCoord[0] = b3*faces[faceIndex]->tex[0]->data[0] + b1*faces[faceIndex]->tex[1]->data[0]
+                           + b2*faces[faceIndex]->tex[2]->data[0];
+         i.texCoord[1] = b3*faces[faceIndex]->tex[0]->data[1] + b1*faces[faceIndex]->tex[1]->data[1]
+                           + b2*faces[faceIndex]->tex[2]->data[1];
+       }
         //normal = Vec3(normals[faces[i]->normal]->data[0], normals[faces[i]->normal]->data[1], normals[faces[i]->normal]->data[2]);
         //i.normal = (c_p2 - c_p1).cross(c_p3 - c_p1);
         //intersection.normal = (c_p3 - c_p1).crossProduct(c_p2 - c_p1);
