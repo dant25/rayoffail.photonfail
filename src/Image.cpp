@@ -33,6 +33,13 @@ int Image::getHeight() const {
 
 void Image::setPixel(int x, int y, const SpectralQuantity& c) {
     color[x][y] = c;
+
+    if(c.data[0] > 1.0)
+       color[x][y].data[0] = 1.0;
+    if(c.data[1] > 1.0)
+       color[x][y].data[1] = 1.0;
+    if(c.data[2] > 1.0)
+       color[x][y].data[2] = 1.0;
 }
 
 SpectralQuantity Image::getPixel(int x, int y) const {
