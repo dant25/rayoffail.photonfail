@@ -46,19 +46,18 @@ Scene* Importer::load(const char* path) {
    TiXmlElement* collada = dae.FirstChildElement("COLLADA");
    if (!collada)
       return 0;
-   
-//   TiXmlElement* visualScene = collada->FirstChildElement("library_visual_scenes");
-   
+
+   //   TiXmlElement* visualScene = collada->FirstChildElement("library_visual_scenes");
+
    map<string, Material*> materials;
-//   TiXmlElement* libraryMaterials = collada->FirstChildElement("library_materials");
-//   TiXmlElement* libraryEffects = collada->FirstChildElement("library_effects");
+   //   TiXmlElement* libraryMaterials = collada->FirstChildElement("library_materials");
+   //   TiXmlElement* libraryEffects = collada->FirstChildElement("library_effects");
    loadMaterials(collada, materials);
-//   TiXmlElement* libraryGeometries = collada->FirstChildElement("library_geometries");
+   //   TiXmlElement* libraryGeometries = collada->FirstChildElement("library_geometries");
    map<string, Mesh*> meshes;
    loadGeometry(collada, meshes, materials);
    map<string, Light*> lights;
    loadLight(collada, lights);
-
    loadScene(collada, meshes, lights, s);
 
    return s;
@@ -68,7 +67,7 @@ Scene* Importer::load(const char* path) {
 void loadScene(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Light*>& lights, Scene *s) {
    TiXmlElement* libraryVisualScenes = collada->FirstChildElement("library_visual_scenes");
    TiXmlElement* visualScene = libraryVisualScenes->FirstChildElement("visual_scene");
-   
+
    TiXmlElement* node = visualScene->FirstChildElement("node");
    while(node) {
       //Ler transformações
@@ -90,7 +89,7 @@ void loadScene(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Li
       rotzTok = strtok(NULL, " ");
       rotzTok = strtok(NULL, " ");
       Transform rz = rotateZ(strToFloat(rotzTok));
-      
+
       //FIXME assumindo que a segunda rotação é roty
       TiXmlElement* roty = rotz->NextSiblingElement("rotate");
       char* rotyTok = strtok((char*)roty->GetText(), " ");
@@ -98,7 +97,7 @@ void loadScene(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Li
       rotyTok = strtok(NULL, " ");
       rotyTok = strtok(NULL, " ");
       Transform ry = rotateY(strToFloat(rotzTok));
-      
+
       //FIXME assumindo que a terceira rotação é rotx
       TiXmlElement* rotx = roty->NextSiblingElement("rotate");
       char* rotxTok = strtok((char*)rotx->GetText(), " ");
@@ -106,7 +105,7 @@ void loadScene(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Li
       rotxTok = strtok(NULL, " ");
       rotxTok = strtok(NULL, " ");
       Transform rx = rotateX(strToFloat(rotxTok));
-      
+
       //Ler instance_geometry
       TiXmlElement* instanceGeometry = node->FirstChildElement("instance_geometry");
       if(instanceGeometry) {
@@ -158,7 +157,10 @@ void loadMaterials(TiXmlElement *collada, map<string, Material*>& materials) {
             SpectralQuantity kd;
             Texture *tex = NULL;
             if(texture) {
+               std::cout << "<loadTexture>" << std::endl;
                tex = loadTexture(collada, texture->Attribute("texture"));
+               std::cout << "</loadTexture>" << std::endl;
+               kd = SpectralQuantity(0.0, 0.0, 0.0);
             }
             else {
                color = diffuse->FirstChildElement("color");
@@ -177,9 +179,11 @@ void loadMaterials(TiXmlElement *collada, map<string, Material*>& materials) {
             TiXmlElement *reflectivity = phong->FirstChildElement("reflectivity");
             value = reflectivity->FirstChildElement("float");
             float spec = strToFloat(value->GetText());
-           
+
             //FIXME atribuir textura ao material!
             Material *m = new Material(kd, ks, ka, matShininess, spec);
+            if(tex)
+               m->tex = tex;
             std::cout << "adicionando material id: " << matId << std::endl;
             //s->addMaterial(matId, m);
             materials[string(matId)] = m;
@@ -233,12 +237,12 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
                      if(strcmp(inputVertSource->Attribute("semantic"), "POSITION") == 0) {
                         char *posSourceName = (char*)inputVertSource->Attribute("source");
                         fixStr(posSourceName);
-                        
+
                         TiXmlElement *meshSource = mesh->FirstChildElement("source");
                         while(meshSource) {
                            if(strcmp(meshSource->Attribute("id"), posSourceName) == 0) 
                               break;
-                           
+
                            meshSource = meshSource->NextSiblingElement("source");
                         }
                         //meshSource guarda um ponteiro para o source das positions
@@ -247,7 +251,7 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
                         //char *coords = floatArray->GetText();
                         char *vertTok = strtok((char*)floatArray->GetText(), " ");
                         for(int i = 0; i < numVertexCoords/3; i++) {
-                        	std::cout << "String: (" << vertTok << ");" << std::endl;
+                           std::cout << "String: (" << vertTok << ");" << std::endl;
                            float x = strToFloat(vertTok);
                            vertTok = strtok(NULL, " ");
                            std::cout << "String: (" << vertTok << ");" << std::endl;
@@ -304,8 +308,8 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
                      float x = strToFloat(texTok);
                      texTok = strtok(NULL, " ");
                      float y = strToFloat(texTok);
+                     texTok = strtok(NULL, " ");
                      m->addTexCoord(x, y);
-
                      std::cout << "addtexcoord: (" << x << ", " << y << ");" << std::endl;
                   }
                   //std::cout << "\tfloat array (texcoord): " << floatArray->GetText() << std::endl;
@@ -356,7 +360,7 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
 
                   indexTok = strtok(NULL, " ");
                   int vertNorm2 = atoi(indexTok);
-                  
+
                   indexTok = strtok(NULL, " ");
                   int texCoord2 = atoi(indexTok);
 
@@ -365,25 +369,14 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
 
                   indexTok = strtok(NULL, " ");
                   int vertNorm3 = atoi(indexTok);
-                  
+
                   indexTok = strtok(NULL, " ");
                   int texCoord3 = atoi(indexTok);
 
                   indexTok = strtok(NULL, " ");
-
-                  //m->addFace()
-                 /*float vertId1 = atoi(tok);
-                 tok = strtok(NULL, " ");
-                 float vertNorm1 = atoi(tok);
-                 tok = strtok(NULL, " ");
-                 float vertId2 = atoi(tok);
-                 tok = strtok(NULL, " ");
-                 float vertNorm2 = atoi(tok);
-                 tok = strtok(NULL, " ");
-                 float vertId3 = atoi(tok);
-                 tok = strtok(NULL, " ");
-                 float vertNorm3 = atoi(tok);*/
-                 }
+                  m->addFace(vertId1, vertId2, vertId3, vertNorm1, vertNorm2, vertNorm3, texCoord1, texCoord2, texCoord3);
+                  std::cout << "addface: (" << vertId1  << ", " << vertId2 << ", " << vertId3 << ")" << std::endl;
+               }
             }
             //std::cout << "Vertices dos triangulos: " << p->GetText() << std::endl;
 
@@ -502,8 +495,10 @@ Texture* loadTexture(TiXmlElement *collada, const char* id) {
 
    TiXmlElement* newparam = profileCommon->FirstChildElement("newparam");
    while(newparam) {
-      if(strcmp(id, newparam->Attribute("sid")) == 0)
+      if(strcmp(id, newparam->Attribute("sid")) == 0) {
+         std::cout << "found id: "  << id << std::endl;
          break;
+      }
       newparam = newparam->NextSiblingElement("newparam");
    }
 
@@ -514,8 +509,10 @@ Texture* loadTexture(TiXmlElement *collada, const char* id) {
 
    newparam = profileCommon->FirstChildElement("newparam");
    while(newparam) {
-      if(strcmp(sourceid, newparam->Attribute("sid")) == 0)
+      if(strcmp(sourceid, newparam->Attribute("sid")) == 0) {
+         std::cout << "sourceid: " << sourceid << std::endl;
          break;
+      }
       newparam = newparam->NextSiblingElement("newparam");
    }
 
@@ -524,7 +521,10 @@ Texture* loadTexture(TiXmlElement *collada, const char* id) {
 
    //FIXME deveria retornar uma IMG
    //FIXME considerar <format>
+   std::cout << "<loadImage>" << std::endl;
+   std::cout << "initFrom: " << initFrom->GetText() << std::endl;
    Texture *tex = loadImage(collada, initFrom->GetText());
+   std::cout << "</loadImage>" << std::endl;
 
    return tex;
 }
@@ -534,19 +534,22 @@ Texture* loadImage(TiXmlElement *collada, const char *id) {
    TiXmlElement* image = libraryImages->FirstChildElement("image");
 
    while(image) {
-      if(strcmp(id, image->Attribute("id"))) 
+      if(strcmp(id, image->Attribute("id")) == 0) {
+         std::cout << "image id: " << id << std::endl;
          break;
+      }
       image = image->NextSiblingElement("image");
    }
 
    TiXmlElement* initFrom = image->FirstChildElement("init_from");
+   std::cout << "carregando imagem: " << initFrom->GetText() << std::endl;
    Texture *tex = new Texture(initFrom->GetText());
    return tex;
 }
 
 void loadColor(TiXmlElement *color, SpectralQuantity &sq) {
    char *tok = strtok((char *) color->GetText(), " ");
-   
+
    //FIXME desconsiderando o alpha da cor
    for(int i = 0; i < 3; i++) {
       sq.data[i] = strToFloat(tok);

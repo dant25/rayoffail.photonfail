@@ -7,6 +7,7 @@ struct Intersection {
     Vec3 point;
     Vec3 normal;
     float dist;
+    float texCoord[2];
 };
 
 #endif

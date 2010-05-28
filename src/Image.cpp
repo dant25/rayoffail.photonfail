@@ -36,6 +36,10 @@ void Image::setPixel(int x, int y, const SpectralQuantity& c) {
 }
 
 SpectralQuantity Image::getPixel(int x, int y) const {
+   if(x > width)
+      x = width;
+   if(y > height)
+      y = height;
 	return color[x][y];
 }
 

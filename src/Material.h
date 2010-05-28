@@ -2,7 +2,7 @@
 #define MATERIAL_H_
 
 #include "SpectralQuantity.h"
-
+#include "Texture.h"
 class Material {
 public:
     Material(const SpectralQuantity& kd, 
@@ -14,6 +14,8 @@ public:
     SpectralQuantity kd, ks, ka;
     float shininess;
     float spec;
+
+   Texture *tex;
 };
 
 #endif
