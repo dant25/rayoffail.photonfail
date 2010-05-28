@@ -57,8 +57,8 @@ void MainFrame::onOpenMenu( wxCommandEvent& event )
 		statusBar->SetStatusText(_("Cena carregada."), 0);
 
 		//TODO: E a Câmera?
-		//camera = new Camera(Vec3(23.599, -24.454, 7.197, 1.0), normalize(Vec3(-1.0, 1.0, 0.0)), Vec3(0.0, 0.0, 1.0), 500, 500);
-        camera = new Camera(Vec3(0, 0, 5.3436, 1.0), normalize(Vec3(0.0, 0.0, -1.0)), Vec3(0.0, 1.0, 0.0), 500, 500);
+		camera = new Camera(Vec3(23.599, -24.454, 7.197, 1.0), normalize(Vec3(-1.0, 1.0, 0.0)), Vec3(0.0, 0.0, 1.0), 500, 500);
+        //camera = new Camera(Vec3(0, 0, 5.3436, 1.0), normalize(Vec3(0.0, 0.0, -1.0)), Vec3(0.0, 1.0, 0.0), 500, 500);
 		//camera->depthOfField(true);
 		//camera->setDepthOfField(10.0, 0.5);
 	}
@@ -133,17 +133,6 @@ void MainFrame::onIdle( wxIdleEvent& event )
 	}
 }
 
-int toUInt(float value) {
-   int newValue = int(255*value);
-   
-   if(newValue > 255)
-      newValue = 255;
-   else if (newValue < 0)
-      newValue = 0;
-
-   return newValue;
-}
-
 void MainFrame::refreshPreview()
 {
 	statusBar->SetStatusText(_("Refreshing preview..."), 1);
@@ -156,9 +145,9 @@ void MainFrame::refreshPreview()
 		for(int x=0; x < img->getWidth(); x++)
 		{
 			SpectralQuantity color = img->getPixel(x, y);
-			int r = toUInt(color.data[0]);
-			int g = toUInt(color.data[1]);
-			int b = toUInt(color.data[2]);
+			int r = color.data[0]*255;
+			int g = color.data[1]*255;
+			int b = color.data[2]*255;
 			image->SetRGB(x, y, r, g, b);
 		}
 	}
