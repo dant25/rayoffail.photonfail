@@ -7,6 +7,11 @@
 #include "../Material.h"
 #include "../Transform.h"
 
+typedef struct BBox_{
+	float minx, miny, minz;
+	float maxx, maxy, maxz;
+} BBox;
+
 class Object {
 public:
     Object(const Material& mat);
