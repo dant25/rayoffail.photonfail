@@ -43,13 +43,13 @@ void Importer::load(const char* path, Scene** s, Camera** c) {
 
    if (!dae.LoadFile(path)){
       std::cout << "Arquivo inválido" << path << std::endl;
-      return 0;
+      return;
    }
 
    //Verificando  o cabeçalho
    TiXmlElement* collada = dae.FirstChildElement("COLLADA");
    if (!collada)
-      return 0;
+      return;
 
    std::cout << "ler a camera" << std::endl;
    *c = loadCamera(collada);
@@ -113,7 +113,7 @@ void loadScene(TiXmlElement *collada, map<string, Object*>& objects, map<string,
          char *url = (char*) instanceGeometry->Attribute("url");
          fixStr(url);
          //Mesh *m = readGeometry(collada, url);
-         Mesh *m = objects[string(url)];
+         Mesh *m = (Mesh*)objects[string(url)];
          m->t = translateTransform;
          s->addObject(m);    
       }
