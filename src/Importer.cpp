@@ -18,23 +18,25 @@
 #include "Texture.h"
 #include <map>
 #include "math/Utilities.h"
+#include "Camera.h"
 
 using std::map;
 using std::string;
 
 //Funções auxiliares
+Camera* loadCamera(TiXmlElement* collada);
 void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Material*>& materials);
 void loadMaterials(TiXmlElement *collada, map<string, Material*>& materials);
 void loadScene(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Light*>& lights, Scene *s);
 void loadLight(TiXmlElement *collada, map<string, Light*>& lights);
-Texture* loadTexture(TiXmlElement *collada, const char* id);
+Texture* loadTexture(TiXmlElement *collada, TiXmlElement* effect, const char* id);
 Texture* loadImage(TiXmlElement *collada, const char *id);
 void loadColor(TiXmlElement *color, SpectralQuantity &sq);
 void fixStr(char *str);
 
 
-Scene* Importer::load(const char* path) {
-   Scene *s = new Scene;
+void Importer::load(const char* path, Scene** s, Camera** c) {
+   *s = new Scene;
    TiXmlDocument dae(path);
 
    if (!dae.LoadFile(path)){
@@ -47,20 +49,17 @@ Scene* Importer::load(const char* path) {
    if (!collada)
       return 0;
 
-   //   TiXmlElement* visualScene = collada->FirstChildElement("library_visual_scenes");
+   std::cout << "ler a camera" << std::endl;
+   *c = loadCamera(collada);
+   std::cout << "camera lida" << std::endl;
 
    map<string, Material*> materials;
-   //   TiXmlElement* libraryMaterials = collada->FirstChildElement("library_materials");
-   //   TiXmlElement* libraryEffects = collada->FirstChildElement("library_effects");
    loadMaterials(collada, materials);
-   //   TiXmlElement* libraryGeometries = collada->FirstChildElement("library_geometries");
    map<string, Mesh*> meshes;
    loadGeometry(collada, meshes, materials);
    map<string, Light*> lights;
    loadLight(collada, lights);
-   loadScene(collada, meshes, lights, s);
-
-   return s;
+   loadScene(collada, meshes, lights, *s);
 }
 
 //FIXME considerando só uma cena
@@ -158,7 +157,7 @@ void loadMaterials(TiXmlElement *collada, map<string, Material*>& materials) {
             Texture *tex = NULL;
             if(texture) {
                std::cout << "<loadTexture>" << std::endl;
-               tex = loadTexture(collada, texture->Attribute("texture"));
+               tex = loadTexture(collada, effect, texture->Attribute("texture"));
                std::cout << "</loadTexture>" << std::endl;
                kd = SpectralQuantity(0.0, 0.0, 0.0);
             }
@@ -490,23 +489,29 @@ void loadLight(TiXmlElement *collada, map<string, Light*>& lights) {
    }
 }
 
-Texture* loadTexture(TiXmlElement *collada, const char* id) {
-   TiXmlElement* profileCommon = collada->FirstChildElement("library_effects")->FirstChildElement("effect")->FirstChildElement("profile_COMMON");
+Texture* loadTexture(TiXmlElement* collada, TiXmlElement *effect, const char* id) {
+   //FIXME pegando o primeiro effect que não tem nada a ver com textura
+   TiXmlElement* profileCommon = effect->FirstChildElement("profile_COMMON");
 
    TiXmlElement* newparam = profileCommon->FirstChildElement("newparam");
+    std::cout << "prcurando id: " << id << std::endl;
    while(newparam) {
+      std::cout << "newparam->sid: " << newparam->Attribute("sid") << std::endl;
       if(strcmp(id, newparam->Attribute("sid")) == 0) {
          std::cout << "found id: "  << id << std::endl;
          break;
       }
       newparam = newparam->NextSiblingElement("newparam");
    }
-
+   
+   std::cout << "a" << std::endl;
    TiXmlElement* sampler2D = newparam->FirstChildElement("sampler2D");
+   std::cout << "a" << std::endl;
    TiXmlElement* samplerSouce = sampler2D->FirstChildElement("source");
-   char* sourceid = (char*) samplerSouce->GetText();
-   //FIXME ignorando filtros
 
+   char* sourceid = (char*) samplerSouce->GetText();
+
+   //FIXME ignorando filtros
    newparam = profileCommon->FirstChildElement("newparam");
    while(newparam) {
       if(strcmp(sourceid, newparam->Attribute("sid")) == 0) {
@@ -516,6 +521,7 @@ Texture* loadTexture(TiXmlElement *collada, const char* id) {
       newparam = newparam->NextSiblingElement("newparam");
    }
 
+   std::cout << "a" << std::endl;
    TiXmlElement* surface = newparam->FirstChildElement("surface");
    TiXmlElement* initFrom = surface->FirstChildElement("init_from");
 
@@ -545,6 +551,48 @@ Texture* loadImage(TiXmlElement *collada, const char *id) {
    std::cout << "carregando imagem: " << initFrom->GetText() << std::endl;
    Texture *tex = new Texture(initFrom->GetText());
    return tex;
+}
+
+//FIXME considerando só uma camera
+Camera* loadCamera(TiXmlElement* collada) {
+   TiXmlElement *libraryCameras = collada->FirstChildElement("library_cameras");
+   TiXmlElement *camera = libraryCameras->FirstChildElement("camera");
+
+   TiXmlElement* perspective = camera->FirstChildElement("optics")->FirstChildElement("technique_common")->FirstChildElement("perspective");
+   
+   std::cout << "ler pos" << std::endl;
+   TiXmlElement* cPos = perspective->FirstChildElement("pos");
+   Vec3 pos(0.0, 0.0, 0.0, 1.0);
+   char *pTok = strtok((char*) cPos->GetText(), " ");
+   pos.x = strToFloat(pTok);
+   pTok = strtok(NULL, " ");
+   pos.y = strToFloat(pTok);
+   pTok = strtok(NULL, " ");
+   pos.z = strToFloat(pTok);
+
+   std::cout << "ler lookat" << std::endl;
+   TiXmlElement* cLookat = perspective->FirstChildElement("lookat");
+   Vec3 lookat;
+   char *lTok = strtok((char*) cLookat->GetText(), " ");
+   lookat.x = strToFloat(lTok);
+   lTok = strtok(NULL, " ");
+   lookat.y = strToFloat(lTok);
+   lTok = strtok(NULL, " ");
+   lookat.z = strToFloat(lTok);
+
+   std::cout << "ler up" << std::endl;
+   TiXmlElement* cUp = perspective->FirstChildElement("up");
+   Vec3 up;
+   char *upTok = strtok((char*) cUp->GetText(), " ");
+   up.x = strToFloat(upTok);
+   upTok = strtok(NULL, " ");
+   up.y = strToFloat(upTok);
+   upTok = strtok(NULL, " ");
+   up.z = strToFloat(upTok);
+
+   std::cout << "instanciar camera" << std:: endl;
+   Camera *c = new Camera(pos, lookat, up);
+   return c;
 }
 
 void loadColor(TiXmlElement *color, SpectralQuantity &sq) {
