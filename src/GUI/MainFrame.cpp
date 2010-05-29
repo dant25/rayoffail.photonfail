@@ -7,6 +7,7 @@
 
 #include "../lights/PointLight.h"
 #include "../objects/Sphere.h"
+#include "../math/Utilities.h"
 
 using namespace std;
 
@@ -29,9 +30,18 @@ void MainFrame::onStart( wxCommandEvent& event )
 		long xres, yres;
 		xRes_textCtrl->GetValue().ToLong(&xres);
 		yRes_textCtrl->GetValue().ToLong(&yres);
+		image = new wxImage((int)xres, (int)yres);
 		camera->setResolution(xres, yres);
 
-		image = new wxImage((int)xres, (int)yres);
+		if(dof_checkBox->IsChecked())
+		{
+			camera->depthOfField(true);
+
+			double dist, lensRad;
+			dist = strToFloat(dofDistance_textCtrl->GetValue().ToAscii());
+			lensRad = strToFloat(lensRadius_textCtrl->GetValue().ToAscii());
+			camera->setDepthOfField(dist, lensRad);
+		}
 
 		rendering = true;
 	}
@@ -39,6 +49,12 @@ void MainFrame::onStart( wxCommandEvent& event )
 	{
 		statusBar->SetStatusText(_("Falta carregar a cena!"), 0);
 	}
+}
+
+
+void MainFrame::onDofCheckBox( wxCommandEvent& event )
+{
+	dof_panel->Enable(dof_checkBox->IsChecked());
 }
 
 
@@ -57,10 +73,15 @@ void MainFrame::onOpenMenu( wxCommandEvent& event )
 		statusBar->SetStatusText(_("Cena carregada."), 0);
 
 		//TODO: E a Câmera?
+		//camera = new Camera(Vec3(-2.780, -8.000, 2.730, 1.0), normalize(Vec3(0.0, 1.0, 0.0)), Vec3(0.0, 0.0, 1.0), 500, 500);
+
 		camera = new Camera(Vec3(23.599, -24.454, 7.197, 1.0), normalize(Vec3(-1.0, 1.0, 0.0)), Vec3(0.0, 0.0, 1.0), 500, 500);
         //camera = new Camera(Vec3(0, 0, 5.3436, 1.0), normalize(Vec3(0.0, 0.0, -1.0)), Vec3(0.0, 1.0, 0.0), 500, 500);
+
 		//camera->depthOfField(true);
 		//camera->setDepthOfField(10.0, 0.5);
+		//scene->addLight(new PointLight(Vec3(-2.780, -8.000, 2.730, 1.0), SpectralQuantity(0.2, 0.2, 0.2)));
+		//scene->addObject(new Sphere(Material(SpectralQuantity(1.0, 1.0, 1.0), SpectralQuantity(1.0, 1.0, 1.0), SpectralQuantity(0.0, 0.0, 0.0), 100.0, 0.5), 1.0, Vec3(-1.948, 1.735, 2.678, 1.0)));
 	}
 }
 
@@ -120,6 +141,7 @@ void MainFrame::onIdle( wxIdleEvent& event )
 			rendering = false;
 			refreshPreview();
 			delete img;
+			delete image;
 			img = 0;
 			frame = 0;
 
@@ -157,6 +179,9 @@ void MainFrame::refreshPreview()
 	imageCanvas->setBitmap(bitmap);
 	imageCanvas->Refresh();
 	Refresh();
+
+	if(savePreviews_checkBox->IsChecked())
+		image->SaveFile(_("preview.png"), wxBITMAP_TYPE_PNG);
 
 	statusBar->SetStatusText(_(""), 1);
 }

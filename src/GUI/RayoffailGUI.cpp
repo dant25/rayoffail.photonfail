@@ -35,8 +35,12 @@ MainFrame_Base::MainFrame_Base( wxWindow* parent, wxWindowID id, const wxString&
 	m_staticText1->Wrap( -1 );
 	bSizer5->Add( m_staticText1, 0, wxALL, 5 );
 	
-	updateRate_spinCtrl = new wxSpinCtrl( m_panel4, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 100, 10 );
+	updateRate_spinCtrl = new wxSpinCtrl( m_panel4, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 100, 1 );
 	bSizer5->Add( updateRate_spinCtrl, 0, wxALL, 5 );
+	
+	savePreviews_checkBox = new wxCheckBox( m_panel4, wxID_ANY, wxT("Save previews"), wxDefaultPosition, wxDefaultSize, 0 );
+	savePreviews_checkBox->SetValue(true); 
+	bSizer5->Add( savePreviews_checkBox, 0, wxALL, 5 );
 	
 	bSizer3->Add( bSizer5, 0, 0, 0 );
 	
@@ -107,7 +111,62 @@ MainFrame_Base::MainFrame_Base( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer3->Fit( m_panel4 );
 	m_notebook1->AddPage( m_panel4, wxT("Render"), true );
 	m_panel5 = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	m_notebook1->AddPage( m_panel5, wxT("Scene"), false );
+	wxBoxSizer* bSizer16;
+	bSizer16 = new wxBoxSizer( wxVERTICAL );
+	
+	wxStaticBoxSizer* sbSizer1;
+	sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( m_panel5, wxID_ANY, wxT("DoF") ), wxVERTICAL );
+	
+	dof_checkBox = new wxCheckBox( m_panel5, wxID_ANY, wxT("On"), wxDefaultPosition, wxDefaultSize, 0 );
+	dof_checkBox->SetToolTip( wxT("Habilita o Depth of Field.") );
+	
+	sbSizer1->Add( dof_checkBox, 0, wxALL, 5 );
+	
+	dof_panel = new wxPanel( m_panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	dof_panel->Enable( false );
+	
+	wxBoxSizer* bSizer12;
+	bSizer12 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer11;
+	bSizer11 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText6 = new wxStaticText( dof_panel, wxID_ANY, wxT("Distance:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText6->Wrap( -1 );
+	bSizer11->Add( m_staticText6, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	dofDistance_textCtrl = new wxTextCtrl( dof_panel, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxDefaultSize, 0 );
+	dofDistance_textCtrl->SetToolTip( wxT("Os pontos da cena que estiverem a essa distância da câmera estarão perfeitamente em foco.") );
+	
+	bSizer11->Add( dofDistance_textCtrl, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizer12->Add( bSizer11, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer15;
+	bSizer15 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText7 = new wxStaticText( dof_panel, wxID_ANY, wxT("Lens Radius:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText7->Wrap( -1 );
+	bSizer15->Add( m_staticText7, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	lensRadius_textCtrl = new wxTextCtrl( dof_panel, wxID_ANY, wxT("0.5"), wxDefaultPosition, wxDefaultSize, 0 );
+	lensRadius_textCtrl->SetToolTip( wxT("Quanto maior esse valor, mais brusca será a perda de foco.") );
+	
+	bSizer15->Add( lensRadius_textCtrl, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizer12->Add( bSizer15, 1, wxEXPAND, 5 );
+	
+	dof_panel->SetSizer( bSizer12 );
+	dof_panel->Layout();
+	bSizer12->Fit( dof_panel );
+	sbSizer1->Add( dof_panel, 0, wxALL, 0 );
+	
+	bSizer16->Add( sbSizer1, 0, 0, 5 );
+	
+	m_panel5->SetSizer( bSizer16 );
+	m_panel5->Layout();
+	bSizer16->Fit( m_panel5 );
+	m_notebook1->AddPage( m_panel5, wxT("Camera"), false );
 	
 	bSizer2->Add( m_notebook1, 1, wxEXPAND | wxALL, 5 );
 	
@@ -124,7 +183,7 @@ MainFrame_Base::MainFrame_Base( wxWindow* parent, wxWindowID id, const wxString&
 	m_panel41->SetSizer( bSizer4 );
 	m_panel41->Layout();
 	bSizer4->Fit( m_panel41 );
-	m_splitter1->SplitVertically( m_scrolledWindow1, m_panel41, 174 );
+	m_splitter1->SplitVertically( m_scrolledWindow1, m_panel41, 203 );
 	bSizer1->Add( m_splitter1, 1, wxEXPAND, 5 );
 	
 	this->SetSizer( bSizer1 );
@@ -158,6 +217,7 @@ MainFrame_Base::MainFrame_Base( wxWindow* parent, wxWindowID id, const wxString&
 	// Connect Events
 	this->Connect( wxEVT_IDLE, wxIdleEventHandler( MainFrame_Base::onIdle ) );
 	start_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_Base::onStart ), NULL, this );
+	dof_checkBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrame_Base::onDofCheckBox ), NULL, this );
 	this->Connect( open_menuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_Base::onOpenMenu ) );
 	this->Connect( saveImage_menuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_Base::onSaveImageMenu ) );
 	this->Connect( about_menuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_Base::onAboutMenu ) );
@@ -168,6 +228,7 @@ MainFrame_Base::~MainFrame_Base()
 	// Disconnect Events
 	this->Disconnect( wxEVT_IDLE, wxIdleEventHandler( MainFrame_Base::onIdle ) );
 	start_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_Base::onStart ), NULL, this );
+	dof_checkBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrame_Base::onDofCheckBox ), NULL, this );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_Base::onOpenMenu ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_Base::onSaveImageMenu ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_Base::onAboutMenu ) );
