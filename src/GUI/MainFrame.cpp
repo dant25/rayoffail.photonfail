@@ -71,7 +71,7 @@ void MainFrame::onOpenMenu( wxCommandEvent& event )
 		statusBar->SetStatusText(_("Carregando a cena..."), 0);
 		Importer::load(dialog.GetPath().ToAscii(), &scene, &camera);
 		statusBar->SetStatusText(_("Cena carregada."), 0);
-
+      
 		//TODO: E a Câmera?
 		//camera = new Camera(Vec3(-2.780, -8.000, 2.730, 1.0), normalize(Vec3(0.0, 1.0, 0.0)), Vec3(0.0, 0.0, 1.0), 500, 500);
 		//camera = new Camera(Vec3(-11.27431, 13.79502, 6.4117, 1.0), normalize(Vec3(-1.0, 1.0, 0.0)), Vec3(0.0, 0.0, 1.0), 500, 500);
@@ -81,7 +81,7 @@ void MainFrame::onOpenMenu( wxCommandEvent& event )
 		//camera->depthOfField(true);
 		//camera->setDepthOfField(10.0, 0.5);
 		//scene->addLight(new PointLight(Vec3(-2.780, -8.000, 2.730, 1.0), SpectralQuantity(0.2, 0.2, 0.2)));
-		//scene->addObject(new Sphere(Material(SpectralQuantity(1.0, 1.0, 1.0), SpectralQuantity(1.0, 1.0, 1.0), SpectralQuantity(0.0, 0.0, 0.0), 100.0, 0.5), 1.0, Vec3(-1.948, 1.735, 2.678, 1.0)));
+		//scene->addObject(new Sphere(Material(SpectralQuantity(1.0, 1.0, 1.0), SpectralQuantity(1.0, 1.0, 1.0), SpectralQuantity(0.0, 0.0, 0.0), 100.0, 0.5), 1.0, Vec3(-18.10619, 27.39592, 7.1425, 1.0)));
 	}
 }
 
