@@ -13,6 +13,12 @@ Mesh::Mesh()
 
 Mesh::Mesh(const Material &m) : Object(m)
 {
+	bbox.maxx = -INFINITY;
+	bbox.maxy = -INFINITY;
+	bbox.maxz = -INFINITY;
+	bbox.minx = INFINITY;
+	bbox.miny = INFINITY;
+	bbox.miny = INFINITY;
 }
 
 void Mesh::addVertex(float x, float y, float z){
@@ -20,6 +26,13 @@ void Mesh::addVertex(float x, float y, float z){
     vertex->data[0] = x;
     vertex->data[1] = y;
     vertex->data[2] = z;
+
+    bbox.maxx = (x > bbox.maxx) ? x : bbox.maxx;
+    bbox.maxy = (y > bbox.maxy) ? y : bbox.maxy;
+    bbox.maxz = (z > bbox.maxz) ? z : bbox.maxz;
+    bbox.minx = (x < bbox.minx) ? x : bbox.minx;
+    bbox.miny = (y < bbox.miny) ? y : bbox.miny;
+    bbox.minz = (z < bbox.minz) ? z : bbox.minz;
 
     vertices.push_back(vertex);
 }
@@ -80,7 +93,11 @@ void Mesh::addTexCoord(float s, float t)  {
 
 bool Mesh::intersect(const Ray &r){
     //Transforma o raio pela inversa da transformada de mesh
-   Ray ray = t.getInverse()*r;
+	Ray ray = t.getInverse()*r;
+
+	if(!intersectBoundingBox(ray))
+		return false;
+
 	bool hit =false;
 	float min_dist = 999999999999.0;
 	Vec3 c_p1, c_p2, c_p3;
@@ -233,7 +250,7 @@ bool Mesh::intersect(const Ray &r){
         //i.normal = (c_p2 - c_p1).cross(c_p3 - c_p1);
         //intersection.normal = (c_p3 - c_p1).crossProduct(c_p2 - c_p1);
         //i.normal.normalize();
-        i.point = i.point + i.normal*0.0000001;
+        i.point = i.point + i.normal*0.0001;
         //intersection.toOrigin = ray.d*(-1.0);
         //intersection.reflected = intersection.normal * ( 2.0 * intersection.toOrigin.dotProduct ( intersection.normal ) ) - intersection.toOrigin;
 
@@ -254,4 +271,85 @@ Vec3 Mesh::samplePoint(){
 
 void Mesh::getNormal(Vec3 point, Vec3 &normal){
 	//TODO: Implementar
+}
+
+
+bool Mesh::intersectBoundingBox(const Ray &ray)
+{
+	float tnear = -INFINITY , tfar = INFINITY;
+
+	if(ray.d.x == 0){
+		if (ray.o.x < bbox.minx || ray.o.x > bbox.maxx)
+			return false;
+	}
+	else
+	{
+		float t1 = (bbox.minx - ray.o.x) / ray.d.x; //(time at which ray intersects minimum X plane)
+        float t2 = (bbox.maxx - ray.o.x) / ray.d.x; //(time at which ray intersects maximum X plane)
+        if (t1 > t2)
+		{
+        	float aux = t1;
+        	t1 = t2;
+        	t2 = aux;
+		}
+        if(t1 > tnear)
+        	tnear = t1;
+        if(t2 < tfar)
+			tfar = t2;
+        if(tnear > tfar)
+        	return false;
+        if(tfar < 0.0)
+        	return false;
+	}
+
+
+	if(ray.d.y == 0){
+		if (ray.o.y < bbox.miny || ray.o.y > bbox.maxy)
+			return false;
+	}
+	else
+	{
+		float t1 = (bbox.miny - ray.o.y) / ray.d.y; //(time at which ray intersects minimum X plane)
+        float t2 = (bbox.maxy - ray.o.y) / ray.d.y; //(time at which ray intersects maximum X plane)
+        if (t1 > t2)
+		{
+        	float aux = t1;
+        	t1 = t2;
+        	t2 = aux;
+		}
+        if(t1 > tnear)
+        	tnear = t1;
+        if(t2 < tfar)
+			tfar = t2;
+        if(tnear > tfar)
+        	return false;
+        if(tfar < 0.0)
+        	return false;
+	}
+
+	if(ray.d.z == 0){
+		if (ray.o.z < bbox.minz || ray.o.z > bbox.maxz)
+			return false;
+	}
+	else
+	{
+		float t1 = (bbox.minz - ray.o.z) / ray.d.z; //(time at which ray intersects minimum X plane)
+        float t2 = (bbox.maxz - ray.o.z) / ray.d.z; //(time at which ray intersects maximum X plane)
+        if (t1 > t2)
+		{
+        	float aux = t1;
+        	t1 = t2;
+        	t2 = aux;
+		}
+        if(t1 > tnear)
+        	tnear = t1;
+        if(t2 < tfar)
+			tfar = t2;
+        if(tnear > tfar)
+        	return false;
+        if(tfar < 0.0)
+        	return false;
+	}
+
+   return true;
 }

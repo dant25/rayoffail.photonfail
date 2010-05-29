@@ -44,6 +44,10 @@ private:
     vector<Vector*> normals;
     vector<Face*> faces;
     vector<TexCoord*> texcoords;
+
+    BBox bbox;
+
+    bool intersectBoundingBox(const Ray &ray);
 };
 
 #endif
