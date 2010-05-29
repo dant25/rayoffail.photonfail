@@ -183,7 +183,7 @@
 	</library_effects>
 	<library_images>
 		<image id="2010-05-27-115753_jpg-img" name="2010-05-27-115753_jpg-img">
-			<init_from>data/2010-05-27-115753.tga</init_from>
+			<init_from>data/2010-05-27-115753.jpg</init_from>
 		</image>
 	</library_images>
 	<library_lights>
