@@ -206,17 +206,9 @@ void loadGeometry(TiXmlElement *collada, map<string, Object*>& objects, map<stri
          const char* matId = sphere->Attribute("material");
          TiXmlElement* radius = sphere->FirstChildElement("radius");
          float sphereRadius = strToFloat(radius->GetText());
-         TiXmlElement* center = sphere->FirstChildElement("center");
          Vec3 sphereCenter(0.0, 0.0, 0.0, 1.0);
-         char *pTok = strtok((char*) center->GetText(), " ");
-         sphereCenter.x = strToFloat(pTok);
-         pTok = strtok(NULL, " ");
-         sphereCenter.y = strToFloat(pTok);
-         pTok = strtok(NULL, " ");
-         sphereCenter.z = strToFloat(pTok);
-
+         
          Sphere *s = new Sphere(*(materials[string(matId)]), sphereRadius, sphereCenter);
-         //FIXME considerar vetor de objects*
          objects[string(geometryId)] = s;
       }
       TiXmlElement* mesh = geometry->FirstChildElement("mesh");
@@ -269,18 +261,18 @@ void loadGeometry(TiXmlElement *collada, map<string, Object*>& objects, map<stri
                         //char *coords = floatArray->GetText();
                         char *vertTok = strtok((char*)floatArray->GetText(), " ");
                         for(int i = 0; i < numVertexCoords/3; i++) {
-                           std::cout << "String: (" << vertTok << ");" << std::endl;
+                           //std::cout << "String: (" << vertTok << ");" << std::endl;
                            float x = strToFloat(vertTok);
                            vertTok = strtok(NULL, " ");
-                           std::cout << "String: (" << vertTok << ");" << std::endl;
+                           //std::cout << "String: (" << vertTok << ");" << std::endl;
                            float y = strToFloat(vertTok);
                            vertTok = strtok(NULL, " ");
-                           std::cout << "String: (" << vertTok << ");" << std::endl;
+                           //std::cout << "String: (" << vertTok << ");" << std::endl;
                            float z = strToFloat(vertTok);
                            vertTok = strtok(NULL, " ");
                            m->addVertex(x, y, z);
 
-                           std::cout << "addvertex: (" << x << ", " << y << ", " << z << ");" << std::endl;
+                           //std::cout << "addvertex: (" << x << ", " << y << ", " << z << ");" << std::endl;
                         }
                         //std::cout << "\tfloat array: " << floatArray->GetText() << std::endl;
                      }
@@ -306,7 +298,7 @@ void loadGeometry(TiXmlElement *collada, map<string, Object*>& objects, map<stri
                      float z = strToFloat(normalTok);
                      normalTok = strtok(NULL, " ");
                      m->addNormal(x, y, z);
-                     std::cout << "addnormal: (" << x << ", " << y << ", " << z << ");" << std::endl;
+                     //std::cout << "addnormal: (" << x << ", " << y << ", " << z << ");" << std::endl;
                   }
                   //std::cout << "\tfloat array (normais): " << floatArray->GetText() << std::endl;
                }
@@ -328,7 +320,7 @@ void loadGeometry(TiXmlElement *collada, map<string, Object*>& objects, map<stri
                      float y = strToFloat(texTok);
                      texTok = strtok(NULL, " ");
                      m->addTexCoord(x, y);
-                     std::cout << "addtexcoord: (" << x << ", " << y << ");" << std::endl;
+                     //std::cout << "addtexcoord: (" << x << ", " << y << ");" << std::endl;
                   }
                   //std::cout << "\tfloat array (texcoord): " << floatArray->GetText() << std::endl;
                }
@@ -361,7 +353,7 @@ void loadGeometry(TiXmlElement *collada, map<string, Object*>& objects, map<stri
 
                   indexTok = strtok(NULL, " ");
                   m->addFace(vertId1, vertId2, vertId3, vertNorm1, vertNorm2, vertNorm3);
-                  std::cout << "addface: (" << vertId1  << ", " << vertId2 << ", " << vertId3 << ")" << std::endl;
+                  //std::cout << "addface: (" << vertId1  << ", " << vertId2 << ", " << vertId3 << ")" << std::endl;
                }
                //TODO ler texcoords
                else if (numOffset == 3) {
@@ -393,7 +385,7 @@ void loadGeometry(TiXmlElement *collada, map<string, Object*>& objects, map<stri
 
                   indexTok = strtok(NULL, " ");
                   m->addFace(vertId1, vertId2, vertId3, vertNorm1, vertNorm2, vertNorm3, texCoord1, texCoord2, texCoord3);
-                  std::cout << "addface: (" << vertId1  << ", " << vertId2 << ", " << vertId3 << ")" << std::endl;
+                  //std::cout << "addface: (" << vertId1  << ", " << vertId2 << ", " << vertId3 << ")" << std::endl;
                }
             }
             //std::cout << "Vertices dos triangulos: " << p->GetText() << std::endl;
@@ -609,7 +601,7 @@ Camera* loadCamera(TiXmlElement* collada) {
    up.z = strToFloat(upTok);
 
    std::cout << "instanciar camera" << std:: endl;
-   Camera *c = new Camera(pos, lookat, up);
+   Camera *c = new Camera(pos, normalize(lookat), normalize(up));
    return c;
 }
 
