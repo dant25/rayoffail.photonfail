@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <cstring>
 #include "objects/Mesh.h"
+#include "objects/Sphere.h"
 #include "Material.h"
 #include "SpectralQuantity.h"
 #include "Transform.h"
@@ -197,20 +198,37 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
    TiXmlElement* libraryGeometries = collada->FirstChildElement("library_geometries");
    TiXmlElement* geometry = libraryGeometries->FirstChildElement("geometry");
    while (geometry){
+      const char* geometryId = geometry->Attribute("id");
+
+      TiXmlElement* sphere = geometry->FirstChildElement("sphere");
+      if(sphere) {
+         const char* matId = sphere->Attribute("material");
+         TiXmlElement* radius = sphere->FirstChildElement("radius");
+         float sphereRadius = strToFloat(radius->GetText());
+         TiXmlElement* center = sphere->FirstChildElement("center");
+         Vec3 sphereCenter(0.0, 0.0, 0.0, 1.0);
+         char *pTok = strtok((char*) center->GetText(), " ");
+         sphereCenter.x = strToFloat(pTok);
+         pTok = strtok(NULL, " ");
+         sphereCenter.y = strToFloat(pTok);
+         pTok = strtok(NULL, " ");
+         sphereCenter.z = strToFloat(pTok);
+
+         Sphere *s = new Sphere(*(materials[string(matId)]), sphereRadius, sphereCenter);
+         //FIXME considerar vetor de objects*
+         //meshes[string(geometryId)] = s;
+      }
       TiXmlElement* mesh = geometry->FirstChildElement("mesh");
       //FIXME tratando geometry id como mesh id
-      const char* geometryId = geometry->Attribute("id");
-      while(mesh){
-         TiXmlElement* triangles = mesh->FirstChildElement("triangles");
+      if (mesh){
+         TiXmlElement* triangles = mesh->FirstChildElement("triangles"); 
          const char* matId = triangles->Attribute("material");
          Mesh *m;
          if(matId != NULL) {
-            //Material *mat = s->getMaterial(matId);
             m = new Mesh(*(materials[string(matId)]));
             std::cout << "mat != NULL" << std::endl;
          } else
             m = new Mesh;
-
          while (triangles){
             TiXmlElement *input = triangles->FirstChildElement("input");
             int numOffset = 0;
@@ -384,7 +402,6 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
          //s->addObject(m);
          //FIXME tratando geomtry id como meshId
          meshes[string(geometryId)] = m;
-         mesh = mesh->NextSiblingElement("mesh");
       }
       geometry = geometry->NextSiblingElement("geometry"); 
    }
