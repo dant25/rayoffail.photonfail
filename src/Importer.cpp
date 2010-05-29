@@ -6,6 +6,7 @@
 #include <string>
 #include <cstdlib>
 #include <cstring>
+#include "objects/Object.h"
 #include "objects/Mesh.h"
 #include "objects/Sphere.h"
 #include "Material.h"
@@ -26,9 +27,9 @@ using std::string;
 
 //Funções auxiliares
 Camera* loadCamera(TiXmlElement* collada);
-void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Material*>& materials);
+void loadGeometry(TiXmlElement *collada, map<string, Object*>& objects, map<string, Material*>& materials);
 void loadMaterials(TiXmlElement *collada, map<string, Material*>& materials);
-void loadScene(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Light*>& lights, Scene *s);
+void loadScene(TiXmlElement *collada, map<string, Object*>& objects, map<string, Light*>& lights, Scene *s);
 void loadLight(TiXmlElement *collada, map<string, Light*>& lights);
 Texture* loadTexture(TiXmlElement *collada, TiXmlElement* effect, const char* id);
 Texture* loadImage(TiXmlElement *collada, const char *id);
@@ -56,15 +57,15 @@ void Importer::load(const char* path, Scene** s, Camera** c) {
 
    map<string, Material*> materials;
    loadMaterials(collada, materials);
-   map<string, Mesh*> meshes;
-   loadGeometry(collada, meshes, materials);
+   map<string, Object*> objects;
+   loadGeometry(collada, objects, materials);
    map<string, Light*> lights;
    loadLight(collada, lights);
-   loadScene(collada, meshes, lights, *s);
+   loadScene(collada, objects, lights, *s);
 }
 
 //FIXME considerando só uma cena
-void loadScene(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Light*>& lights, Scene *s) {
+void loadScene(TiXmlElement *collada, map<string, Object*>& objects, map<string, Light*>& lights, Scene *s) {
    TiXmlElement* libraryVisualScenes = collada->FirstChildElement("library_visual_scenes");
    TiXmlElement* visualScene = libraryVisualScenes->FirstChildElement("visual_scene");
 
@@ -112,7 +113,7 @@ void loadScene(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Li
          char *url = (char*) instanceGeometry->Attribute("url");
          fixStr(url);
          //Mesh *m = readGeometry(collada, url);
-         Mesh *m = meshes[string(url)];
+         Mesh *m = objects[string(url)];
          m->t = translateTransform;
          s->addObject(m);    
       }
@@ -194,7 +195,7 @@ void loadMaterials(TiXmlElement *collada, map<string, Material*>& materials) {
    }
 }
 
-void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string, Material*>& materials) {
+void loadGeometry(TiXmlElement *collada, map<string, Object*>& objects, map<string, Material*>& materials) {
    TiXmlElement* libraryGeometries = collada->FirstChildElement("library_geometries");
    TiXmlElement* geometry = libraryGeometries->FirstChildElement("geometry");
    while (geometry){
@@ -216,7 +217,7 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
 
          Sphere *s = new Sphere(*(materials[string(matId)]), sphereRadius, sphereCenter);
          //FIXME considerar vetor de objects*
-         //meshes[string(geometryId)] = s;
+         objects[string(geometryId)] = s;
       }
       TiXmlElement* mesh = geometry->FirstChildElement("mesh");
       //FIXME tratando geometry id como mesh id
@@ -401,7 +402,7 @@ void loadGeometry(TiXmlElement *collada, map<string, Mesh*>& meshes, map<string,
          }
          //s->addObject(m);
          //FIXME tratando geomtry id como meshId
-         meshes[string(geometryId)] = m;
+         objects[string(geometryId)] = m;
       }
       geometry = geometry->NextSiblingElement("geometry"); 
    }
