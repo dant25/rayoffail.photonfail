@@ -69,13 +69,13 @@ void MainFrame::onOpenMenu( wxCommandEvent& event )
 	if (dialog.ShowModal() == wxID_OK)
 	{
 		statusBar->SetStatusText(_("Carregando a cena..."), 0);
-		scene = Importer::load(dialog.GetPath().ToAscii());
+		Importer::load(dialog.GetPath().ToAscii(), &scene, &camera);
 		statusBar->SetStatusText(_("Cena carregada."), 0);
 
 		//TODO: E a Câmera?
 		//camera = new Camera(Vec3(-2.780, -8.000, 2.730, 1.0), normalize(Vec3(0.0, 1.0, 0.0)), Vec3(0.0, 0.0, 1.0), 500, 500);
-
-		camera = new Camera(Vec3(23.599, -24.454, 7.197, 1.0), normalize(Vec3(-1.0, 1.0, 0.0)), Vec3(0.0, 0.0, 1.0), 500, 500);
+		//camera = new Camera(Vec3(-11.27431, 13.79502, 6.4117, 1.0), normalize(Vec3(-1.0, 1.0, 0.0)), Vec3(0.0, 0.0, 1.0), 500, 500);
+		//camera = new Camera(Vec3(23.599, -24.454, 7.197, 1.0), normalize(Vec3(-1.0, 1.0, 0.0)), Vec3(0.0, 0.0, 1.0), 500, 500);
         //camera = new Camera(Vec3(0, 0, 5.3436, 1.0), normalize(Vec3(0.0, 0.0, -1.0)), Vec3(0.0, 1.0, 0.0), 500, 500);
 
 		//camera->depthOfField(true);
