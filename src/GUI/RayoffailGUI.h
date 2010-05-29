@@ -15,6 +15,7 @@
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/spinctrl.h>
+#include <wx/checkbox.h>
 #include <wx/sizer.h>
 #include <wx/statline.h>
 #include <wx/textctrl.h>
@@ -23,6 +24,7 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
+#include <wx/statbox.h>
 #include <wx/notebook.h>
 #include <wx/scrolwin.h>
 #include "ImageCanvas.h"
@@ -47,6 +49,7 @@ class MainFrame_Base : public wxFrame
 		wxPanel* m_panel4;
 		wxStaticText* m_staticText1;
 		wxSpinCtrl* updateRate_spinCtrl;
+		wxCheckBox* savePreviews_checkBox;
 		wxStaticLine* m_staticline1;
 		wxStaticText* m_staticText2;
 		wxSpinCtrl* samples_spinCtrl;
@@ -59,6 +62,12 @@ class MainFrame_Base : public wxFrame
 		wxStaticLine* m_staticline3;
 		wxButton* start_button;
 		wxPanel* m_panel5;
+		wxCheckBox* dof_checkBox;
+		wxPanel* dof_panel;
+		wxStaticText* m_staticText6;
+		wxTextCtrl* dofDistance_textCtrl;
+		wxStaticText* m_staticText7;
+		wxTextCtrl* lensRadius_textCtrl;
 		wxPanel* m_panel41;
 		ImageCanvas *imageCanvas;
 		wxStatusBar* statusBar;
@@ -69,6 +78,7 @@ class MainFrame_Base : public wxFrame
 		// Virtual event handlers, overide them in your derived class
 		virtual void onIdle( wxIdleEvent& event ) { event.Skip(); }
 		virtual void onStart( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onDofCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onOpenMenu( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onSaveImageMenu( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onAboutMenu( wxCommandEvent& event ) { event.Skip(); }
@@ -76,11 +86,11 @@ class MainFrame_Base : public wxFrame
 	
 	public:
 		
-		MainFrame_Base( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("RayTracing"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 662,441 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		MainFrame_Base( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("RayTracing"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,600 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~MainFrame_Base();
 		void m_splitter1OnIdle( wxIdleEvent& )
 		{
-		m_splitter1->SetSashPosition( 174 );
+		m_splitter1->SetSashPosition( 203 );
 		m_splitter1->Disconnect( wxEVT_IDLE, wxIdleEventHandler( MainFrame_Base::m_splitter1OnIdle ), NULL, this );
 		}
 		
