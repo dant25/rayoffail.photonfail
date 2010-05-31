@@ -463,8 +463,8 @@ void loadLight(TiXmlElement *collada, map<string, Light*>& lights) {
       TiXmlElement* spot = light->FirstChildElement("technique_common")->FirstChildElement("spot");
       if(spot) {
          SpectralQuantity intensity;
-         loadColor(point->FirstChildElement("color"), intensity);
-
+         loadColor(spot->FirstChildElement("color"), intensity);
+         
          //Lê o vetor pos
          TiXmlElement* spotPos = spot->FirstChildElement("pos");
          Vec3 pos(0.0, 0.0, 0.0, 1.0);
@@ -494,6 +494,7 @@ void loadLight(TiXmlElement *collada, map<string, Light*>& lights) {
          float exp = strToFloat(spotExp->GetText());
 
          l = new SpotLight(intensity, pos, dir, cutoff, exp);
+         lights[string(lightId)] = l;
       }
       light = light->NextSiblingElement("light");
    }
