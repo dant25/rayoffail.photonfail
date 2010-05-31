@@ -29,12 +29,13 @@
     <library_lights>
    <light id="Disk-Light" name="Disk-Light">
       <technique_common>
-      <disk>
+      <spot>
          <color>1.00000 1.00000 1.00000</color> 
-         <centre>-2.78 2.8 5.4</centre>
-         <normal>0.0 0.0 -1.0</normal>
-         <radius>0.5</radius>
-      </disk>
+         <pos>-2.78 2.8 5.4</pos>
+         <dir>0.0 0.0 -1.0</dir>
+         <falloff_angle>60.0</falloff_angle>
+         <falloff_exponent>1.0</falloff_exponent>
+      </spot>
       </technique_common>
    </light>
     </library_lights>

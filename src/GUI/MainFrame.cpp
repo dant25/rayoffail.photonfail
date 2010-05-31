@@ -6,6 +6,7 @@
 #include "../Importer.h"
 
 #include "../lights/PointLight.h"
+#include "../lights/SpotLight.h"
 #include "../objects/Sphere.h"
 #include "../math/Utilities.h"
 
@@ -81,6 +82,7 @@ void MainFrame::onOpenMenu( wxCommandEvent& event )
 		//camera->depthOfField(true);
 		//camera->setDepthOfField(10.0, 0.5);
 		//scene->addLight(new PointLight(Vec3(-2.780, -8.000, 2.730, 1.0), SpectralQuantity(0.2, 0.2, 0.2)));
+        //scene->addLight(new SpotLight(SpectralQuantity(0.2, 0.2, 0.2), Vec3(-2.780, -8.000, 2.730, 1.0), Vec3(0.0, 1.0, 0.0), 30.0, 5.0));
 		//scene->addObject(new Sphere(Material(SpectralQuantity(1.0, 1.0, 1.0), SpectralQuantity(1.0, 1.0, 1.0), SpectralQuantity(0.0, 0.0, 0.0), 100.0, 0.5), 1.0, Vec3(-18.10619, 27.39592, 7.1425, 1.0)));
 	}
 }
