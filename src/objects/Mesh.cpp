@@ -18,7 +18,7 @@ Mesh::Mesh(const Material &m) : Object(m)
 	bbox.maxz = -INFINITY;
 	bbox.minx = INFINITY;
 	bbox.miny = INFINITY;
-	bbox.miny = INFINITY;
+	bbox.minz = INFINITY;
 }
 
 void Mesh::addVertex(float x, float y, float z){
@@ -99,7 +99,7 @@ bool Mesh::intersect(const Ray &r){
 		return false;
 
 	bool hit =false;
-	float min_dist = 999999999999.0;
+	float min_dist = INFINITY;
 	Vec3 c_p1, c_p2, c_p3;
 
     unsigned int k;
@@ -236,7 +236,7 @@ bool Mesh::intersect(const Ray &r){
        n3 = Vec3(faces[faceIndex]->normal[2]->data[0], faces[faceIndex]->normal[2]->data[1],
                   faces[faceIndex]->normal[2]->data[2]);
        i.normal = n1*b3+ n2*b1 + n3*b2;
-       //i.normal = normalize(i.normal);
+       i.normal = normalize(i.normal);
        //i.normal = Vec3(faces[faceIndex]->normal[0]->data[0], faces[faceIndex]->normal[0]->data[1], faces[faceIndex]->normal[0]->data[2]);
        i.normal = t.transformNormal(i.normal);
 
@@ -254,7 +254,11 @@ bool Mesh::intersect(const Ray &r){
         //intersection.toOrigin = ray.d*(-1.0);
         //intersection.reflected = intersection.normal * ( 2.0 * intersection.toOrigin.dotProduct ( intersection.normal ) ) - intersection.toOrigin;
 
-        //std::cout << "interseção com mesh" << std::endl;
+        //std::cout << "Interseção com Ray = " << r.d.x << ", " << r.d.y << ", " << r.d.z << std::endl;
+        //std::cout << "point = " << i.point.x << ", " << i.point.y << ", " << i.point.z << std::endl;
+        //std::cout << "normal = " << i.normal.x << ", " << i.normal.y << ", " << i.normal.z << std::endl;
+        //std::cout << "dist = " << i.dist << std::endl << std::endl;
+
         return true;
     }
 
@@ -278,7 +282,7 @@ bool Mesh::intersectBoundingBox(const Ray &ray)
 {
 	float tnear = -INFINITY , tfar = INFINITY;
 
-	if(ray.d.x == 0){
+	if(fabs(ray.d.x) < 0.000001){
 		if (ray.o.x < bbox.minx || ray.o.x > bbox.maxx)
 			return false;
 	}
@@ -302,8 +306,7 @@ bool Mesh::intersectBoundingBox(const Ray &ray)
         	return false;
 	}
 
-
-	if(ray.d.y == 0){
+	if(fabs(ray.d.y) < 0.000001){
 		if (ray.o.y < bbox.miny || ray.o.y > bbox.maxy)
 			return false;
 	}
@@ -327,7 +330,7 @@ bool Mesh::intersectBoundingBox(const Ray &ray)
         	return false;
 	}
 
-	if(ray.d.z == 0){
+	if(fabs(ray.d.z) < 0.000001){
 		if (ray.o.z < bbox.minz || ray.o.z > bbox.maxz)
 			return false;
 	}

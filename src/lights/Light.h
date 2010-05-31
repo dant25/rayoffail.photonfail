@@ -12,12 +12,6 @@ public:
 
     virtual SpectralQuantity getIntensity(const Vec3 &from);
 
-    /*
-    virtual SpectralQuantity computeLocalShading(const Intersection& lIntersect,
-                                         const SpectralQuantity& intensity,
-                                         const Vec3& rayOrigin);
-	*/
-
 protected:
     SpectralQuantity intensity;
 };
