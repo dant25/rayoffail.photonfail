@@ -8,8 +8,8 @@
 			<copyright></copyright>
 			<source_data>file:///home/nfs/jonasdeyson/Documentos/Pesquisa/RayTracing/Scenes/cornell-box.blend</source_data>
 		</contributor>
-		<created>2010-05-21T15:03:56.239455</created>
-		<modified>2010-05-21T15:03:56.239477</modified>
+		<created>2010-05-31T15:37:20.533431</created>
+		<modified>2010-05-31T15:37:20.533461</modified>
 		<unit meter="0.01" name="centimeter"/>
 		<up_axis>Z_UP</up_axis>
 	</asset>
@@ -26,19 +26,6 @@
 			</optics>
 		</camera>
 	</library_cameras>
-    <library_lights>
-   <light id="Disk-Light" name="Disk-Light">
-      <technique_common>
-      <spot>
-         <color>1.00000 1.00000 1.00000</color> 
-         <pos>-2.78 2.8 5.4</pos>
-         <dir>0.0 0.0 -1.0</dir>
-         <falloff_angle>1.047197551</falloff_angle>
-         <falloff_exponent>1.0</falloff_exponent>
-      </spot>
-      </technique_common>
-   </light>
-    </library_lights>
 	<library_effects>
 		<effect id="Khaki-fx" name="Khaki-fx">
 			<profile_COMMON>
@@ -145,42 +132,27 @@
 				</technique>
 			</profile_COMMON>
 		</effect>
-		<effect id="Grey-fx" name="Grey-fx">
-			<profile_COMMON>
-				<technique sid="blender">
-					<phong>
-						<emission>
-							<color>0.70000 0.70000 0.70000 1</color>
-						</emission>
-						<ambient>
-							<color>0.40000 0.40000 0.40000 1</color>
-						</ambient>
-						<diffuse>
-							<color>0.80000 0.80000 0.80000 1</color>
-						</diffuse>
-						<specular>
-							<color>0.50000 0.50000 0.50000 1</color>
-						</specular>
-						<shininess>
-							<float>12.5</float>
-						</shininess>
-						<reflective>
-							<color>1.00000 1.00000 1.00000 1</color>
-						</reflective>
-						<reflectivity>
-							<float>0.0</float>
-						</reflectivity>
-						<transparent>
-							<color>1 1 1 1</color>
-						</transparent>
-						<transparency>
-							<float>0.0</float>
-						</transparency>
-					</phong>
-				</technique>
-			</profile_COMMON>
-		</effect>
 	</library_effects>
+	<library_lights>
+		<light id="Lamp_001" name="Lamp_001">
+			<technique_common>
+				<disk>
+					<color>1.00000 1.00000 1.00000</color>
+					<centre>-2.76825 2.80783 5.44996</centre>
+					<normal>0.0 0.0 -1.0</normal>
+					<radius>0.5</radius>
+				</disk>
+			</technique_common>
+		</light>
+		<light id="Lamp-Light" name="Lamp-Light">
+			<technique_common>
+				<point>
+					<color>0.1 0.1 0.1</color>
+					<pos>-2.75615 -8.32045 2.70415</pos>
+				</point>
+			</technique_common>
+		</light>
+	</library_lights>
 	<library_materials>
 		<material id="Khaki" name="Khaki">
 			<instance_effect url="#Khaki-fx"/>
@@ -190,9 +162,6 @@
 		</material>
 		<material id="DarkGreen" name="DarkGreen">
 			<instance_effect url="#DarkGreen-fx"/>
-		</material>
-		<material id="Grey" name="Grey">
-			<instance_effect url="#Grey-fx"/>
 		</material>
 	</library_materials>
 	<library_geometries>
@@ -420,41 +389,25 @@
 				</triangles>
 			</mesh>
 		</geometry>
-		<geometry id="area_light_001" name="area_light_001">
-			<mesh>
-				<source id="area_light_001-Position">
-					<float_array count="12" id="area_light_001-Position-array">-0.65000 -0.52500 0.00042 -0.65000 0.52500 -0.00042 0.65000 0.52500 -0.00042 0.65000 -0.52500 0.00042</float_array>
-					<technique_common>
-						<accessor count="4" source="#area_light_001-Position-array" stride="3">
-							<param type="float" name="X"></param>
-							<param type="float" name="Y"></param>
-							<param type="float" name="Z"></param>
-						</accessor>
-					</technique_common>
-				</source>
-				<source id="area_light_001-Normals">
-					<float_array count="3" id="area_light_001-Normals-array">0.00000 -0.00080 -1.00000</float_array>
-					<technique_common>
-						<accessor count="1" source="#area_light_001-Normals-array" stride="3">
-							<param type="float" name="X"></param>
-							<param type="float" name="Y"></param>
-							<param type="float" name="Z"></param>
-						</accessor>
-					</technique_common>
-				</source>
-				<vertices id="area_light_001-Vertex">
-					<input semantic="POSITION" source="#area_light_001-Position"/>
-				</vertices>
-				<triangles count="2" material="Grey">
-					<input offset="0" semantic="VERTEX" source="#area_light_001-Vertex"/>
-					<input offset="1" semantic="NORMAL" source="#area_light_001-Normals"/>
-					<p>0 0 1 0 2 0 2 0 3 0 0 0</p>
-				</triangles>
-			</mesh>
-		</geometry>
 	</library_geometries>
 	<library_visual_scenes>
 		<visual_scene id="default_half_HI" name="default_half_HI">
+			<node layer="L1" id="AreaLight" name="AreaLight">
+				<translate sid="translate">-2.76825 2.80783 5.44996</translate>
+				<rotate sid="rotateZ">0 0 1 0.00000</rotate>
+				<rotate sid="rotateY">0 1 0 -0.00000</rotate>
+				<rotate sid="rotateX">1 0 0 0.00000</rotate>
+				<scale sid="scale">1.00000 1.00000 1.00000</scale>
+				<instance_light url="#Lamp_001"/>
+			</node>
+			<node layer="L1" id="Lamp" name="Lamp">
+				<translate sid="translate">-2.75615 -8.32045 2.70415</translate>
+				<rotate sid="rotateZ">0 0 1 0.00000</rotate>
+				<rotate sid="rotateY">0 1 0 -0.00000</rotate>
+				<rotate sid="rotateX">1 0 0 0.00000</rotate>
+				<scale sid="scale">1.00000 1.00000 1.00000</scale>
+				<instance_light url="#Lamp-Light"/>
+			</node>
 			<node layer="L1" id="tall_box" name="tall_box">
 				<translate sid="translate">-3.68500 3.51631 1.64720</translate>
 				<rotate sid="rotateZ">0 0 1 0.00000</rotate>
@@ -567,22 +520,6 @@
 					</bind_material>
 				</instance_geometry>
 			</node>
-			<node layer="L1" id="area_light" name="area_light">
-				<translate sid="translate">-2.78000 2.79937 5.47</translate>
-				<rotate sid="rotateZ">0 0 1 0.00000</rotate>
-				<rotate sid="rotateY">0 1 0 -0.00000</rotate>
-				<rotate sid="rotateX">1 0 0 0.00000</rotate>
-				<scale sid="scale">1.00000 1.00000 1.00000</scale>
-				<instance_geometry url="#area_light_001">
-					<bind_material>
-						<technique_common>
-							<instance_material symbol="Grey" target="#Grey">
-								<bind_vertex_input input_semantic="TEXCOORD" input_set="1" semantic="CHANNEL1"/>
-							</instance_material>
-						</technique_common>
-					</bind_material>
-				</instance_geometry>
-			</node>
 			<node layer="L1" id="Camera" name="Camera">
 				<translate sid="translate">-2.78000 -8.00000 2.73000</translate>
 				<rotate sid="rotateZ">0 0 1 0.00000</rotate>
@@ -591,14 +528,6 @@
 				<scale sid="scale">1.00000 1.00000 1.00000</scale>
 				<instance_camera url="#Camera-Camera"/>
 			</node>
-            <node layer="L1" id="Lamp" name="Lamp">
-               <translate sid="translate">0.0 0.0 0.0</translate>
-               <rotate sid="rotateZ">0 0 1 0.00000</rotate>
-               <rotate sid="rotateY">0 1 0 0.00000</rotate>
-               <rotate sid="rotateX">1 0 0 0.00000</rotate>
-               <scale sid="scale">1.0000 1.00000 1.00000</scale>
-               <instance_light url="#Disk-Light"/>
-            </node>
 		</visual_scene>
 	</library_visual_scenes>
 	<scene>

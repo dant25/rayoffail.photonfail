@@ -4,7 +4,8 @@
 using namespace std;
 
 Scene::Scene() {
-	background_color = SpectralQuantity(0.1, 0.1, 0.1);
+	background_color = SpectralQuantity(0.0, 0.0, 0.0);
+	ambient_color = SpectralQuantity(0.01, 0.01, 0.01);
 	maxDepth = 2;
 }
 
@@ -74,7 +75,7 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 	SpectralQuantity result;
 	result = ls * (1.0 - obj->getSpecularity()) + rs * obj->getSpecularity();
 
-	return result;
+	return result + ambient_color;
 }
 
 void Scene::addObject(Object *obj) {
