@@ -493,7 +493,7 @@ void loadLight(TiXmlElement *collada, map<string, Light*>& lights) {
          TiXmlElement* spotExp = spot->FirstChildElement("falloff_exponent");
          float exp = strToFloat(spotExp->GetText());
 
-         l = new SpotLight(intensity, pos, dir, cutoff, exp);
+         l = new SpotLight(intensity, pos, normalize(dir), cutoff, exp);
          lights[string(lightId)] = l;
       }
       light = light->NextSiblingElement("light");
