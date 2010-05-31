@@ -82,9 +82,11 @@ Ray Camera::generateRay(int x, int y) const {
 		dir.normalize();
 		*/
 
+
 		//Direçao aleatória passando pelo pixel
 		dir = (lookat*focal_dist) + (up*((_H/2.0)-(y*dp)+RAND(-dp/2.0, dp/2.0))) + (right*((x*dp)-(_W/2.0)+RAND(-dp/2.0, dp/2.0)));
 		dir.normalize();
+
 	}
 
 	return Ray(position, dir);

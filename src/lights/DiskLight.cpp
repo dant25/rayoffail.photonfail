@@ -76,7 +76,10 @@ void DiskLight::getNormal(Vec3 point, Vec3 &norm){
 }
 
 
-SpectralQuantity DiskLight::computeLocalShading(const Intersection& lIntersect, const SpectralQuantity& intensity, const Vec3& rayOrigin)
+SpectralQuantity DiskLight::computeLocalShading(const Intersection& intersection,
+												const SpectralQuantity& intensity,
+												const Vec3& toLight,
+												const Vec3& toView)
 {
 	//FIXME: É só isso mesmo? Não tem que multiplicar por algum fator cossenoidal?
 	return this->intensity;

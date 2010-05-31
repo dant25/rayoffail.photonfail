@@ -15,9 +15,10 @@ public:
     virtual Vec3 samplePoint();
     virtual void getNormal(Vec3 point, Vec3 &normal);
 
-    virtual SpectralQuantity computeLocalShading(const Intersection& lIntersect,
-                                         const SpectralQuantity& intensity,
-                                         const Vec3& rayOrigin);
+    virtual SpectralQuantity computeLocalShading(const Intersection& intersection,
+												const SpectralQuantity& intensity,
+												const Vec3& toLight,
+												const Vec3& toView);
 
 private:
     Vec3 centre;

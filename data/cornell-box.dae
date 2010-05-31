@@ -18,9 +18,9 @@
 			<optics>
 				<technique_common>
 					<perspective>
-						<yfov>39.14625</yfov>
-						<znear>0.1</znear>
-						<zfar>100.0</zfar>
+                        <pos>-2.78000 -8.00000 2.73000</pos>
+                        <lookat>0.0 1.0 0.0</lookat>
+                        <up>0.0 0.0 1.0</up>
 					</perspective>
 				</technique_common>
 			</optics>

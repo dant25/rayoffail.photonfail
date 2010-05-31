@@ -55,8 +55,10 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 			}
 		}
 
-		ls += obj->computeLocalShading(lightIntersect,
-				lights[i]->getIntensity(normalize(objIntersect.point - lightIntersect.point)), r.o);
+		ls += obj->computeLocalShading(	objIntersect,
+										lights[i]->getIntensity(normalize(objIntersect.point - lightIntersect.point)),
+										normalize(samplePos - objIntersect.point),
+										r.d*-1.0);
 	}
 
 	//Cor resultante de reflexão
