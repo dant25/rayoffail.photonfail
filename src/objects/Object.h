@@ -16,7 +16,7 @@ class Object {
 public:
     Object(const Material& mat);
 
-    virtual bool intersect(const Ray& r) = 0;
+    virtual bool intersect(const Ray& r, Intersection &intersection) = 0;
     virtual Vec3 samplePoint() = 0;
     virtual void getNormal(Vec3 point, Vec3 &normal) = 0;
 
@@ -26,9 +26,6 @@ public:
                                          const Vec3& toLight,
                                          const Vec3& toView);
 
-    Intersection getIntersection();
-
-
     float getSpecularity(){
     	return m.spec;
     }
@@ -36,7 +33,7 @@ public:
    Transform t;
 protected:
     //Armazena o último ponto de interseção
-    Intersection i;
+    //Intersection i;
     Material m;
 };
 

@@ -5,7 +5,7 @@
 
 
 Mesh::Mesh()
-//TODO: Object precisa de um construtor sem argumentos
+    //TODO: Object precisa de um construtor sem argumentos
 :   Object(Material(SpectralQuantity(1.0, 1.0, 1.0), SpectralQuantity(1.0, 1.0, 1.0), SpectralQuantity(1.0, 1.0, 1.0), 1.0, 0.0))
 {
 }
@@ -13,12 +13,12 @@ Mesh::Mesh()
 
 Mesh::Mesh(const Material &m) : Object(m)
 {
-	bbox.maxx = -INFINITY;
-	bbox.maxy = -INFINITY;
-	bbox.maxz = -INFINITY;
-	bbox.minx = INFINITY;
-	bbox.miny = INFINITY;
-	bbox.minz = INFINITY;
+    bbox.maxx = -INFINITY;
+    bbox.maxy = -INFINITY;
+    bbox.maxz = -INFINITY;
+    bbox.minx = INFINITY;
+    bbox.miny = INFINITY;
+    bbox.minz = INFINITY;
 }
 
 void Mesh::addVertex(float x, float y, float z){
@@ -53,7 +53,7 @@ void Mesh::addFace(int index1, int index2, int index3, int nid1, int nid2, int n
     faces.push_back(face);
 }
 void Mesh::addFace(int index1, int index2, int index3, int nid1, int nid2, int nid3,
-                   int tex1, int tex2, int tex3) {
+        int tex1, int tex2, int tex3) {
     Face* face = new Face;
     face->vertices[0] = vertices[index1];
     face->vertices[1] = vertices[index2];
@@ -83,33 +83,33 @@ void Mesh::addNormal(float x, float y, float z)
 }
 
 void Mesh::addTexCoord(float s, float t)  {
-   TexCoord* tex = new TexCoord;
-   tex->data[0] = s;
-   tex->data[1] = t;
+    TexCoord* tex = new TexCoord;
+    tex->data[0] = s;
+    tex->data[1] = t;
 
-   texcoords.push_back(tex);
+    texcoords.push_back(tex);
 }
 
 
-bool Mesh::intersect(const Ray &r){
+bool Mesh::intersect(const Ray &r, Intersection &intersection){
     //Transforma o raio pela inversa da transformada de mesh
-	Ray ray = t.getInverse()*r;
+    Ray ray = t.getInverse()*r;
 
-	if(!intersectBoundingBox(ray))
-		return false;
+    if(!intersectBoundingBox(ray))
+        return false;
 
-	bool hit =false;
-	float min_dist = INFINITY;
-	Vec3 c_p1, c_p2, c_p3;
+    bool hit =false;
+    float min_dist = INFINITY;
+    Vec3 c_p1, c_p2, c_p3;
 
     unsigned int k;
     int faceIndex;
-	for(k = 0; k<faces.size(); k++)
-	{
+    for(k = 0; k<faces.size(); k++)
+    {
 
-	    Vec3 p1(faces[k]->vertices[0]->data[0], faces[k]->vertices[0]->data[1], faces[k]->vertices[0]->data[2], 1.0);
-	    Vec3 p2(faces[k]->vertices[1]->data[0], faces[k]->vertices[1]->data[1], faces[k]->vertices[1]->data[2], 1.0);
-	    Vec3 p3(faces[k]->vertices[2]->data[0], faces[k]->vertices[2]->data[1], faces[k]->vertices[2]->data[2], 1.0);
+        Vec3 p1(faces[k]->vertices[0]->data[0], faces[k]->vertices[0]->data[1], faces[k]->vertices[0]->data[2], 1.0);
+        Vec3 p2(faces[k]->vertices[1]->data[0], faces[k]->vertices[1]->data[1], faces[k]->vertices[1]->data[2], 1.0);
+        Vec3 p3(faces[k]->vertices[2]->data[0], faces[k]->vertices[2]->data[1], faces[k]->vertices[2]->data[2], 1.0);
 
         bool cull_face = false;
 
@@ -154,11 +154,15 @@ bool Mesh::intersect(const Ray &r){
             hit = true;
             float d = (intersection_point - ray.o).length();
             if(d < min_dist){
-               faceIndex = k;
+                faceIndex = k;
                 min_dist = d;
-                i.point = intersection_point;
-                i.point.w = 1.0;
-                i.point = this->t*i.point;
+                intersection.point = intersection_point;
+                intersection.point.w = 1.0;
+                intersection.point = this->t*intersection.point;
+                intersection.dist = min_dist;
+                /*i.point = intersection_point;
+                  i.point.w = 1.0;
+                  i.point = this->t*i.point;*/
                 c_p1 = p1;
                 c_p2 = p2;
                 c_p3 = p3;
@@ -193,72 +197,62 @@ bool Mesh::intersect(const Ray &r){
             hit = true;
             float d = (intersection_point - ray.o).length();
             if(d < min_dist){
-               faceIndex = k;
+                faceIndex = k;
                 min_dist = d;
-                i.point = intersection_point;
-                i.point.w = 1.0;
-                i.point = this->t*i.point;
+                intersection.point = intersection_point;
+                intersection.point.w = 1.0;
+                intersection.point = this->t*intersection.point;
+                /*i.point = intersection_point;
+                  i.point.w = 1.0;
+                  i.point = this->t*i.point;*/
                 c_p1 = p1;
                 c_p2 = p2;
                 c_p3 = p3;
             }
         }
-	}
+    }
 
     if(hit)
     {
-       i.dist = (i.point - r.o).length();
-       Vec3 v1, v2, v3;
-       v1 = Vec3(faces[faceIndex]->vertices[0]->data[0], faces[faceIndex]->vertices[0]->data[1],
-                 faces[faceIndex]->vertices[0]->data[2]);
-       v2 = Vec3(faces[faceIndex]->vertices[1]->data[0], faces[faceIndex]->vertices[1]->data[1],
-                 faces[faceIndex]->vertices[1]->data[2]);
-       v3 = Vec3(faces[faceIndex]->vertices[2]->data[0], faces[faceIndex]->vertices[2]->data[1],
-                  faces[faceIndex]->vertices[2]->data[2]);
+        intersection.dist = (intersection.point - ray.o).length();
+        Vec3 v1, v2, v3;
+        v1 = Vec3(faces[faceIndex]->vertices[0]->data[0], faces[faceIndex]->vertices[0]->data[1],
+                faces[faceIndex]->vertices[0]->data[2]);
+        v2 = Vec3(faces[faceIndex]->vertices[1]->data[0], faces[faceIndex]->vertices[1]->data[1],
+                faces[faceIndex]->vertices[1]->data[2]);
+        v3 = Vec3(faces[faceIndex]->vertices[2]->data[0], faces[faceIndex]->vertices[2]->data[1],
+                faces[faceIndex]->vertices[2]->data[2]);
         //Modo do pbrt de achar coordenadas baricêntricas
-       Vec3 e1 = v2 - v1;
-       Vec3 e2 = v3 - v1;
-       Vec3 s1 = cross(ray.d, e2);
-       float divisor = dot(s1, e1);
-       Vec3 d = ray.o - v1;
-       float b1 = dot(d, s1)/divisor;
-       Vec3 s2 = cross(d, e1);
-       float b2 = dot(ray.d, s2)/divisor;
-       float b3 = 1.0 - b1 - b2;
-       //Modo mazela de achar coordenadas baricêntricas
-       float l1, l2, l3;
-       //barycentricCoords(v1, v2, v3, i.point, l1, l2, l3);
-       Vec3 n1, n2, n3;
-       n1 = Vec3(faces[faceIndex]->normal[0]->data[0], faces[faceIndex]->normal[0]->data[1],
-                 faces[faceIndex]->normal[0]->data[2]);
-       n2 = Vec3(faces[faceIndex]->normal[1]->data[0], faces[faceIndex]->normal[1]->data[1],
-                 faces[faceIndex]->normal[1]->data[2]);
-       n3 = Vec3(faces[faceIndex]->normal[2]->data[0], faces[faceIndex]->normal[2]->data[1],
-                  faces[faceIndex]->normal[2]->data[2]);
-       i.normal = n1*b3+ n2*b1 + n3*b2;
-       i.normal = normalize(i.normal);
-       //i.normal = Vec3(faces[faceIndex]->normal[0]->data[0], faces[faceIndex]->normal[0]->data[1], faces[faceIndex]->normal[0]->data[2]);
-       i.normal = t.transformNormal(i.normal);
+        Vec3 e1 = v2 - v1;
+        Vec3 e2 = v3 - v1;
+        Vec3 s1 = cross(ray.d, e2);
+        float divisor = dot(s1, e1);
+        Vec3 d = ray.o - v1;
+        float b1 = dot(d, s1)/divisor;
+        Vec3 s2 = cross(d, e1);
+        float b2 = dot(ray.d, s2)/divisor;
+        float b3 = 1.0 - b1 - b2;
+        //Modo mazela de achar coordenadas baricêntricas
+        float l1, l2, l3;
+        //barycentricCoords(v1, v2, v3, i.point, l1, l2, l3);
+        Vec3 n1, n2, n3;
+        n1 = Vec3(faces[faceIndex]->normal[0]->data[0], faces[faceIndex]->normal[0]->data[1],
+                faces[faceIndex]->normal[0]->data[2]);
+        n2 = Vec3(faces[faceIndex]->normal[1]->data[0], faces[faceIndex]->normal[1]->data[1],
+                faces[faceIndex]->normal[1]->data[2]);
+        n3 = Vec3(faces[faceIndex]->normal[2]->data[0], faces[faceIndex]->normal[2]->data[1],
+                faces[faceIndex]->normal[2]->data[2]);
+        intersection.normal = n1*b3+ n2*b1 + n3*b2;
+        intersection.normal = normalize(intersection.normal);
+        intersection.normal = t.transformNormal(intersection.normal);
 
-       if(this->m.tex) {
-         i.texCoord[0] = b3*faces[faceIndex]->tex[0]->data[0] + b1*faces[faceIndex]->tex[1]->data[0]
-                           + b2*faces[faceIndex]->tex[2]->data[0];
-         i.texCoord[1] = b3*faces[faceIndex]->tex[0]->data[1] + b1*faces[faceIndex]->tex[1]->data[1]
-                           + b2*faces[faceIndex]->tex[2]->data[1];
-       }
-        //normal = Vec3(normals[faces[i]->normal]->data[0], normals[faces[i]->normal]->data[1], normals[faces[i]->normal]->data[2]);
-        //i.normal = (c_p2 - c_p1).cross(c_p3 - c_p1);
-        //intersection.normal = (c_p3 - c_p1).crossProduct(c_p2 - c_p1);
-        //i.normal.normalize();
-        i.point = i.point + i.normal*0.0001;
-        //intersection.toOrigin = ray.d*(-1.0);
-        //intersection.reflected = intersection.normal * ( 2.0 * intersection.toOrigin.dotProduct ( intersection.normal ) ) - intersection.toOrigin;
-
-        //std::cout << "Interseção com Ray = " << r.d.x << ", " << r.d.y << ", " << r.d.z << std::endl;
-        //std::cout << "point = " << i.point.x << ", " << i.point.y << ", " << i.point.z << std::endl;
-        //std::cout << "normal = " << i.normal.x << ", " << i.normal.y << ", " << i.normal.z << std::endl;
-        //std::cout << "dist = " << i.dist << std::endl << std::endl;
-
+        if(this->m.tex) {
+            intersection.texCoord[0] = b3*faces[faceIndex]->tex[0]->data[0] + b1*faces[faceIndex]->tex[1]->data[0]
+                + b2*faces[faceIndex]->tex[2]->data[0];
+            intersection.texCoord[1] = b3*faces[faceIndex]->tex[0]->data[1] + b1*faces[faceIndex]->tex[1]->data[1]
+                + b2*faces[faceIndex]->tex[2]->data[1];
+        }
+        intersection.point = intersection.point + intersection.normal*0.0001;
         return true;
     }
 
@@ -268,91 +262,91 @@ bool Mesh::intersect(const Ray &r){
 
 
 Vec3 Mesh::samplePoint(){
-	//TODO: Implementar
-	return Vec3();
+    //TODO: Implementar
+    return Vec3();
 }
 
 
 void Mesh::getNormal(Vec3 point, Vec3 &normal){
-	//TODO: Implementar
+    //TODO: Implementar
 }
 
 
 bool Mesh::intersectBoundingBox(const Ray &ray)
 {
-	float tnear = -INFINITY , tfar = INFINITY;
+    float tnear = -INFINITY , tfar = INFINITY;
 
-	if(fabs(ray.d.x) < 0.000001){
-		if (ray.o.x < bbox.minx || ray.o.x > bbox.maxx)
-			return false;
-	}
-	else
-	{
-		float t1 = (bbox.minx - ray.o.x) / ray.d.x; //(time at which ray intersects minimum X plane)
+    if(fabs(ray.d.x) < 0.000001){
+        if (ray.o.x < bbox.minx || ray.o.x > bbox.maxx)
+            return false;
+    }
+    else
+    {
+        float t1 = (bbox.minx - ray.o.x) / ray.d.x; //(time at which ray intersects minimum X plane)
         float t2 = (bbox.maxx - ray.o.x) / ray.d.x; //(time at which ray intersects maximum X plane)
         if (t1 > t2)
-		{
-        	float aux = t1;
-        	t1 = t2;
-        	t2 = aux;
-		}
+        {
+            float aux = t1;
+            t1 = t2;
+            t2 = aux;
+        }
         if(t1 > tnear)
-        	tnear = t1;
+            tnear = t1;
         if(t2 < tfar)
-			tfar = t2;
+            tfar = t2;
         if(tnear > tfar)
-        	return false;
+            return false;
         if(tfar < 0.0)
-        	return false;
-	}
+            return false;
+    }
 
-	if(fabs(ray.d.y) < 0.000001){
-		if (ray.o.y < bbox.miny || ray.o.y > bbox.maxy)
-			return false;
-	}
-	else
-	{
-		float t1 = (bbox.miny - ray.o.y) / ray.d.y; //(time at which ray intersects minimum X plane)
+    if(fabs(ray.d.y) < 0.000001){
+        if (ray.o.y < bbox.miny || ray.o.y > bbox.maxy)
+            return false;
+    }
+    else
+    {
+        float t1 = (bbox.miny - ray.o.y) / ray.d.y; //(time at which ray intersects minimum X plane)
         float t2 = (bbox.maxy - ray.o.y) / ray.d.y; //(time at which ray intersects maximum X plane)
         if (t1 > t2)
-		{
-        	float aux = t1;
-        	t1 = t2;
-        	t2 = aux;
-		}
+        {
+            float aux = t1;
+            t1 = t2;
+            t2 = aux;
+        }
         if(t1 > tnear)
-        	tnear = t1;
+            tnear = t1;
         if(t2 < tfar)
-			tfar = t2;
+            tfar = t2;
         if(tnear > tfar)
-        	return false;
+            return false;
         if(tfar < 0.0)
-        	return false;
-	}
+            return false;
+    }
 
-	if(fabs(ray.d.z) < 0.000001){
-		if (ray.o.z < bbox.minz || ray.o.z > bbox.maxz)
-			return false;
-	}
-	else
-	{
-		float t1 = (bbox.minz - ray.o.z) / ray.d.z; //(time at which ray intersects minimum X plane)
+    if(fabs(ray.d.z) < 0.000001){
+        if (ray.o.z < bbox.minz || ray.o.z > bbox.maxz)
+            return false;
+    }
+    else
+    {
+        float t1 = (bbox.minz - ray.o.z) / ray.d.z; //(time at which ray intersects minimum X plane)
         float t2 = (bbox.maxz - ray.o.z) / ray.d.z; //(time at which ray intersects maximum X plane)
         if (t1 > t2)
-		{
-        	float aux = t1;
-        	t1 = t2;
-        	t2 = aux;
-		}
+        {
+            float aux = t1;
+            t1 = t2;
+            t2 = aux;
+        }
         if(t1 > tnear)
-        	tnear = t1;
+            tnear = t1;
         if(t2 < tfar)
-			tfar = t2;
+            tfar = t2;
         if(tnear > tfar)
-        	return false;
+            return false;
         if(tfar < 0.0)
-        	return false;
-	}
+            return false;
+    }
 
-   return true;
+    return true;
 }

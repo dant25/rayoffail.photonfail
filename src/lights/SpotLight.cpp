@@ -29,7 +29,7 @@ SpectralQuantity SpotLight::getIntensity(const Vec3 &from){
 }
 
 
-bool SpotLight::intersect(const Ray& r) {
+bool SpotLight::intersect(const Ray& r, Intersection &i) {
 	return false;
 }
 

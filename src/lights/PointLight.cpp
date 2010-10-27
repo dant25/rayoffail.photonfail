@@ -7,7 +7,7 @@ PointLight::PointLight(const Vec3 &pos, const SpectralQuantity &intensity)
 }
 
 
-bool PointLight::intersect(const Ray& r){
+bool PointLight::intersect(const Ray& r, Intersection &i){
 	return false;
 }
 
