@@ -7,11 +7,6 @@ Object::Object(const Material& mat) : m(mat){
 }
 
 
-Intersection Object::getIntersection() {
-   return i;
-}
-
-
 SpectralQuantity Object::computeLocalShading(const Intersection& intersection,
                                      const SpectralQuantity& intensity,
                                      const Vec3& toLight,

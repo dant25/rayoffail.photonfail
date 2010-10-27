@@ -9,7 +9,7 @@
 class Container {
 public:
    void addObject(Object *obj);
-   Object* findObject(const Ray& r) const;
+   Object* findObject(const Ray& r, Intersection &i) const;
 //private:
     //TODO: Estrutura de dados pra armazenar objetos.
     std::vector<Object*> objects;
