@@ -214,7 +214,7 @@ bool Mesh::intersect(const Ray &r, Intersection &intersection){
 
     if(hit)
     {
-        intersection.dist = (intersection.point - ray.o).length();
+        intersection.dist = (intersection.point - r.o).length();
         Vec3 v1, v2, v3;
         v1 = Vec3(faces[faceIndex]->vertices[0]->data[0], faces[faceIndex]->vertices[0]->data[1],
                 faces[faceIndex]->vertices[0]->data[2]);
