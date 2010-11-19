@@ -27,7 +27,7 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 	SpectralQuantity ls;
 
 	// Calcula a iluminação direta.
-	for (int i = 0; i < lights.size(); i++) {
+	for (int i = 0; i < (int)lights.size(); i++) {
 		//cout << "Intersectou!" << endl;
         //FIXME fazer vec retornado ter componente w = 1.0
 		Vec3 samplePos = lights[i]->samplePoint();
@@ -45,7 +45,7 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
         lightIntersect.point.w = 1.0;
 		lightIntersect.normal = lightNormal;
 		lightIntersect.dist = (lightIntersect.point - objIntersect.point).length();
-         
+
 		Ray shadowRay(objIntersect.point, normalize(lightIntersect.point - objIntersect.point));
         Intersection shadowIntersection;
 		Object *shadowObj = objects.findObject(shadowRay, shadowIntersection);

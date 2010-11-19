@@ -233,7 +233,7 @@ bool Mesh::intersect(const Ray &r, Intersection &intersection){
         float b2 = dot(ray.d, s2)/divisor;
         float b3 = 1.0 - b1 - b2;
         //Modo mazela de achar coordenadas baricêntricas
-        float l1, l2, l3;
+        //float l1, l2, l3;
         //barycentricCoords(v1, v2, v3, i.point, l1, l2, l3);
         Vec3 n1, n2, n3;
         n1 = Vec3(faces[faceIndex]->normal[0]->data[0], faces[faceIndex]->normal[0]->data[1],
@@ -267,7 +267,7 @@ Vec3 Mesh::samplePoint(){
 }
 
 
-void Mesh::getNormal(Vec3 point, Vec3 &normal){
+void Mesh::getNormal(Vec3 /*point*/, Vec3 &/*normal*/){
     //TODO: Implementar
 }
 

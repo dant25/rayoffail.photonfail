@@ -31,7 +31,7 @@ wxBitmap* ImageCanvas::getBitmap(){
     return bitmap;
 }
 
-void ImageCanvas::draw( wxPaintEvent& evt ){
+void ImageCanvas::draw( wxPaintEvent& WXUNUSED(evt)){
     wxPaintDC dc(this);
     DoPrepareDC(dc);
 

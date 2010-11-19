@@ -11,7 +11,7 @@ Light::Light(const SpectralQuantity &intensity)
 {
 }
 
-SpectralQuantity Light::getIntensity(const Vec3 &from) {
+SpectralQuantity Light::getIntensity(const Vec3 &/*from*/) {
     return intensity;
 }
 

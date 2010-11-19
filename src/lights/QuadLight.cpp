@@ -61,15 +61,15 @@ Vec3 QuadLight::samplePoint(){
 }
 
 
-void QuadLight::getNormal(Vec3 point, Vec3 &norm){
+void QuadLight::getNormal(Vec3 /*point*/, Vec3 &norm){
 	norm = this->normal;
 }
 
 
-SpectralQuantity QuadLight::computeLocalShading(const Intersection& intersection,
-												const SpectralQuantity& intensity,
-												const Vec3& toLight,
-												const Vec3& toView)
+SpectralQuantity QuadLight::computeLocalShading(const Intersection& /*intersection*/,
+												const SpectralQuantity& /*intensity*/,
+												const Vec3& /*toLight*/,
+												const Vec3& /*toView*/)
 {
 	//FIXME: É só isso mesmo? Não tem que multiplicar por algum fator cossenoidal?
 	return this->intensity;
