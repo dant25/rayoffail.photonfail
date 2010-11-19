@@ -12,6 +12,9 @@ class Image {
       void save(const char* path);
       void load(const char* path);
 
+      double *makeData();
+      void setData(double *data);
+
       void setPixel(int x, int y, const SpectralQuantity& c);
       SpectralQuantity getPixel(int x, int y) const;
 
