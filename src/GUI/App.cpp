@@ -6,8 +6,6 @@
 
 IMPLEMENT_APP(App);
 
-#endif //#if USE_GUI
-
 bool App::OnInit()
 {
     bool wxsOK = true;
@@ -22,13 +20,13 @@ bool App::OnInit()
     return true;
 }
 
-#if (!USE_GUI)
+#else
 
 #include <iostream>
 #include <sstream>
 
 #include "../Importer.h"
-#include <wx/bitmap.h>
+#include "../Renderer.h"
 
 #include <mpi.h>
 
@@ -109,4 +107,4 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-#endif //#if (!USE_GUI)
+#endif //#if USE_GUI
