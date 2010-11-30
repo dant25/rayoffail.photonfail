@@ -1,5 +1,7 @@
 #include "MainFrame.h"
 
+#if USE_GUI
+
 #include <wx/msgdlg.h>
 #include <wx/filedlg.h>
 #include <iostream>
@@ -189,3 +191,5 @@ void MainFrame::refreshPreview()
 
 	statusBar->SetStatusText(_(""), 1);
 }
+
+#endif //#if USE_GUI

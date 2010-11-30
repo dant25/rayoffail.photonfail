@@ -1,5 +1,8 @@
 
 #include "ImageCanvas.h"
+
+#if USE_GUI
+
 #include <wx/dcclient.h>
 #include <wx/image.h>
 
@@ -42,3 +45,5 @@ void ImageCanvas::draw( wxPaintEvent& WXUNUSED(evt)){
 void ImageCanvas::onSize( wxSizeEvent& evt ){
     evt.Skip();
 }
+
+#endif //#if USE_GUI

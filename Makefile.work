@@ -47,16 +47,21 @@ endif
 # What tools to use.
 PREFIX		= /usr/bin/
 AR		= $(SILENCE)$(PREFIX)ar
-AS		= $(SILENCE)$(PREFIX)gcc
+#AS		= $(SILENCE)$(PREFIX)gcc
+AS		= $(SILENCE)$(PREFIX)mpicc
 APP		= $(PREFIX)gasp
-CC		= $(SILENCE)$(PREFIX)gcc
-LD		= $(SILENCE)$(PREFIX)g++
+#CC		= $(SILENCE)$(PREFIX)gcc
+CC		= $(SILENCE)$(PREFIX)mpicc
+#LD		= $(SILENCE)$(PREFIX)g++
+LD		= $(SILENCE)$(PREFIX)mpiCC
 DVPASM		= $(PREFIX)dvp-as
 OBJDUMP		= $(SILENCE)$(PREFIX)objdump
 RM		= /bin/rm -fr
 SHELL		= /bin/sh
-CPP		= g++ -E
-CDEP		= $(PREFIX)gcc -M
+#CPP		= g++ -E
+CPP		= mpiCC -E
+#CDEP		= $(PREFIX)gcc -M
+CDEP		= $(PREFIX)mpicc -M
 DSEDB		= $(SCEDIR)/bin/dsedb
 
 # How to run the executable...
@@ -207,14 +212,16 @@ LIBFLAGS	= $(addprefix -L, $(LIBDIRS) $($(BUILDNAME)_LIBDIRS) $($(*)_LIBDIRS) $(
 CFLAGS		= $(DEBUGFLAGS) $(OPTFLAGS) $(INCFLAGS) $(DEFFLAGS)
 
 # Flags for compiling C++ files.
-CXXFLAGS	= $(DEBUGFLAGS) $(OPTFLAGS) $(INCFLAGS) $(DEFFLAGS) `wx-config --cxxflags` -fopenmp
+# CXXFLAGS	= $(DEBUGFLAGS) $(OPTFLAGS) $(INCFLAGS) $(DEFFLAGS) `wx-config --cxxflags` -fopenmp
+CXXFLAGS	= $(DEBUGFLAGS) $(OPTFLAGS) $(INCFLAGS) $(DEFFLAGS) -fopenmp -std=c++0x
 
 # Flags for the assemblers. -xassembler-with-cpp -Wa,-al
 ASFLAGS		= -c  $(INCFLAGS)
 DVPASMFLAGS	= -g
 
 # Flags for the linker.  -nostartfiles
-LDFLAGS		= $(DEBUGFLAGS) $(LIBFLAGS) `wx-config --libs` -fopenmp
+#LDFLAGS		= $(DEBUGFLAGS) $(LIBFLAGS) `wx-config --libs` -fopenmp
+LDFLAGS		= $(DEBUGFLAGS) $(LIBFLAGS) -fopenmp -std=c++0x
 
 ##########################################################################
 ### Libraries
