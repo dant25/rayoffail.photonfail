@@ -7,7 +7,7 @@
 
 class Renderer {
 public:
-    Image* render(const Scene& s, const Camera& c, int minw = 0, int incrw = 1, int maxw = -1, int minh = 0, int incrh = 1, int maxh = -1);
+    Image* render(const Scene& s, const Camera& c);
 };
 
 #endif

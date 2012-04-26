@@ -13,7 +13,7 @@ public:
 	virtual SpectralQuantity getIntensity(const Vec3 &from);
 
 	// Métodos de Object
-    virtual bool intersect(const Ray& r, Intersection &i);
+    virtual bool intersect(const Ray& r);
     virtual Vec3 samplePoint();
     virtual void getNormal(Vec3 point, Vec3 &normal);
 
@@ -24,7 +24,6 @@ public:
 
 private:
     Vec3 centre;
-    Vec3 normal;
     float radius;
 
     Vec3 xVec;

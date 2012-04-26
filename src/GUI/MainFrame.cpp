@@ -1,7 +1,5 @@
 #include "MainFrame.h"
 
-#if USE_GUI
-
 #include <wx/msgdlg.h>
 #include <wx/filedlg.h>
 #include <iostream>
@@ -26,7 +24,7 @@ MainFrame_Base( parent )
 }
 
 
-void MainFrame::onStart( wxCommandEvent& WXUNUSED(event) )
+void MainFrame::onStart( wxCommandEvent& event )
 {
 	if(scene && camera)
 	{
@@ -55,13 +53,13 @@ void MainFrame::onStart( wxCommandEvent& WXUNUSED(event) )
 }
 
 
-void MainFrame::onDofCheckBox( wxCommandEvent& WXUNUSED(event) )
+void MainFrame::onDofCheckBox( wxCommandEvent& event )
 {
 	dof_panel->Enable(dof_checkBox->IsChecked());
 }
 
 
-void MainFrame::onOpenMenu( wxCommandEvent& WXUNUSED(event) )
+void MainFrame::onOpenMenu( wxCommandEvent& event )
 {
 
 	const wxChar *types = _("COLLADA (*.dae)|*.dae|");
@@ -74,7 +72,7 @@ void MainFrame::onOpenMenu( wxCommandEvent& WXUNUSED(event) )
 		statusBar->SetStatusText(_("Carregando a cena..."), 0);
 		Importer::load(dialog.GetPath().ToAscii(), &scene, &camera);
 		statusBar->SetStatusText(_("Cena carregada."), 0);
-
+      
 		//TODO: E a Câmera?
 		//camera = new Camera(Vec3(-2.780, -8.000, 2.730, 1.0), normalize(Vec3(0.0, 1.0, 0.0)), Vec3(0.0, 0.0, 1.0), 500, 500);
 		//camera = new Camera(Vec3(-11.27431, 13.79502, 6.4117, 1.0), normalize(Vec3(-1.0, 1.0, 0.0)), Vec3(0.0, 0.0, 1.0), 500, 500);
@@ -90,7 +88,7 @@ void MainFrame::onOpenMenu( wxCommandEvent& WXUNUSED(event) )
 }
 
 
-void MainFrame::onSaveImageMenu( wxCommandEvent& WXUNUSED(event) )
+void MainFrame::onSaveImageMenu( wxCommandEvent& event )
 {
 	// Salvando a imagem
 	const wxChar *types = _("Imagem PNG (*.png)|*.png|");
@@ -105,7 +103,7 @@ void MainFrame::onSaveImageMenu( wxCommandEvent& WXUNUSED(event) )
 }
 
 
-void MainFrame::onAboutMenu( wxCommandEvent& WXUNUSED(event) )
+void MainFrame::onAboutMenu( wxCommandEvent& event )
 {
     wxString msg;
     msg.Printf(wxT("Trabalho:\n\t- Distributed Ray Tracing\n\nDisciplina:\n\t- CGII\n\nAutores:\n\t- Jonas Deyson\n\t- Caio\n\nProfessor:\n\t- Joaquim Bento"));
@@ -166,8 +164,6 @@ void MainFrame::refreshPreview()
 	// Convertendo de Image para wxBitmap
 	// FIXME: Alguma forma mais eficiente?
 
-	if (rendering) return;
-
 	for(int y=0; y < img->getHeight(); y++)
 	{
 		for(int x=0; x < img->getWidth(); x++)
@@ -191,5 +187,3 @@ void MainFrame::refreshPreview()
 
 	statusBar->SetStatusText(_(""), 1);
 }
-
-#endif //#if USE_GUI

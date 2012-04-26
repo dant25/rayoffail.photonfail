@@ -319,7 +319,7 @@ __forceinline static int at_eof(stbi *s)
    if (s->img_file)
       return feof(s->img_file);
 #endif
-   return s->img_buffer >= s->img_buffer_end;
+   return s->img_buffer >= s->img_buffer_end;   
 }
 
 __forceinline static uint8 get8u(stbi *s)
@@ -1360,7 +1360,7 @@ typedef struct
    resample_row_func resample;
    uint8 *line0,*line1;
    int hs,vs;   // expansion factor in each axis
-   int w_lores; // horizontal pixels pre-expansion
+   int w_lores; // horizontal pixels pre-expansion 
    int ystep;   // how far through vertical expansion we are
    int ypos;    // which pre-expansion row we're on
 } stbi_resample;
@@ -1538,7 +1538,7 @@ typedef struct
    int maxcode[17];
    uint16 firstsymbol[16];
    uint8  size[288];
-   uint16 value[288];
+   uint16 value[288]; 
 } zhuffman;
 
 __forceinline static int bitreverse16(int n)
@@ -1566,7 +1566,7 @@ static int zbuild_huffman(zhuffman *z, uint8 *sizelist, int num)
    // DEFLATE spec for generating codes
    memset(sizes, 0, sizeof(sizes));
    memset(z->fast, 255, sizeof(z->fast));
-   for (i=0; i < num; ++i)
+   for (i=0; i < num; ++i) 
       ++sizes[sizelist[i]];
    sizes[0] = 0;
    for (i=1; i < 16; ++i)
@@ -1645,7 +1645,7 @@ __forceinline static unsigned int zreceive(zbuf *z, int n)
    k = z->code_buffer & ((1 << n) - 1);
    z->code_buffer >>= n;
    z->num_bits -= n;
-   return k;
+   return k;   
 }
 
 __forceinline static int zhuffman_decode(zbuf *a, zhuffman *z)
@@ -1697,7 +1697,7 @@ static int length_base[31] = {
    15,17,19,23,27,31,35,43,51,59,
    67,83,99,115,131,163,195,227,258,0,0 };
 
-static int length_extra[31]=
+static int length_extra[31]= 
 { 0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0,0,0 };
 
 static int dist_base[32] = { 1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,
@@ -2013,13 +2013,9 @@ static int create_png_image_raw(png *a, uint8 *raw, uint32 raw_len, int out_n, u
    if (!a->out) return e("outofmem", "Out of memory");
    if (!stbi_png_partial) {
       if (s->img_x == x && s->img_y == y)
-	  {
-	  	 if (raw_len != (img_n * x + 1) * y) return e("not enough pixels","Corrupt PNG");
-	  }
+         if (raw_len != (img_n * x + 1) * y) return e("not enough pixels","Corrupt PNG");
       else // interlaced:
-	  {
-	  	 if (raw_len < (img_n * x + 1) * y) return e("not enough pixels","Corrupt PNG");
-	  }
+         if (raw_len < (img_n * x + 1) * y) return e("not enough pixels","Corrupt PNG");
    }
    for (j=0; j < y; ++j) {
       uint8 *cur = a->out + stride*j;
@@ -2668,7 +2664,7 @@ static stbi_uc *bmp_load(stbi *s, int *x, int *y, int *comp, int req_comp)
                out[z++] = shiftsigned(v & mg, gshift, gcount);
                out[z++] = shiftsigned(v & mb, bshift, bcount);
                a = (ma ? shiftsigned(v & ma, ashift, acount) : 255);
-               if (target == 4) out[z++] = a;
+               if (target == 4) out[z++] = a; 
             }
          }
          skip(s, pad);
@@ -3064,7 +3060,7 @@ static stbi_uc *psd_load(stbi *s, int *x, int *y, int *comp, int req_comp)
 	// Read the rows and columns of the image.
    h = get32(s);
    w = get32(s);
-
+	
 	// Make sure the depth is 8 bits.
 	if (get16(s) != 8)
 		return epuc("unsupported bit depth", "PSD bit depth is not 8 bit");
@@ -3106,7 +3102,7 @@ static stbi_uc *psd_load(stbi *s, int *x, int *y, int *comp, int req_comp)
 
 	// Initialize the data to zero.
 	//memset( out, 0, pixelCount * 4 );
-
+	
 	// Finally, the image data.
 	if (compression) {
 		// RLE as used by .PSD and .TIFF
@@ -3124,7 +3120,7 @@ static stbi_uc *psd_load(stbi *s, int *x, int *y, int *comp, int req_comp)
 		// Read the RLE data by channel.
 		for (channel = 0; channel < 4; channel++) {
 			uint8 *p;
-
+			
          p = out+channel;
 			if (channel >= channelCount) {
 				// Fill this channel with default data.
@@ -3162,15 +3158,15 @@ static stbi_uc *psd_load(stbi *s, int *x, int *y, int *comp, int req_comp)
 				}
 			}
 		}
-
+		
 	} else {
 		// We're at the raw image data.  It's each channel in order (Red, Green, Blue, Alpha, ...)
 		// where each channel consists of an 8-bit value for each pixel in the image.
-
+		
 		// Read the data by channel.
 		for (channel = 0; channel < 4; channel++) {
 			uint8 *p;
-
+			
          p = out + channel;
 			if (channel > channelCount) {
 				// Fill this channel with default data.
@@ -3192,7 +3188,7 @@ static stbi_uc *psd_load(stbi *s, int *x, int *y, int *comp, int req_comp)
 	if (comp) *comp = channelCount;
 	*y = h;
 	*x = w;
-
+	
 	return out;
 }
 
@@ -3260,7 +3256,7 @@ int stbi_hdr_test_file(FILE *f)
 static char *hdr_gettoken(stbi *z, char *buffer)
 {
    int len=0;
-	char /**s = buffer, */c = '\0';
+	char *s = buffer, c = '\0';
 
    c = get8(z);
 
@@ -3323,7 +3319,7 @@ static float *hdr_load(stbi *s, int *x, int *y, int *comp, int req_comp)
 	// Check identifier
 	if (strcmp(hdr_gettoken(s,buffer), "#?RADIANCE") != 0)
 		return epf("not HDR", "Corrupt HDR image");
-
+	
 	// Parse header
 	while(1) {
 		token = hdr_gettoken(s,buffer);
@@ -3387,7 +3383,7 @@ static float *hdr_load(stbi *s, int *x, int *y, int *comp, int req_comp)
          len |= get8(s);
          if (len != width) { free(hdr_data); free(scanline); return epf("invalid decoded scanline length", "corrupt HDR"); }
          if (scanline == NULL) scanline = (stbi_uc *) malloc(width * 4);
-
+				
 			for (k = 0; k < 4; ++k) {
 				i = 0;
 				while (i < width) {
@@ -3468,7 +3464,7 @@ static void write_pixels(FILE *f, int rgb_dir, int vdir, int x, int y, int comp,
    uint32 zero = 0;
    int i,j,k, j_end;
 
-   if (vdir < 0)
+   if (vdir < 0) 
       j_end = -1, j = y-1;
    else
       j_end =  y, j = 0;

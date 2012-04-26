@@ -1,10 +1,6 @@
 #ifndef __ImageCanvas__
 #define __ImageCanvas__
 
-#include "App.h"
-
-#if USE_GUI
-
 #include <wx/window.h>
 #include <wx/scrolwin.h>
 
@@ -25,7 +21,5 @@ private:
 
     DECLARE_EVENT_TABLE()
 };
-
-#endif //#if USE_GUI
 
 #endif
