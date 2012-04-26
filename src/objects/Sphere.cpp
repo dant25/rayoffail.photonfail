@@ -6,7 +6,7 @@
 Sphere::Sphere(const Material& mat, float radius, Vec3 center) : Object(mat), radius(radius), centre(center) {
 }
 
-bool Sphere::intersect(const Ray& ray, Intersection &intersection) {
+bool Sphere::intersect(const Ray& ray) {
    Ray r = t.getInverse()*ray;
    //Assume que r.d está normalizado
    //a, b, e c são os coeficientes da equação do segundo grau
@@ -21,20 +21,13 @@ bool Sphere::intersect(const Ray& ray, Intersection &intersection) {
    else if (delta == 0){
       float dist = -b/2.0*a;
       if(dist > 0) {
-         /*this->i.dist = dist;
+         this->i.dist = dist;
          this->i.point = r.o + r.d*dist;
          this->i.point.w = 1.0;
          this->i.normal = (this->i.point - this->centre)/radius;
          this->i.point += this->i.normal*0.0001;
          this->i.point = t*this->i.point;
-         this->i.dist = (this->i.point - ray.o).length();*/
-          intersection.dist = dist;
-          intersection.point = r.o + r.d*dist;
-          intersection.point.w = 1.0;
-          intersection.normal = (intersection.point - this->centre)/radius;
-          intersection.point += intersection.normal*0.0001;
-          intersection.point = t*intersection.point;
-          intersection.dist = (intersection.point - ray.o).length();
+         this->i.dist = (this->i.point - ray.o).length();
          return true;
       } else
          return false;
@@ -55,18 +48,13 @@ bool Sphere::intersect(const Ray& ray, Intersection &intersection) {
       if(dist < 0) 
          return false;
       else {
-          intersection.point = r.o + r.d*dist;
-          intersection.point.w = 1.0;
-          intersection.normal = (intersection.point - this->centre)/radius;
-          intersection.point += intersection.normal*0.0001;
-          intersection.point = t*intersection.point;
-          intersection.dist = (intersection.point - ray.o).length();
-         /*this->i.point = r.o + r.d*dist;
+         this->i.point = r.o + r.d*dist;
          this->i.point.w = 1.0;
+         //FIXME inverter normal se dist == largest?
          this->i.normal = (this->i.point - this->centre)/radius;
          this->i.point += this->i.normal*0.0001;
          this->i.point = t*this->i.point;
-         this->i.dist = (this->i.point - ray.o).length();*/
+         this->i.dist = (this->i.point - ray.o).length();
          return true;
       }
    }

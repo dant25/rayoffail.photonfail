@@ -115,7 +115,7 @@ void loadScene(TiXmlElement *collada, map<string, Object*>& objects, map<string,
          //Mesh *m = readGeometry(collada, url);
          Mesh *m = (Mesh*)objects[string(url)];
          m->t = translateTransform;
-         s->addObject(m);
+         s->addObject(m);    
       }
       TiXmlElement* instanceLight = node->FirstChildElement("instance_light");
       if(instanceLight) {
@@ -207,14 +207,14 @@ void loadGeometry(TiXmlElement *collada, map<string, Object*>& objects, map<stri
          TiXmlElement* radius = sphere->FirstChildElement("radius");
          float sphereRadius = strToFloat(radius->GetText());
          Vec3 sphereCenter(0.0, 0.0, 0.0, 1.0);
-
+         
          Sphere *s = new Sphere(*(materials[string(matId)]), sphereRadius, sphereCenter);
          objects[string(geometryId)] = s;
       }
       TiXmlElement* mesh = geometry->FirstChildElement("mesh");
       //FIXME tratando geometry id como mesh id
       if (mesh){
-         TiXmlElement* triangles = mesh->FirstChildElement("triangles");
+         TiXmlElement* triangles = mesh->FirstChildElement("triangles"); 
          const char* matId = triangles->Attribute("material");
          Mesh *m;
          if(matId != NULL) {
@@ -235,7 +235,7 @@ void loadGeometry(TiXmlElement *collada, map<string, Object*>& objects, map<stri
                   //TODO agrupar em uma função
                   TiXmlElement *vertSource = mesh->FirstChildElement("vertices");
                   while(vertSource) {
-                     if(strcmp(vertSource->Attribute("id"), inputAttrName) == 0)
+                     if(strcmp(vertSource->Attribute("id"), inputAttrName) == 0) 
                         break;
                      vertSource = vertSource->NextSiblingElement("vertices");
                   }
@@ -250,7 +250,7 @@ void loadGeometry(TiXmlElement *collada, map<string, Object*>& objects, map<stri
 
                         TiXmlElement *meshSource = mesh->FirstChildElement("source");
                         while(meshSource) {
-                           if(strcmp(meshSource->Attribute("id"), posSourceName) == 0)
+                           if(strcmp(meshSource->Attribute("id"), posSourceName) == 0) 
                               break;
 
                            meshSource = meshSource->NextSiblingElement("source");
@@ -283,7 +283,7 @@ void loadGeometry(TiXmlElement *collada, map<string, Object*>& objects, map<stri
                else if (strcmp(input->Attribute("semantic"), "NORMAL") == 0) {
                   TiXmlElement *meshSource = mesh->FirstChildElement("source");
                   while(meshSource) {
-                     if(strcmp(meshSource->Attribute("id"), inputAttrName) == 0)
+                     if(strcmp(meshSource->Attribute("id"), inputAttrName) == 0) 
                         break;
                      meshSource = meshSource->NextSiblingElement("source");
                   }
@@ -305,7 +305,7 @@ void loadGeometry(TiXmlElement *collada, map<string, Object*>& objects, map<stri
                else if (strcmp(input->Attribute("semantic"), "TEXCOORD") == 0) {
                   TiXmlElement *meshSource = mesh->FirstChildElement("source");
                   while(meshSource) {
-                     if(strcmp(meshSource->Attribute("id"), inputAttrName) == 0)
+                     if(strcmp(meshSource->Attribute("id"), inputAttrName) == 0) 
                         break;
                      meshSource = meshSource->NextSiblingElement("source");
                   }
@@ -396,7 +396,7 @@ void loadGeometry(TiXmlElement *collada, map<string, Object*>& objects, map<stri
          //FIXME tratando geomtry id como meshId
          objects[string(geometryId)] = m;
       }
-      geometry = geometry->NextSiblingElement("geometry");
+      geometry = geometry->NextSiblingElement("geometry"); 
    }
 }
 
@@ -464,7 +464,7 @@ void loadLight(TiXmlElement *collada, map<string, Light*>& lights) {
       if(spot) {
          SpectralQuantity intensity;
          loadColor(spot->FirstChildElement("color"), intensity);
-
+         
          //Lê o vetor pos
          TiXmlElement* spotPos = spot->FirstChildElement("pos");
          Vec3 pos(0.0, 0.0, 0.0, 1.0);
@@ -514,7 +514,7 @@ Texture* loadTexture(TiXmlElement* collada, TiXmlElement *effect, const char* id
       }
       newparam = newparam->NextSiblingElement("newparam");
    }
-
+   
    std::cout << "a" << std::endl;
    TiXmlElement* sampler2D = newparam->FirstChildElement("sampler2D");
    std::cout << "a" << std::endl;
@@ -570,7 +570,7 @@ Camera* loadCamera(TiXmlElement* collada) {
    TiXmlElement *camera = libraryCameras->FirstChildElement("camera");
 
    TiXmlElement* perspective = camera->FirstChildElement("optics")->FirstChildElement("technique_common")->FirstChildElement("perspective");
-
+   
    std::cout << "ler pos" << std::endl;
    TiXmlElement* cPos = perspective->FirstChildElement("pos");
    Vec3 pos(0.0, 0.0, 0.0, 1.0);
@@ -618,7 +618,7 @@ void loadColor(TiXmlElement *color, SpectralQuantity &sq) {
 
 void fixStr(char *str) {
    if (str[0] == '#'){
-      for(int i = 1; i < (int)strlen(str); i++)
+      for(int i = 1; i < strlen(str); i++)
          str[i-1] = str[i];
       str[strlen(str)-1] = '\0';
    }

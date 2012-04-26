@@ -38,5 +38,4 @@ Mat4x4 transpose(const Mat4x4& m) {
     for(int i = 0; i < 4; i++)
         for(int j = 0; j < 4; j++)
             result(i, j) = m.mat[j][i];
-	return result;
 }

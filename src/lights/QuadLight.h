@@ -11,7 +11,7 @@ public:
 				const Vec3 &at_height);
 
 	// Métodos de Object
-    virtual bool intersect(const Ray& r, Intersection &i);
+    virtual bool intersect(const Ray& r);
     virtual Vec3 samplePoint();
     virtual void getNormal(Vec3 point, Vec3 &normal);
 
@@ -22,7 +22,6 @@ public:
 
 private:
     Vec3 centre;
-    Vec3 normal;
     Vec3 at_width;
     Vec3 at_height;
 

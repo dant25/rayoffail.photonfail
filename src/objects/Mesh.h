@@ -21,7 +21,7 @@ public:
     void addTexCoord(float s, float t);
 
     //Implementação da interface de Object
-    virtual bool intersect(const Ray& r, Intersection &intersection);
+    virtual bool intersect(const Ray& r);
     virtual Vec3 samplePoint();
     virtual void getNormal(Vec3 point, Vec3 &normal);
 

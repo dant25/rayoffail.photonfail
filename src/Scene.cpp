@@ -15,19 +15,19 @@ SpectralQuantity Scene::render(const Ray& r) const {
 
 SpectralQuantity Scene::render(const Ray& r, int depth) const {
 	// obj = 0 caso não haja interseção
-    Intersection objIntersect;
-	Object *obj = objects.findObject(r, objIntersect);
+	Object *obj = objects.findObject(r);
 
 	//Se não houver interseção, retorna cor de fundo
 	if (!obj)
 		return background_color;
 
+	Intersection objIntersect = obj->getIntersection();
 
 	//Cor resultante da iluminação local
 	SpectralQuantity ls;
 
 	// Calcula a iluminação direta.
-	for (int i = 0; i < (int)lights.size(); i++) {
+	for (int i = 0; i < lights.size(); i++) {
 		//cout << "Intersectou!" << endl;
         //FIXME fazer vec retornado ter componente w = 1.0
 		Vec3 samplePos = lights[i]->samplePoint();
@@ -45,14 +45,13 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
         lightIntersect.point.w = 1.0;
 		lightIntersect.normal = lightNormal;
 		lightIntersect.dist = (lightIntersect.point - objIntersect.point).length();
-
+         
 		Ray shadowRay(objIntersect.point, normalize(lightIntersect.point - objIntersect.point));
-        Intersection shadowIntersection;
-		Object *shadowObj = objects.findObject(shadowRay, shadowIntersection);
+		Object *shadowObj = objects.findObject(shadowRay);
 
 		// Se não há obstáculo entre a luz e o ponto sendo considerado
 		if (shadowObj) {
-			if (shadowIntersection.dist < lightIntersect.dist) {
+			if (shadowObj->getIntersection().dist < lightIntersect.dist) {
 				continue;
 			}
 		}

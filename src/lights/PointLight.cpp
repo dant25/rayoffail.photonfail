@@ -7,7 +7,7 @@ PointLight::PointLight(const Vec3 &pos, const SpectralQuantity &intensity)
 }
 
 
-bool PointLight::intersect(const Ray& /*r*/, Intersection &/*i*/){
+bool PointLight::intersect(const Ray& r){
 	return false;
 }
 
@@ -17,5 +17,5 @@ Vec3 PointLight::samplePoint() {
 }
 
 
-void PointLight::getNormal(Vec3 /*point*/, Vec3 &/*normal*/) {
+void PointLight::getNormal(Vec3 point, Vec3 &normal) {
 }

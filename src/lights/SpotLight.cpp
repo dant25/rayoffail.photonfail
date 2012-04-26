@@ -29,7 +29,7 @@ SpectralQuantity SpotLight::getIntensity(const Vec3 &from){
 }
 
 
-bool SpotLight::intersect(const Ray& /*r*/, Intersection &/*i*/) {
+bool SpotLight::intersect(const Ray& r) {
 	return false;
 }
 
@@ -39,5 +39,5 @@ Vec3 SpotLight::samplePoint(){
 }
 
 
-void SpotLight::getNormal(Vec3 /*point*/, Vec3 &/*norm*/){
+void SpotLight::getNormal(Vec3 point, Vec3 &norm){
 }

@@ -1,8 +1,5 @@
 
 #include "ImageCanvas.h"
-
-#if USE_GUI
-
 #include <wx/dcclient.h>
 #include <wx/image.h>
 
@@ -34,7 +31,7 @@ wxBitmap* ImageCanvas::getBitmap(){
     return bitmap;
 }
 
-void ImageCanvas::draw( wxPaintEvent& WXUNUSED(evt)){
+void ImageCanvas::draw( wxPaintEvent& evt ){
     wxPaintDC dc(this);
     DoPrepareDC(dc);
 
@@ -45,5 +42,3 @@ void ImageCanvas::draw( wxPaintEvent& WXUNUSED(evt)){
 void ImageCanvas::onSize( wxSizeEvent& evt ){
     evt.Skip();
 }
-
-#endif //#if USE_GUI

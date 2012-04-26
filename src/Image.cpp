@@ -31,40 +31,6 @@ int Image::getHeight() const {
     return height;
 }
 
-double *Image::makeData()
-{
-	double *data = new double[this->width*this->height*3];
-
-	double *ptr = data;
-
-	for (int i = 0; i < this->width; i++)
-	{
-		for (int j = 0; j < this->height; j++)
-		{
-			(*ptr++) = this->color[i][j].data[0];
-			(*ptr++) = this->color[i][j].data[1];
-			(*ptr++) = this->color[i][j].data[2];
-		}
-	}
-
-	return data;
-}
-
-void Image::setData(double *data)
-{
-	double *ptr = data;
-
-	for (int i = 0; i < this->width; i++)
-	{
-		for (int j = 0; j < this->height; j++)
-		{
-			this->color[i][j].data[0] = (*ptr++);
-			this->color[i][j].data[1] = (*ptr++);
-			this->color[i][j].data[2] = (*ptr++);
-		}
-	}
-}
-
 void Image::setPixel(int x, int y, const SpectralQuantity& c) {
     color[x][y] = c;
 
@@ -90,7 +56,7 @@ void WriteByte(FILE *file, unsigned char b) {
 
 int clamp(float value) {
    int newValue = int(255*value);
-
+   
    if(newValue > 255)
       newValue = 255;
    else if (newValue < 0)
@@ -150,7 +116,7 @@ void Image::load(const char* path) {
    color = new SpectralQuantity*[width];
    for(int i = 0; i < width; i++)
       color[i] = new SpectralQuantity[height];
-
+   
    for(int j = 0; j < height; j++)
       for(int i = 0; i < width; i++)
          color[i][j] = SpectralQuantity(data[3*j*width + i*3]/255.0,
