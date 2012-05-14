@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QImage>
 #include <QGraphicsScene>
+#include <QMessageBox>
 #include <QTimer>
 
 #include "../src/Scene.h"

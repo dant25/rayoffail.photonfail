@@ -191,10 +191,10 @@ void MainWindow::refreshPreview()
 
     if(ui->graphicsView->scene() == 0)
     {
-        QGraphicsScene s;
-        s.addPixmap(QPixmap::fromImage(*image));
+        QGraphicsScene *s= new QGraphicsScene();
+                s->addPixmap(QPixmap::fromImage(*image));
 
-        ui->graphicsView->setScene(&s);
+        ui->graphicsView->setScene(s);
     }
     else
     {
@@ -202,11 +202,7 @@ void MainWindow::refreshPreview()
     }
 
 
-
-    //imageCanvas->Refresh();
-    //Refresh();
     ui->graphicsView->show();
-    updateActions();
 
     if(ui->save_checkBox->isChecked())
         image->save("preview.png");
