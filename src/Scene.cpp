@@ -13,12 +13,21 @@ SpectralQuantity Scene::render(const Ray& r) const {
 	return render(r, 0);
 }
 
+
+bool Scene::intersect(const Ray& r, Object **obj) const{
+    *obj = objects.findObject(r);
+    if(!(*obj))
+        return false;
+    return true;
+}
+
 SpectralQuantity Scene::render(const Ray& r, int depth) const {
 	// obj = 0 caso não haja interseção
-	Object *obj = objects.findObject(r);
+	//Object *obj = objects.findObject(r);
+	Object *obj;
 
 	//Se não houver interseção, retorna cor de fundo
-	if (!obj)
+	if (!intersect(r, &obj))
 		return background_color;
 
 	Intersection objIntersect = obj->getIntersection();

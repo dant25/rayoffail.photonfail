@@ -29,8 +29,12 @@ public:
     Intersection getIntersection();
 
 
-    float getSpecularity(){
+    inline float getSpecularity(){
     	return m.spec;
+    }
+
+    inline Material getMaterial() {
+        return m;
     }
 
    Transform t;

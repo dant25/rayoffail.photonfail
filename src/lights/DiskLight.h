@@ -21,7 +21,8 @@ public:
 												const SpectralQuantity& intensity,
 												const Vec3& toLight,
 												const Vec3& toView);
-
+    
+    virtual Vec3 sampleDir();
 private:
     Vec3 centre;
     float radius;

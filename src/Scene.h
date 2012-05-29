@@ -19,6 +19,8 @@ public:
     void addMaterial(const char *label, Material *m);
    
     Material* getMaterial(const char *label);
+
+    bool intersect(const Ray& r, Object **obj) const;
 //private:
     Container objects;
     std::vector<Light*> lights;
