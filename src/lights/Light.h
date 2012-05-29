@@ -11,6 +11,10 @@ public:
     Light(const SpectralQuantity &intensity);
 
     virtual SpectralQuantity getIntensity(const Vec3 &from);
+    inline SpectralQuantity getIntensity() { return intensity; };
+
+    //Amostra uma direção vinda da luz
+    virtual Vec3 sampleDir();
 
 protected:
     SpectralQuantity intensity;

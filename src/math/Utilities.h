@@ -14,4 +14,8 @@ void barycentricCoords(const Vec3& p1, const Vec3& p2, const Vec3& p3, const Vec
 
 float strToFloat(const char *);
 
+Vec3 UniformSampleHemisphere(float u1, float u2);
+void ConcentricSampleDisk(float u1, float u2, float *dx, float *dy);
+//Vec3 CosineSampleHemisphere(float u1, float u2);
+Vec3 CosineSampleHemisphere(float u1, float u2, Vec3 n);
 #endif /* UTILITIES_H_ */

@@ -15,6 +15,10 @@ SpectralQuantity Light::getIntensity(const Vec3 &from) {
     return intensity;
 }
 
+Vec3 Light::sampleDir() {
+    return Vec3(0.f, 0.f, 0.f);
+}
+
 /*
 SpectralQuantity Light::computeLocalShading(const Intersection& lIntersect, const SpectralQuantity& intensity, const Vec3& rayOrigin)
 {
