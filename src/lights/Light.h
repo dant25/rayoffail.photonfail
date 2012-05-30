@@ -11,7 +11,9 @@ public:
     Light(const SpectralQuantity &intensity);
 
     virtual SpectralQuantity getIntensity(const Vec3 &from);
-    inline SpectralQuantity getIntensity() { return intensity; };
+    inline Vec3 getIntensity() { 
+        return Vec3(intensity.data[0], intensity.data[1], intensity.data[2]); 
+    }
 
     //Amostra uma direção vinda da luz
     virtual Vec3 sampleDir();

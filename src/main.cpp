@@ -5,15 +5,15 @@
 #include "Importer.h"
 #include "Image.h"
 #include <cstdlib>
+#include "PhotonMap.h"
 
-struct Photon {
-    Vec3 p;
-    SpectralQuantity alpha;
-    Vec3 dir;
-};
 
 
 int main(int argc, char** argv) {
+    Vec3 v(0.0, 1.0, 2.0);
+    std::cout << v[0] << ", " << v[1] << ", "  << v[2] << std::endl;
+
+    srand48(time(0));
     //Verificar argumentos
     std::cout << "argc: " << argc << std::endl;
     for(int i = 1; i < argc; i++)
@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
     camera->setResolution(800, 800);
 
     Renderer renderer;
-    Image *img = renderer.render(*scene, *camera);
+    /*Image *img = renderer.render(*scene, *camera);
 
     int numSamples = 1;
     for(int i = 1; i <= numSamples; i++) {
@@ -42,13 +42,13 @@ int main(int argc, char** argv) {
     }
 
     //Salvar imagem
-    img->save(argv[2]);
+    img->save(argv[2]);*/
 
 
 
     std::cout << "Começando a lançar os photons!" << std::endl;
-
-    int nPhotons = 1000;
+    int nPhotons = 50000;
+    std::cout << "nPhotons: " << nPhotons << std::endl;
     int photonCount = 0;
     //FIXME amostrar luz aleatoriamente no laço
     Light *l = scene->lights[0];
@@ -60,10 +60,10 @@ int main(int argc, char** argv) {
         //photonCount++;
         Photon p; 
         //FIXME calcular melhor a estimativa de cor do photon
-        p.alpha = l->getIntensity()/nPhotons;
+        p.power = l->getIntensity()/nPhotons;
 
         //escolher posição de origem e direção do photon - já implementado no rof
-        p.p = l->samplePoint();
+        p.pos = l->samplePoint();
         p.dir = l->sampleDir(); 
 
         //std::cout << "p.p: (" << p.p.x << ", " << p.p.y << "," << p.p.z << ")" << std::endl;
@@ -76,11 +76,11 @@ int main(int argc, char** argv) {
         //Enquanto o photon bater em algum obj da cena
         Object *obj;
         bool specularReflection = false;
-        while( scene->intersect(Ray(p.p, p.dir), &obj) ) {
+        while( scene->intersect(Ray(p.pos, p.dir), &obj) ) {
             //std::cout << "teve interseção com a cena!" << std::endl;
             nIntersections++;
             Intersection objIntersect = obj->getIntersection();
-
+            
             if(obj->getSpecularity() != 1.0) {
                 if(nIntersections == 1){ //directHit em uma superfície com difusidade
                     //std::cout << "inserir no mapa direto" << std::endl;
@@ -97,7 +97,8 @@ int main(int argc, char** argv) {
             ReflectivityType flag;
             Vec3 invDir = p.dir*-1.0f;
             float pDotN = dot(invDir, objIntersect.normal);
-            p.alpha *= m.sampleBRDF(objIntersect.normal, invDir, &newDir, flag)*pDotN;
+            p.power *= m.sampleBRDF(objIntersect.normal, invDir, &newDir, flag)*pDotN;
+            //p.alpha *= m.sampleBRDF(objIntersect.normal, invDir, &newDir, flag);
             p.dir = newDir;
 
             if(flag == SPECULAR)
@@ -106,14 +107,14 @@ int main(int argc, char** argv) {
                 specularReflection = false;
 
             //parte fácil
-            p.p = objIntersect.point;
+            p.pos = objIntersect.point;
 
             if( nIntersections > 3  ) {
                 //O melhor mesmo seria um breakzão logo e pronto
                 float contProb = 0.5; //exemplo do pbrt
                 if(drand48() > contProb)
                     break;
-                p.alpha /= contProb;
+                p.power /= contProb;
             }
         }
     }
@@ -122,6 +123,10 @@ int main(int argc, char** argv) {
     std::cout << "numero de photons diretos: " << directMap.size() << std::endl;
     std::cout << "numero de photons indiretos: " << indirectMap.size() << std::endl;
     std::cout << "numero de photons de caustics: " << causticMap.size() << std::endl;
+
+    PhotonMap directPhotonMap(directMap);
+    PhotonMap indirectPhotonMap(indirectMap);
+    PhotonMap causticPhotonMap(causticMap);
 
     return 0;
 }
