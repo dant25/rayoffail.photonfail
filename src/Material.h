@@ -15,7 +15,7 @@ public:
              float shininess,
              float spec);
     
-    SpectralQuantity sampleBRDF(Vec3 n, Vec3 indir, Vec3 *dir, ReflectivityType &rt);
+    Vec3 sampleBRDF(Vec3 n, Vec3 indir, Vec3 *dir, ReflectivityType &rt);
 
     SpectralQuantity kd, ks, ka;
     float shininess;

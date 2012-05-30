@@ -16,8 +16,15 @@ public:
 	Vec3 operator*(float s) const;
 	Vec3& operator*=(float s);
 
-	Vec3 operator*(const Vec3& v) const{
+	inline Vec3 operator*(const Vec3& v) const{
 		return Vec3(x*v.x, y*v.y, z*v.z);
+	}
+
+    inline Vec3& operator*=(const Vec3& v){
+        this->x *= v.x;
+        this->y *= v.y;
+        this->z *= v.z;
+		return *this; 
 	}
 
 	Vec3 operator/(float s) const;
@@ -50,6 +57,15 @@ public:
        vec.normalize();
        return vec;
 	}
+
+    inline float operator[](short index) const {
+        if(index == 0)
+            return x;
+        else if(index == 1)
+            return y;
+        else
+            return z;
+    }
 
 	float x, y, z;
     float w;
