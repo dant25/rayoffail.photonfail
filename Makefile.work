@@ -207,14 +207,14 @@ LIBFLAGS	= $(addprefix -L, $(LIBDIRS) $($(BUILDNAME)_LIBDIRS) $($(*)_LIBDIRS) $(
 CFLAGS		= $(DEBUGFLAGS) $(OPTFLAGS) $(INCFLAGS) $(DEFFLAGS)
 
 # Flags for compiling C++ files.
-CXXFLAGS	= $(DEBUGFLAGS) $(OPTFLAGS) $(INCFLAGS) $(DEFFLAGS) `wx-config --cxxflags`
+CXXFLAGS	= $(DEBUGFLAGS) $(OPTFLAGS) $(INCFLAGS) $(DEFFLAGS) 
 
 # Flags for the assemblers. -xassembler-with-cpp -Wa,-al
 ASFLAGS		= -c  $(INCFLAGS)
 DVPASMFLAGS	= -g
 
 # Flags for the linker.  -nostartfiles
-LDFLAGS		= $(DEBUGFLAGS) $(LIBFLAGS) `wx-config --libs`
+LDFLAGS		= $(DEBUGFLAGS) $(LIBFLAGS) 
 
 ##########################################################################
 ### Libraries

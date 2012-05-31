@@ -10,9 +10,6 @@
 
 
 int main(int argc, char** argv) {
-    Vec3 v(0.0, 1.0, 2.0);
-    std::cout << v[0] << ", " << v[1] << ", "  << v[2] << std::endl;
-
     srand48(time(0));
     //Verificar argumentos
     std::cout << "argc: " << argc << std::endl;
@@ -26,7 +23,7 @@ int main(int argc, char** argv) {
     scene->preprocess();
 
     //Renderizar
-    camera->setResolution(800, 800);
+    camera->setResolution(500, 500);
 
     Renderer renderer;
     Image *img = renderer.render(*scene, *camera);

@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
+#include <iostream>
 
 #include "PhotonMap.h"
 
@@ -9,7 +10,7 @@
  * maximum number of photons that will be stored */
 //PhotonMap::PhotonMap(const int max_phot) {
 PhotonMap::PhotonMap(std::vector<Photon> v) {
-    stored_photons = 0;
+    stored_photons = v.size();
     prev_scale = 1;
     max_photons = v.size();
 
@@ -23,7 +24,7 @@ PhotonMap::PhotonMap(std::vector<Photon> v) {
     bbox_min[0] = bbox_min[1] = bbox_min[2] = 1e8f;
     bbox_max[0] = bbox_max[1] = bbox_max[2] = -1e8f;
 
-    for(int i = 0; i < max_photons; i++) {
+    for(int i = 1; i <= max_photons; i++) {
         photons[i] = v[i];
 
         if(photons[i].pos.x < bbox_min[0])
@@ -54,7 +55,6 @@ PhotonMap::~PhotonMap() {
 /* irradiance_estimate computes an irradiance estimate
  * at a given surface position */
 void PhotonMap::irradianceEstimate(Vec3* irrad, const Vec3& pos, const Vec3& normal, const float max_dist, const int nphotons ) const {
-    //TODO verificar se isso funciona
     //irrad[0] = irrad[1] = irrad[2] = 0.0;
     irrad->x = irrad->y = irrad->z = 0.0;
 
@@ -71,12 +71,16 @@ void PhotonMap::irradianceEstimate(Vec3* irrad, const Vec3& pos, const Vec3& nor
 
     // locate the nearest photons
     locatePhotons(&np, 1);
-
+    
     // if less than 8 photons return
-    if (np.found < 8)
+    if (np.found < 8) {
         return;
+    }
+
+    //std::cout << "no.found > 8" << std::endl;
 
 
+    //std::cout << "np.found:  " << np.found << std::endl;
     // sum irradiance from all photons
     for (int i = 1; i <= np.found; i++) {
         const Photon *p = np.index[i];
@@ -84,17 +88,17 @@ void PhotonMap::irradianceEstimate(Vec3* irrad, const Vec3& pos, const Vec3& nor
         // if the scene does not have any thin surfaces
         //photonDir(pdir, p);
         //if ((pdir[0]*normal[0] + pdir[1]*normal[1] + pdir[2]*normal[2]) < 0.0f) {
-        if(dot(p->dir, normal) < 0.0) {
+        //if(dot(p->dir, normal) > 0.0) {
             *irrad += p->power;
             /*irrad[0] += p->power[0];
             irrad[1] += p->power[1];
             irrad[2] += p->power[2];*/
-        }
+        //}
     }
+    *irrad *= 100.0;
+    //const float tmp = (1.0f/M_PI)/(np.dist2[0]);	// estimate of density
 
-    const float tmp = (1.0f/M_PI)/(np.dist2[0]);	// estimate of density
-
-    *irrad *= tmp;
+    //*irrad *= tmp;
     /*irrad[0] *= tmp;
     irrad[1] *= tmp;
     irrad[2] *= tmp;*/
@@ -106,7 +110,7 @@ void PhotonMap::irradianceEstimate(Vec3* irrad, const Vec3& pos, const Vec3& nor
 void PhotonMap::locatePhotons(NearestPhotons *const np, const int index) const {
     const Photon *p = &photons[index];
     float dist1;
-
+    
     if (index < half_stored_photons) {
         dist1 = np->pos[p->plane] - p->pos[p->plane];
 
@@ -122,7 +126,6 @@ void PhotonMap::locatePhotons(NearestPhotons *const np, const int index) const {
     }
 
     // compute squared distance between current photon and np->pos
-
     dist1 = p->pos[0] - np->pos[0];
     float dist2 = dist1*dist1;
     dist1 = p->pos[1] - np->pos[1];
@@ -252,7 +255,7 @@ void PhotonMap::balance(void) {
         Photon **pa1 = (Photon**)malloc(sizeof(Photon*)*(stored_photons + 1));
         Photon **pa2 = (Photon**)malloc(sizeof(Photon*)*(stored_photons + 1));
 
-        for (int i = 0; i <= stored_photons; i++)
+        for (int i = 1; i <= stored_photons; i++)
             pa2[i] = &photons[i];
 
         balance_segment(pa1, pa2, 1, 1, stored_photons);
