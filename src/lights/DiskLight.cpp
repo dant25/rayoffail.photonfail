@@ -89,7 +89,7 @@ Vec3 DiskLight::samplePoint(){
 }
 
 
-void DiskLight::getNormal(Vec3 point, Vec3 &norm){
+void DiskLight::getNormal(Vec3, Vec3 &norm){
 	norm = i.normal;
 }
 

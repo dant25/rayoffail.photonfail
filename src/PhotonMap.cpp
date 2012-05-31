@@ -88,15 +88,14 @@ void PhotonMap::irradianceEstimate(Vec3* irrad, const Vec3& pos, const Vec3& nor
         // if the scene does not have any thin surfaces
         //photonDir(pdir, p);
         //if ((pdir[0]*normal[0] + pdir[1]*normal[1] + pdir[2]*normal[2]) < 0.0f) {
-        //if(dot(p->dir, normal) > 0.0) {
+        //if(dot(p->dir, normal) < 0.0) {
             *irrad += p->power;
             /*irrad[0] += p->power[0];
             irrad[1] += p->power[1];
             irrad[2] += p->power[2];*/
         //}
     }
-    *irrad *= 100.0;
-    //const float tmp = (1.0f/M_PI)/(np.dist2[0]);	// estimate of density
+    const float tmp = (1.0f/M_PI)/(np.dist2[0]);	// estimate of density
 
     //*irrad *= tmp;
     /*irrad[0] *= tmp;

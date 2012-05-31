@@ -90,7 +90,7 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 	SpectralQuantity result;
 	result = ls * (1.0 - obj->getSpecularity()) + rs * obj->getSpecularity();
     Vec3 irradEst;
-    directMap->irradianceEstimate(&irradEst, objIntersect.point, objIntersect.normal, 100.0, 500);
+    directMap->irradianceEstimate(&irradEst, objIntersect.point, objIntersect.normal, 10.0, 100);
     //std::cout << "irradEst: " << irradEst.x << ", " << irradEst.y << ", " << irradEst.z << std::endl;
     result = SpectralQuantity(irradEst.x, irradEst.y, irradEst.z);
 
@@ -116,7 +116,7 @@ Material* Scene::getMaterial(const char *label) {
 
 void Scene::preprocess() {
     std::cout << "Começando a lançar os photons!" << std::endl;
-    int nPhotons = 100000;
+    int nPhotons = 200000;
     std::cout << "nPhotons: " << nPhotons << std::endl;
     int photonCount = 0;
     //FIXME amostrar luz aleatoriamente no laço
@@ -127,12 +127,15 @@ void Scene::preprocess() {
     while(photonCount < nPhotons) {
         Photon p; 
         //FIXME calcular melhor a estimativa de cor do photon
-        p.power = l->getIntensity()/nPhotons;
+        p.power = (l->getIntensity()*600.0f)/nPhotons;
 
         //escolher posição de origem e direção do photon
-        p.pos = l->samplePoint();
+        //Vec3 norm;
+        //l->getNormal(Vec3(), norm);
+        p.pos = l->samplePoint();// + norm*0.0001;
         p.dir = l->sampleDir();
-
+        p.dir.normalize(); 
+        //directPhotons.push_back(p);
 
         int nIntersections = 0;
         //Enquanto o photon bater em algum obj da cena
@@ -146,23 +149,27 @@ void Scene::preprocess() {
             Vec3 invDir = p.dir*-1.0f;
             ReflectivityType flag;
             Vec3 newDir;
-            float pDotN = dot(invDir, objIntersect.normal);
+            //float pDotN = dot(invDir, objIntersect.normal);
+            //if (pDotN < 0.0f)
+            //    pDotN = 0.0f;
+            //std::cout << "invDir: " << invDir.x << ", " << invDir.y << ", " << invDir.z << std::endl;
+            //std::cout << "n: " << objIntersect.normal.x << ", " << objIntersect.normal.y << ", " << objIntersect.normal.z << std::endl;
+            //std::cout << "pDotN: " << pDotN << std::endl;
             p.power *= m.sampleBRDF(objIntersect.normal, invDir, &newDir, flag);
-            p.pos = objIntersect.point + objIntersect.normal*0.0001;
+            //p.power *= dot(invDir, objIntersect.normal);
+            p.pos = objIntersect.point;// + objIntersect.normal*0.0001;
 
             if(obj->getSpecularity() != 1.0) {
-                if(nIntersections == 1) {
+                if(nIntersections == 1)
                     directPhotons.push_back(p);
-                }
                 else if(specularReflection) //indirectHit, de superfície specular
                     causticPhotons.push_back(p);
                 else //indirectHit, de superfície difusa
-                    indirectPhotons.push_back(p);
+                    directPhotons.push_back(p);
                 photonCount++;
             }
-            //p.power *= m.sampleBRDF(objIntersect.normal, invDir, &newDir, flag)*pDotN;
             p.dir = newDir;
-
+            p.dir.normalize();
             if(flag == SPECULAR)
                 specularReflection = true;
             else
