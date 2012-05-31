@@ -58,7 +58,7 @@ public:
 
     //void photonDir(float *dir, const Photon *p) const;
 
-private:
+//private:
     void balance_segment(Photon **pbal, Photon **porg, const int index, const int start, const int end);
 
     void median_split(Photon **p, const int start, const int end, const int median, const int axis);
