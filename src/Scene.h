@@ -5,6 +5,7 @@
 #include "Container.h"
 #include "math/Ray.h"
 #include "lights/Light.h"
+#include "PhotonMap.h"
 #include <vector>
 #include <map>
 #include <string>
@@ -21,6 +22,8 @@ public:
     Material* getMaterial(const char *label);
 
     bool intersect(const Ray& r, Object **obj) const;
+
+    void preprocess();
 //private:
     Container objects;
     std::vector<Light*> lights;
@@ -31,6 +34,11 @@ public:
     int maxDepth;
 
     SpectralQuantity render(const Ray& r, int depth) const;
+
+    PhotonMap *directMap;
+    PhotonMap *indirectMap;
+    PhotonMap *causticMap;
+
 };
 
 #endif
