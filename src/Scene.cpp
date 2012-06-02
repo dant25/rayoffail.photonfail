@@ -12,7 +12,7 @@ Scene::Scene() {
 	maxDepth = 2;
 
     directWithPhotons = false;
-    finalGather = false;
+    finalGather = true;
 }
 
 SpectralQuantity Scene::render(const Ray& r) const {
@@ -98,16 +98,34 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
         Vec3 irradEst;
         indirectMap->irradianceEstimate(&irradEst, objIntersect.point, objIntersect.normal, 10.0, 100);
         //FIXME considerar brdf do material?
-        is = SpectralQuantity(irradEst.x, irradEst.y, irradEst.z);
-    } //else {
+        is = SpectralQuantity(irradEst.x, irradEst.y, irradEst.z);//*obj->getMaterial().kd;
+    } else {
+        int nSampleRays = 16;
         //Lançar raios e amostrar todas as contribuições (direta, indireta e caustics)
-    //}
+        for(int i = 0; i < nSampleRays; i++) {
+            //Amostra direção saindo do material
+            Material m = obj->getMaterial();
+            Vec3 newdir;
+            ReflectivityType rt;
+            Vec3 color = m.sampleBRDF(objIntersect.normal, r.d*-1.0f, &newdir, rt);
+            //Encontra ponto de interseção
+            Object *obj2;
+            if(intersect(Ray(objIntersect.point, newdir), &obj2)) {
+                Vec3 irradEst;
+                Intersection obj2Intersect = obj2->getIntersection();
+                directMap->irradianceEstimate(&irradEst, obj2Intersect.point, obj2Intersect.normal, 10.0, 100);
+                is += SpectralQuantity(irradEst.x, irradEst.y, irradEst.z)*obj2->getMaterial().kd;
+                indirectMap->irradianceEstimate(&irradEst, obj2Intersect.point, obj2Intersect.normal, 10.0, 100);
+                is += SpectralQuantity(irradEst.x, irradEst.y, irradEst.z)*obj2->getMaterial().kd;
+            }
+        }
+    }
 
 
 	//Combina de algum modo os valores de ls e rs e retorna a cor
 	//encontrada por aquele raio na cena
 	SpectralQuantity result;
-	result = (ls + is);//*(1.0 - obj->getSpecularity()) + rs * obj->getSpecularity();
+	result = (is + ls);//*(1.0 - obj->getSpecularity()) + rs * obj->getSpecularity();
 	return result + ambient_color;
 }
 
@@ -130,7 +148,7 @@ Material* Scene::getMaterial(const char *label) {
 
 void Scene::preprocess() {
     std::cout << "Começando a lançar os photons!" << std::endl;
-    int nPhotons = 1000000;
+    int nPhotons = 500000;
     std::cout << "nPhotons: " << nPhotons << std::endl;
     int photonCount = 0;
     //FIXME amostrar luz aleatoriamente no laço
@@ -139,7 +157,7 @@ void Scene::preprocess() {
     std::vector<Photon> causticPhotons;
     std::vector<Photon> indirectPhotons;
     //FIXME calcular melhor a estimativa de cor do photon
-    Vec3 tempPower = (l->getIntensity()*2000.0f)/nPhotons;
+    Vec3 tempPower = l->getIntensity()*5.0f/(float)nPhotons;
     std::cout << "photon initial power: " << tempPower.x << ", " << tempPower.y << ", " << tempPower.z << std::endl;
     while(photonCount < nPhotons) {
         Photon p; 
