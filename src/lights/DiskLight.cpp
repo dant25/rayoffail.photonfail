@@ -94,10 +94,10 @@ void DiskLight::getNormal(Vec3, Vec3 &norm){
 }
 
 
-SpectralQuantity DiskLight::computeLocalShading(const Intersection& intersection,
-												const SpectralQuantity& intensity,
-												const Vec3& toLight,
-												const Vec3& toView)
+SpectralQuantity DiskLight::computeLocalShading(const Intersection&,
+												const SpectralQuantity&,
+												const Vec3&,
+												const Vec3&)
 {
 	//FIXME: É só isso mesmo? Não tem que multiplicar por algum fator cossenoidal?
 	return this->intensity;
@@ -151,4 +151,20 @@ Vec3 DiskLight::sampleDir() {
                 sn.y*tempDir.x + tn.y*tempDir.y + nn.y*tempDir.z,
                 sn.z*tempDir.x + tn.z*tempDir.y + nn.z*tempDir.z);*/
     return CosineSampleHemisphere(drand48(), drand48(), i.normal);
+    
+/*    Vec3 tempDir = UniformSampleHemisphere(drand48(), drand48()); 
+
+    float px, py;
+    ConcentricSampleDisk(drand48(), drand48(), &px, &py);
+
+    Vec3 dpdu(-py, px, 0.f);
+    Vec3 nn = i.normal;
+    Vec3 sn = normalize(dpdu);
+    Vec3 tn = cross(nn, sn);
+    
+    //Local to world
+    return Vec3(tn.x*tempDir.x + sn.x*tempDir.y + nn.x*tempDir.z,
+                tn.y*tempDir.x + sn.y*tempDir.y + nn.y*tempDir.z,
+                tn.z*tempDir.x + sn.z*tempDir.y + nn.z*tempDir.z);*/
+
 }

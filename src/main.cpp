@@ -6,6 +6,7 @@
 #include "Image.h"
 #include <cstdlib>
 #include "PhotonMap.h"
+#include <math/Utilities.h>
 
 
 
@@ -28,7 +29,7 @@ int main(int argc, char** argv) {
     Renderer renderer;
     Image *img = renderer.render(*scene, *camera);
 
-    int numSamples = 1;
+    int numSamples = 20;
     for(int i = 1; i <= numSamples; i++) {
        Image *aux = renderer.render(*scene, *camera);
        for(int j = 0; j < img->getWidth(); j++) {

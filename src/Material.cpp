@@ -17,7 +17,21 @@ Vec3 Material::sampleBRDF(Vec3 n, Vec3 indir, Vec3 *dir, ReflectivityType &rt) {
     //FIXME só isso?
     if(drand48() >= spec) {
         rt = DIFFUSE;
-        *dir = CosineSampleHemisphere(drand48(), drand48(), n);
+        //*dir = CosineSampleHemisphere(drand48(), drand48(), n);
+        Vec3 tempDir = UniformSampleHemisphere(drand48(), drand48()); 
+
+        float px, py;
+        ConcentricSampleDisk(drand48(), drand48(), &px, &py);
+
+        Vec3 dpdu(-py, px, 0.f);
+        Vec3 nn = n;
+        Vec3 sn = normalize(dpdu);
+        Vec3 tn = cross(nn, sn);
+
+        //Local to world
+        *dir = Vec3(tn.x*tempDir.x + sn.x*tempDir.y + nn.x*tempDir.z,
+                tn.y*tempDir.x + sn.y*tempDir.y + nn.y*tempDir.z,
+                tn.z*tempDir.x + sn.z*tempDir.y + nn.z*tempDir.z);
     } else {
         rt = SPECULAR;
         *dir = indir.getReflected(n);
