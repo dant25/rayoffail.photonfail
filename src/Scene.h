@@ -39,6 +39,9 @@ public:
     PhotonMap *indirectMap;
     PhotonMap *causticMap;
 
+
+    bool directWithPhotons;
+    bool finalGather;
 };
 
 #endif

@@ -2,8 +2,11 @@
 #include <cstdlib>
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 
 #include "PhotonMap.h"
+
+using namespace std;
 
 /* This is the constructor for the photon map.
  * To create the photon map it is necessary to specify the
@@ -89,13 +92,13 @@ void PhotonMap::irradianceEstimate(Vec3* irrad, const Vec3& pos, const Vec3& nor
         //photonDir(pdir, p);
         //if ((pdir[0]*normal[0] + pdir[1]*normal[1] + pdir[2]*normal[2]) < 0.0f) {
         //if(dot(p->dir, normal) < 0.0) {
-            *irrad += p->power;
+            *irrad += p->power;//*max(dot(p->dir, normal), 0.0f);
             /*irrad[0] += p->power[0];
             irrad[1] += p->power[1];
             irrad[2] += p->power[2];*/
         //}
     }
-    const float tmp = (1.0f/M_PI)/(np.dist2[0]);	// estimate of density
+    //const float tmp = (1.0f/M_PI)/(np.dist2[0]);	// estimate of density
 
     //*irrad *= tmp;
     /*irrad[0] *= tmp;
