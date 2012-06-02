@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
     Renderer renderer;
     Image *img = renderer.render(*scene, *camera);
 
-    int numSamples = 20;
+    int numSamples = 1;
     for(int i = 1; i <= numSamples; i++) {
        Image *aux = renderer.render(*scene, *camera);
        for(int j = 0; j < img->getWidth(); j++) {

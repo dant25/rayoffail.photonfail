@@ -152,7 +152,7 @@ Vec3 DiskLight::sampleDir() {
                 sn.z*tempDir.x + tn.z*tempDir.y + nn.z*tempDir.z);*/
     return CosineSampleHemisphere(drand48(), drand48(), i.normal);
     
-/*    Vec3 tempDir = UniformSampleHemisphere(drand48(), drand48()); 
+    /*Vec3 tempDir = UniformSampleHemisphere(drand48(), drand48()); 
 
     float px, py;
     ConcentricSampleDisk(drand48(), drand48(), &px, &py);
@@ -163,8 +163,8 @@ Vec3 DiskLight::sampleDir() {
     Vec3 tn = cross(nn, sn);
     
     //Local to world
-    return Vec3(tn.x*tempDir.x + sn.x*tempDir.y + nn.x*tempDir.z,
-                tn.y*tempDir.x + sn.y*tempDir.y + nn.y*tempDir.z,
-                tn.z*tempDir.x + sn.z*tempDir.y + nn.z*tempDir.z);*/
+    return Vec3(sn.x*tempDir.x + tn.x*tempDir.y + nn.x*tempDir.z,
+                sn.y*tempDir.x + tn.y*tempDir.y + nn.y*tempDir.z,
+                sn.z*tempDir.x + tn.z*tempDir.y + nn.z*tempDir.z);*/
 
 }
