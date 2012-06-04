@@ -30,9 +30,9 @@ Vec3 PointLight::sampleDir() {
     float prob = drand48();
     Vec3 nn;
     if(prob < 0.5f)
-        nn = Vec3(0.0, 0.0, 1.0);
+        nn = Vec3(0.0, 1.0, 0.0);
     else
-        nn = Vec3(0.0, 0.0, -1.0);
+        nn = Vec3(0.0, -1.0, 0.0);
 
     Vec3 dpdu(-py, px, 0.f);
     Vec3 sn = normalize(dpdu);
