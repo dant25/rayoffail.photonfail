@@ -82,7 +82,7 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
         }
     } else {
         Vec3 irradEst;
-        directMap->irradianceEstimate(&irradEst, objIntersect.point, objIntersect.normal, 3.0, 100);
+        directMap->irradianceEstimate(&irradEst, objIntersect.point, objIntersect.normal, 0.5, 100);
         ls = SpectralQuantity(irradEst.x, irradEst.y, irradEst.z)*obj->getMaterial().kd;
     }
 
@@ -98,7 +98,7 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
     SpectralQuantity is;
     if(!finalGather) {
         Vec3 irradEst;
-        indirectMap->irradianceEstimate(&irradEst, objIntersect.point, objIntersect.normal, 3.0, 200);
+        indirectMap->irradianceEstimate(&irradEst, objIntersect.point, objIntersect.normal, 0.5, 100);
         //FIXME considerar brdf do material?
         is = SpectralQuantity(irradEst.x, irradEst.y, irradEst.z);//*obj->getMaterial().kd;
     } else {
@@ -115,9 +115,9 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
             if(intersect(Ray(objIntersect.point, newdir), &obj2)) {
                 Vec3 irradEst;
                 Intersection obj2Intersect = obj2->getIntersection();
-                directMap->irradianceEstimate(&irradEst, obj2Intersect.point, obj2Intersect.normal, 3.0, 200);
+                directMap->irradianceEstimate(&irradEst, obj2Intersect.point, obj2Intersect.normal, 0.5, 200);
                 is += SpectralQuantity(irradEst.x, irradEst.y, irradEst.z);//*obj2->getMaterial().kd;
-                indirectMap->irradianceEstimate(&irradEst, obj2Intersect.point, obj2Intersect.normal, 3.0, 200);
+                indirectMap->irradianceEstimate(&irradEst, obj2Intersect.point, obj2Intersect.normal, 0.5, 200);
                 is += SpectralQuantity(irradEst.x, irradEst.y, irradEst.z);//*obj2->getMaterial().kd;
             }
         }
@@ -133,7 +133,7 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 	//Combina de algum modo os valores de ls e rs e retorna a cor
 	//encontrada por aquele raio na cena
 	SpectralQuantity result;
-	result = (ls + is + cs);//*(1.0 - obj->getSpecularity()) + rs * obj->getSpecularity();
+	result = (ls + is);//*(1.0 - obj->getSpecularity()) + rs * obj->getSpecularity();
 	return result + ambient_color;
 }
 
@@ -175,7 +175,7 @@ void Scene::preprocess() {
     }
     //Divide a potencia total pela quantidade de photons
     photonPower /= nPhotons;
-    photonPower *= 800;
+    photonPower *= 100;
     std::vector<Photon> directPhotons;
     std::vector<Photon> causticPhotons;
     std::vector<Photon> indirectPhotons;
@@ -197,7 +197,7 @@ void Scene::preprocess() {
         p.dir.normalize();
         Vec3 tempLightNormal;
         l->getNormal(Vec3(), tempLightNormal);
-        p.power = photonPower*fabs(dot(p.dir, tempLightNormal));
+        p.power = photonPower;//*fabs(dot(p.dir, tempLightNormal));
 
         int nIntersections = 0;
         //Enquanto o photon bater em algum obj da cena
@@ -205,7 +205,6 @@ void Scene::preprocess() {
         bool specularReflection = false;
         while( intersect(Ray(p.pos, p.dir), &obj) ) {
             nIntersections++;
-
             Intersection objIntersect = obj->getIntersection();
             Material m = obj->getMaterial();
             Vec3 invDir = p.dir*-1.0f;
@@ -248,17 +247,9 @@ void Scene::preprocess() {
     indirectMap = new PhotonMap(indirectPhotons);
     causticMap = new PhotonMap(causticPhotons);
 
-    /*for(int i = 1; i <= directPhotons.size(); i++) {
-        std::cout << "photon " << i << std::endl;
-        std::cout << "\tpos " << directMap->photons[i].pos.x << " " 
-                              << directMap->photons[i].pos.y << " "
-                              << directMap->photons[i].pos.z << std::endl;
-        std::cout << "\tdir " << directMap->photons[i].dir.x << " "
-                              << directMap->photons[i].dir.y << " "
-                              << directMap->photons[i].dir.z << std::endl;
-        std::cout << "\tpower " << directMap->photons[i].power.x  << " "
-                              << directMap->photons[i].power.y  << " "
-                              << directMap->photons[i].power.z << std::endl;
-
+    /*for(int i = 1; i <= indirectPhotons.size(); i++) {
+        std::cout << indirectMap->photons[i].pos.x << " " 
+                  << indirectMap->photons[i].pos.y << " "
+                  << indirectMap->photons[i].pos.z << std::endl;
     }*/
 }

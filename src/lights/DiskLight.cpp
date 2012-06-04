@@ -64,28 +64,36 @@ bool DiskLight::intersect(const Ray& r) {
 	return false;
 }
 
+void CoordinateSystem(const Vec3 &v1, Vec3 *v2, Vec3 *v3) {
+    if (fabsf(v1.x) > fabsf(v1.y)) {
+        float invLen = 1.f / sqrtf(v1.x*v1.x + v1.z*v1.z);
+        *v2 = Vec3(-v1.z * invLen, 0.f, v1.x * invLen);
+    }
+    else {
+        float invLen = 1.f / sqrtf(v1.y*v1.y + v1.z*v1.z);
+        *v2 = Vec3(0.f, v1.z * invLen, -v1.y * invLen);
+    }
+    *v3 = cross(v1, *v2);
+}
 
 Vec3 DiskLight::samplePoint(){
-    float px, py;
+    /*float px, py;
     ConcentricSampleDisk(drand48(), drand48(), &px, &py);
-
-    Vec3 tempPos(px, py, 0.f);
-    Vec3 dpdu(-py, px, 0.f);
-
-    Vec3 nn = i.normal;
-    Vec3 sn = normalize(dpdu);
-    Vec3 tn = cross(nn, sn);
     
+    Vec3 tempPos(px*radius, py*radius, 0.f);
+    Vec3 sn, tn;
+    Vec3 nn = i.normal;
+    CoordinateSystem(nn, &sn, &tn);
     //Local to world
-    Vec3 newpos(tn.x*tempPos.x + sn.x*tempPos.y + nn.x*tempPos.z,
-                tn.y*tempPos.x + sn.y*tempPos.y + nn.y*tempPos.z,
-                tn.z*tempPos.x + sn.z*tempPos.y + nn.z*tempPos.z);
-    return newpos*radius + centre + i.normal*0.0001;
-	/*float phi = 2.0*M_PI*RAND(0.0, 1.0);
-	float r = radius*sqrt(RAND(0.0, 1.0));
+    Vec3 newpos(tn.x*tempPos.x + sn.x*tempPos.y + nn.x*tempPos.z + centre.x,
+                tn.y*tempPos.x + sn.y*tempPos.y + nn.y*tempPos.z + centre.y,
+                tn.z*tempPos.x + sn.z*tempPos.y + nn.z*tempPos.z + centre.z);
+    return newpos + i.normal*0.0001;*/
+	float phi = 2.0*M_PI*drand48();
+	float r = radius*sqrt(drand48());
 
 	Vec3 point = centre + xVec*r*cos(phi) + yVec*r*sin(phi);
-	return point + i.normal*0.0001;*/
+	return point + i.normal*0.0001;
 }
 
 
