@@ -11,8 +11,10 @@ Scene::Scene() {
 	ambient_color = SpectralQuantity(0.01, 0.01, 0.01);
 	maxDepth = 2;
 
-    directWithPhotons = false;
-    finalGather = true;
+    nPhotons = 1000000;
+
+    directWithPhotons = true;
+    finalGather = false;
 }
 
 SpectralQuantity Scene::render(const Ray& r) const {
@@ -96,7 +98,7 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
     SpectralQuantity is;
     if(!finalGather) {
         Vec3 irradEst;
-        indirectMap->irradianceEstimate(&irradEst, objIntersect.point, objIntersect.normal, 10.0, 100);
+        indirectMap->irradianceEstimate(&irradEst, objIntersect.point, objIntersect.normal, 5.0, 1000);
         //FIXME considerar brdf do material?
         is = SpectralQuantity(irradEst.x, irradEst.y, irradEst.z);//*obj->getMaterial().kd;
     } else {
@@ -125,7 +127,7 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
 	//Combina de algum modo os valores de ls e rs e retorna a cor
 	//encontrada por aquele raio na cena
 	SpectralQuantity result;
-	result = (is + ls);//*(1.0 - obj->getSpecularity()) + rs * obj->getSpecularity();
+	result = (ls);//*(1.0 - obj->getSpecularity()) + rs * obj->getSpecularity();
 	return result + ambient_color;
 }
 
@@ -148,26 +150,48 @@ Material* Scene::getMaterial(const char *label) {
 
 void Scene::preprocess() {
     std::cout << "Começando a lançar os photons!" << std::endl;
-    int nPhotons = 500000;
-    std::cout << "nPhotons: " << nPhotons << std::endl;
-    int photonCount = 0;
-    //FIXME amostrar luz aleatoriamente no laço
-    Light *l = lights[0];
+
+    //Soma a potencia de todas as luzes
+    Vec3 photonPower(0.0f, 0.0f, 0.0f);
+    //Estimar valor de cada luz para escolha probabilistica
+    float *lightProb = new float[lights.size()];
+    float totalLightPower = 0.0;
+    for(unsigned int i = 0; i < lights.size(); i++) {
+        Vec3 lightIntensity = lights[i]->getIntensity();
+        lightProb[i] = lightIntensity.x + lightIntensity.y + lightIntensity.z;
+        totalLightPower += lightProb[i];
+        if(i > 0)
+            lightProb[i] += lightProb[i - 1]; 
+    }
+    for(unsigned int i = 0; i < lights.size(); i++) {
+        photonPower += lights[i]->getIntensity();
+        lightProb[i] /= totalLightPower;
+    }
+    //Divide a potencia total pela quantidade de photons
+    photonPower /= nPhotons;
+    photonPower *= 200;
     std::vector<Photon> directPhotons;
     std::vector<Photon> causticPhotons;
     std::vector<Photon> indirectPhotons;
-    //FIXME calcular melhor a estimativa de cor do photon
-    Vec3 tempPower = l->getIntensity()*5.0f/(float)nPhotons;
-    std::cout << "photon initial power: " << tempPower.x << ", " << tempPower.y << ", " << tempPower.z << std::endl;
+    int photonCount = 0;
     while(photonCount < nPhotons) {
-        Photon p; 
-        p.pos = l->samplePoint();// + norm*0.0001;
+        Photon p;
+
+        //Amostrando luz aleatoriamente
+        //TODO Verificar se isso dá certo
+        unsigned int lightIndex;
+        float prob = drand48();
+        for(lightIndex = 0; lightIndex < lights.size(); lightIndex++)
+            if(prob <= lightProb[lightIndex])
+                break;
+        Light *l = lights[lightIndex];
+
+        p.pos = l->samplePoint();
         p.dir = l->sampleDir();
         p.dir.normalize();
         Vec3 tempLightNormal;
         l->getNormal(Vec3(), tempLightNormal);
-        p.power = tempPower*fabs(dot(p.dir, tempLightNormal));
-        //directPhotons.push_back(p);
+        p.power = photonPower*fabs(dot(p.dir, tempLightNormal));
 
         int nIntersections = 0;
         //Enquanto o photon bater em algum obj da cena
@@ -182,7 +206,7 @@ void Scene::preprocess() {
             ReflectivityType flag;
             Vec3 newDir;
             float pDotN = fabs(dot(invDir, objIntersect.normal));
-            p.pos = objIntersect.point;// + objIntersect.normal*0.0001;
+            p.pos = objIntersect.point;
 
             if(obj->getSpecularity() != 1.0) {
                 if(nIntersections == 1)
@@ -211,8 +235,8 @@ void Scene::preprocess() {
             }
         }
     }
-    //std::cout << "directPhotons: " << directPhotons.size() << std::endl;
-    //std::cout << "indirectPhotons: " << indirectPhotons.size() << std::endl;
+    std::cout << "directPhotons: " << directPhotons.size() << std::endl;
+    std::cout << "indirectPhotons: " << indirectPhotons.size() << std::endl;
     directMap = new PhotonMap(directPhotons);
     indirectMap = new PhotonMap(indirectPhotons);
     causticMap = new PhotonMap(causticPhotons);
