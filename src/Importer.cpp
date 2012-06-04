@@ -51,9 +51,9 @@ void Importer::load(const char* path, Scene** s, Camera** c) {
    if (!collada)
       return;
 
-   std::cout << "ler a camera" << std::endl;
+  // std::cout << "ler a camera" << std::endl;
    *c = loadCamera(collada);
-   std::cout << "camera lida" << std::endl;
+   //std::cout << "camera lida" << std::endl;
 
    map<string, Material*> materials;
    loadMaterials(collada, materials);
@@ -158,9 +158,9 @@ void loadMaterials(TiXmlElement *collada, map<string, Material*>& materials) {
             SpectralQuantity kd;
             Texture *tex = NULL;
             if(texture) {
-               std::cout << "<loadTexture>" << std::endl;
+              // std::cout << "<loadTexture>" << std::endl;
                tex = loadTexture(collada, effect, texture->Attribute("texture"));
-               std::cout << "</loadTexture>" << std::endl;
+              // std::cout << "</loadTexture>" << std::endl;
                kd = SpectralQuantity(0.0, 0.0, 0.0);
             }
             else {
@@ -185,7 +185,7 @@ void loadMaterials(TiXmlElement *collada, map<string, Material*>& materials) {
             Material *m = new Material(kd, ks, ka, matShininess, spec);
             if(tex)
                m->tex = tex;
-            std::cout << "adicionando material id: " << matId << std::endl;
+            //std::cout << "adicionando material id: " << matId << std::endl;
             //s->addMaterial(matId, m);
             materials[string(matId)] = m;
          }
@@ -219,7 +219,7 @@ void loadGeometry(TiXmlElement *collada, map<string, Object*>& objects, map<stri
          Mesh *m;
          if(matId != NULL) {
             m = new Mesh(*(materials[string(matId)]));
-            std::cout << "mat != NULL" << std::endl;
+            //std::cout << "mat != NULL" << std::endl;
          } else
             m = new Mesh;
          while (triangles){
@@ -329,9 +329,9 @@ void loadGeometry(TiXmlElement *collada, map<string, Object*>& objects, map<stri
             TiXmlElement *p = triangles->FirstChildElement("p");
             //FIXME: quebrar a string de vertices e instanciar mesh
             int numTriangles = atoi(triangles->Attribute("count"));
-            std::cout << "numTriangles: " << numTriangles << std::endl;
+            //std::cout << "numTriangles: " << numTriangles << std::endl;
             char *indexTok = strtok((char*)p->GetText(), " ");
-            std::cout << "numOffset: " << numOffset << std::endl;
+            //std::cout << "numOffset: " << numOffset << std::endl;
             for(int i = 0;  i < numTriangles; i++) {
                if (numOffset == 2) {
                   int vertId1 = atoi(indexTok);
@@ -505,19 +505,19 @@ Texture* loadTexture(TiXmlElement* collada, TiXmlElement *effect, const char* id
    TiXmlElement* profileCommon = effect->FirstChildElement("profile_COMMON");
 
    TiXmlElement* newparam = profileCommon->FirstChildElement("newparam");
-    std::cout << "prcurando id: " << id << std::endl;
+    //std::cout << "prcurando id: " << id << std::endl;
    while(newparam) {
-      std::cout << "newparam->sid: " << newparam->Attribute("sid") << std::endl;
+      //std::cout << "newparam->sid: " << newparam->Attribute("sid") << std::endl;
       if(strcmp(id, newparam->Attribute("sid")) == 0) {
-         std::cout << "found id: "  << id << std::endl;
+         //std::cout << "found id: "  << id << std::endl;
          break;
       }
       newparam = newparam->NextSiblingElement("newparam");
    }
    
-   std::cout << "a" << std::endl;
+   //std::cout << "a" << std::endl;
    TiXmlElement* sampler2D = newparam->FirstChildElement("sampler2D");
-   std::cout << "a" << std::endl;
+   //std::cout << "a" << std::endl;
    TiXmlElement* samplerSouce = sampler2D->FirstChildElement("source");
 
    char* sourceid = (char*) samplerSouce->GetText();
@@ -526,22 +526,22 @@ Texture* loadTexture(TiXmlElement* collada, TiXmlElement *effect, const char* id
    newparam = profileCommon->FirstChildElement("newparam");
    while(newparam) {
       if(strcmp(sourceid, newparam->Attribute("sid")) == 0) {
-         std::cout << "sourceid: " << sourceid << std::endl;
+         //std::cout << "sourceid: " << sourceid << std::endl;
          break;
       }
       newparam = newparam->NextSiblingElement("newparam");
    }
 
-   std::cout << "a" << std::endl;
+   //std::cout << "a" << std::endl;
    TiXmlElement* surface = newparam->FirstChildElement("surface");
    TiXmlElement* initFrom = surface->FirstChildElement("init_from");
 
    //FIXME deveria retornar uma IMG
    //FIXME considerar <format>
-   std::cout << "<loadImage>" << std::endl;
-   std::cout << "initFrom: " << initFrom->GetText() << std::endl;
+   //std::cout << "<loadImage>" << std::endl;
+   //std::cout << "initFrom: " << initFrom->GetText() << std::endl;
    Texture *tex = loadImage(collada, initFrom->GetText());
-   std::cout << "</loadImage>" << std::endl;
+   //std::cout << "</loadImage>" << std::endl;
 
    return tex;
 }
@@ -552,14 +552,14 @@ Texture* loadImage(TiXmlElement *collada, const char *id) {
 
    while(image) {
       if(strcmp(id, image->Attribute("id")) == 0) {
-         std::cout << "image id: " << id << std::endl;
+         //std::cout << "image id: " << id << std::endl;
          break;
       }
       image = image->NextSiblingElement("image");
    }
 
    TiXmlElement* initFrom = image->FirstChildElement("init_from");
-   std::cout << "carregando imagem: " << initFrom->GetText() << std::endl;
+   //std::cout << "carregando imagem: " << initFrom->GetText() << std::endl;
    Texture *tex = new Texture(initFrom->GetText());
    return tex;
 }
@@ -571,7 +571,7 @@ Camera* loadCamera(TiXmlElement* collada) {
 
    TiXmlElement* perspective = camera->FirstChildElement("optics")->FirstChildElement("technique_common")->FirstChildElement("perspective");
    
-   std::cout << "ler pos" << std::endl;
+   //std::cout << "ler pos" << std::endl;
    TiXmlElement* cPos = perspective->FirstChildElement("pos");
    Vec3 pos(0.0, 0.0, 0.0, 1.0);
    char *pTok = strtok((char*) cPos->GetText(), " ");
@@ -581,7 +581,7 @@ Camera* loadCamera(TiXmlElement* collada) {
    pTok = strtok(NULL, " ");
    pos.z = strToFloat(pTok);
 
-   std::cout << "ler lookat" << std::endl;
+   //std::cout << "ler lookat" << std::endl;
    TiXmlElement* cLookat = perspective->FirstChildElement("lookat");
    Vec3 lookat;
    char *lTok = strtok((char*) cLookat->GetText(), " ");
@@ -591,7 +591,7 @@ Camera* loadCamera(TiXmlElement* collada) {
    lTok = strtok(NULL, " ");
    lookat.z = strToFloat(lTok);
 
-   std::cout << "ler up" << std::endl;
+   //std::cout << "ler up" << std::endl;
    TiXmlElement* cUp = perspective->FirstChildElement("up");
    Vec3 up;
    char *upTok = strtok((char*) cUp->GetText(), " ");
@@ -601,7 +601,7 @@ Camera* loadCamera(TiXmlElement* collada) {
    upTok = strtok(NULL, " ");
    up.z = strToFloat(upTok);
 
-   std::cout << "instanciar camera" << std:: endl;
+   //std::cout << "instanciar camera" << std:: endl;
    Camera *c = new Camera(pos, normalize(lookat), normalize(up));
    return c;
 }
@@ -618,7 +618,7 @@ void loadColor(TiXmlElement *color, SpectralQuantity &sq) {
 
 void fixStr(char *str) {
    if (str[0] == '#'){
-      for(int i = 1; i < strlen(str); i++)
+      for(unsigned int i = 1; i < strlen(str); i++)
          str[i-1] = str[i];
       str[strlen(str)-1] = '\0';
    }

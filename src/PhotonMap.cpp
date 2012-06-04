@@ -58,7 +58,6 @@ PhotonMap::~PhotonMap() {
 /* irradiance_estimate computes an irradiance estimate
  * at a given surface position */
 void PhotonMap::irradianceEstimate(Vec3* irrad, const Vec3& pos, const Vec3& normal, const float max_dist, const int nphotons ) const {
-    //irrad[0] = irrad[1] = irrad[2] = 0.0;
     irrad->x = irrad->y = irrad->z = 0.0;
 
     NearestPhotons np;
@@ -92,15 +91,15 @@ void PhotonMap::irradianceEstimate(Vec3* irrad, const Vec3& pos, const Vec3& nor
         //photonDir(pdir, p);
         //if ((pdir[0]*normal[0] + pdir[1]*normal[1] + pdir[2]*normal[2]) < 0.0f) {
         if(dot(p->dir, normal) < 0.0) {
-            *irrad += p->power;//*max(dot(p->dir*-1.0f, normal), 0.0f);
+            *irrad += p->power*fabs(dot(p->dir*-1.0f, normal));
             /*irrad[0] += p->power[0];
             irrad[1] += p->power[1];
             irrad[2] += p->power[2];*/
         }
     }
-    //const float tmp = 1.0f/(M_PI*np.dist2[0]);	// estimate of density
+    const float tmp = 1.0f/(M_PI*np.dist2[0]);	// estimate of density
 
-    //*irrad *= tmp;
+    *irrad *= tmp;
     /*irrad[0] *= tmp;
     irrad[1] *= tmp;
     irrad[2] *= tmp;*/
