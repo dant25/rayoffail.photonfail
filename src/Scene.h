@@ -38,7 +38,7 @@ public:
     PhotonMap *directMap;
     PhotonMap *indirectMap;
     PhotonMap *causticMap;
-
+    int nPhotons;
 
     bool directWithPhotons;
     bool finalGather;

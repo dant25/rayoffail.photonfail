@@ -12,15 +12,10 @@
 
 int main(int argc, char** argv) {
     srand48(time(0));
-    //Verificar argumentos
-    std::cout << "argc: " << argc << std::endl;
-    for(int i = 1; i < argc; i++)
-        std::cout << "argv[" << i << "]: " << argv[i] << std::endl;
     //Importar a cena
     Scene *scene;
     Camera *camera;
     Importer::load(argv[1], &scene, &camera);
-
     scene->preprocess();
 
     //Renderizar
