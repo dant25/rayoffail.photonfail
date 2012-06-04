@@ -11,10 +11,10 @@ Scene::Scene() {
 	ambient_color = SpectralQuantity(0.01, 0.01, 0.01);
 	maxDepth = 2;
 
-    nPhotons = 1000000;
+    nPhotons = 500000;
 
-    directWithPhotons = true;
-    finalGather = false;
+    directWithPhotons = false;
+    finalGather = true;
 }
 
 SpectralQuantity Scene::render(const Ray& r) const {
@@ -82,7 +82,7 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
         }
     } else {
         Vec3 irradEst;
-        directMap->irradianceEstimate(&irradEst, objIntersect.point, objIntersect.normal, 10.0, 100);
+        directMap->irradianceEstimate(&irradEst, objIntersect.point, objIntersect.normal, 3.0, 100);
         ls = SpectralQuantity(irradEst.x, irradEst.y, irradEst.z)*obj->getMaterial().kd;
     }
 
@@ -98,11 +98,11 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
     SpectralQuantity is;
     if(!finalGather) {
         Vec3 irradEst;
-        indirectMap->irradianceEstimate(&irradEst, objIntersect.point, objIntersect.normal, 5.0, 1000);
+        indirectMap->irradianceEstimate(&irradEst, objIntersect.point, objIntersect.normal, 3.0, 200);
         //FIXME considerar brdf do material?
         is = SpectralQuantity(irradEst.x, irradEst.y, irradEst.z);//*obj->getMaterial().kd;
     } else {
-        int nSampleRays = 16;
+        int nSampleRays = 4;
         //Lançar raios e amostrar todas as contribuições (direta, indireta e caustics)
         for(int i = 0; i < nSampleRays; i++) {
             //Amostra direção saindo do material
@@ -115,19 +115,25 @@ SpectralQuantity Scene::render(const Ray& r, int depth) const {
             if(intersect(Ray(objIntersect.point, newdir), &obj2)) {
                 Vec3 irradEst;
                 Intersection obj2Intersect = obj2->getIntersection();
-                directMap->irradianceEstimate(&irradEst, obj2Intersect.point, obj2Intersect.normal, 10.0, 100);
-                is += SpectralQuantity(irradEst.x, irradEst.y, irradEst.z)*obj2->getMaterial().kd;
-                indirectMap->irradianceEstimate(&irradEst, obj2Intersect.point, obj2Intersect.normal, 10.0, 100);
-                is += SpectralQuantity(irradEst.x, irradEst.y, irradEst.z)*obj2->getMaterial().kd;
+                directMap->irradianceEstimate(&irradEst, obj2Intersect.point, obj2Intersect.normal, 3.0, 200);
+                is += SpectralQuantity(irradEst.x, irradEst.y, irradEst.z);//*obj2->getMaterial().kd;
+                indirectMap->irradianceEstimate(&irradEst, obj2Intersect.point, obj2Intersect.normal, 3.0, 200);
+                is += SpectralQuantity(irradEst.x, irradEst.y, irradEst.z);//*obj2->getMaterial().kd;
             }
         }
+        is /= (float)nSampleRays;
     }
+    
 
+    SpectralQuantity cs;
+    Vec3 irradEst;
+    causticMap->irradianceEstimate(&irradEst, objIntersect.point, objIntersect.normal, 3.0, 100);
+    cs = SpectralQuantity(irradEst.x, irradEst.y, irradEst.z)*obj->getMaterial().kd;
 
 	//Combina de algum modo os valores de ls e rs e retorna a cor
 	//encontrada por aquele raio na cena
 	SpectralQuantity result;
-	result = (ls);//*(1.0 - obj->getSpecularity()) + rs * obj->getSpecularity();
+	result = (ls + is + cs);//*(1.0 - obj->getSpecularity()) + rs * obj->getSpecularity();
 	return result + ambient_color;
 }
 
@@ -169,7 +175,7 @@ void Scene::preprocess() {
     }
     //Divide a potencia total pela quantidade de photons
     photonPower /= nPhotons;
-    photonPower *= 200;
+    photonPower *= 800;
     std::vector<Photon> directPhotons;
     std::vector<Photon> causticPhotons;
     std::vector<Photon> indirectPhotons;
@@ -237,6 +243,7 @@ void Scene::preprocess() {
     }
     std::cout << "directPhotons: " << directPhotons.size() << std::endl;
     std::cout << "indirectPhotons: " << indirectPhotons.size() << std::endl;
+    std::cout << "causticPhotons: " << causticPhotons.size() << std::endl;
     directMap = new PhotonMap(directPhotons);
     indirectMap = new PhotonMap(indirectPhotons);
     causticMap = new PhotonMap(causticPhotons);
