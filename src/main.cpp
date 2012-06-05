@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
     Renderer renderer;
     Image *img = renderer.render(*scene, *camera);
 
-    int numSamples = 1;
+    int numSamples = 100;
     for(int i = 1; i <= numSamples; i++) {
        Image *aux = renderer.render(*scene, *camera);
        for(int j = 0; j < img->getWidth(); j++) {
@@ -33,6 +33,8 @@ int main(int argc, char** argv) {
                 img->setPixel(j, k, (img->getPixel(j, k)*(i - 1.0) + color)/(float)i);
             }
        }
+       aux->save("preview2.tga");
+       std::cout << "sample " << i << "terminado" << std::endl;
        delete aux;
     }
 
